@@ -9,6 +9,7 @@
 * **Sean Coutinho:** Kotlin Android Application that can detect nearby bluetooth devices
 * **Ju Hong Kim:** Linux PAM that logs to a file whenever a user logs in via the GUI Desktop login
 * **Daniel Wang:** Implement a bluetooth scanner in C that detects nearby bluetooth devices
+* **Arslan Qamar:** Set up the VM, Worked On Linux simple pam, fixed the errors, and was able to login. 
 * **Anurag Bist:** Java Android Application Implementation
 
 ## Goals for Next Sprint (Will be subject to change)
