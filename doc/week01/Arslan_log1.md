@@ -2,21 +2,20 @@
 #### Author: Arslan Ahmed Qamar
 #### Date: Feb. 07 2019
 
--- 
+---
 
 ## OBJECTIVES
 * 
 
 ## SOURCES USED 
-https://www.tecmint.com/configure-pam-in-centos-ubuntu-linux/
-https://people.csail.mit.edu/albert/bluez-intro/
-https://people.csail.mit.edu/albert/bluez-intro/
-
+* https://www.tecmint.com/configure-pam-in-centos-ubuntu-linux/
+* https://people.csail.mit.edu/albert/bluez-intro/
+* https://github.com/beatgammit/simple-pam
 ## TODO
-* Simple Pam Module was cloned provided by TA. Understand the simple pam module, fix the issues, dependencies and compile the program. 
+* Simple Pam Module was cloned provided by the TA. Understand the simple pam module, fix the issues, dependencies and compile the program. 
 * Simple Usage would be implemented and PAM be replaced by sudo
 
---
+---
 
 ## PAM Module SETUP 
 
@@ -24,31 +23,31 @@ https://people.csail.mit.edu/albert/bluez-intro/
 * Install the UBUNTU on virtual machine
 * Install packages/tools that we be using e.g. ssh, git, gcc and others
 
-### Steps 
-#### Install SSH to ssh from your computer's terminal due to display size problem 'sudo apt update sudo apt install openssh-server'
-***Check IP address for connection*** 'ip a' or through your browser
-***Install Git to clone the repo*** 'sudo apt install git'
-***Firewall Configuration to allow SSH connection***
-'''
+### STEPS
+**Install SSH to login from your computer's terminal due to display size problem** `sudo apt update sudo apt` `install openssh-server`
+**Check IP address for connection** `ip a` or through your browser
+***Install Git to clone the repo*** `sudo apt install git`
+**Firewall Configuration to allow SSH connection**
+```
 sudo ufw allow ssh
 sudo ufw enable
 sudo ufw status
-'''
+```
 
  
 --- 
 ## PAM Module
-* Cloned the simple-pam repo onto our virtual machine, provided by the TA [https://github.com/beatgammit/simple-pam](https://github.com/beatgammit/simple-pam)
+* Cloned the simple-pam repo onto our virtual machine
 * Follow the instructions on the readme.md file to compile and simply running it. There will be some issues due to our environment setup and how we fix it, that would be discussed in ISSUES.
 
-## Goals 
+## GOALS
 * Able to compile and run the simple pam module
 * Extend on it, make some changes and show some simple usage
 
 ## ISSUES 
 * Build the PAM module. Run these commands in order. 
-'gcc -fPIC -fno-stack-protector -c src/mypam.c'
-'sudo ld -x --shared -o /lib/security/mypam.so mypam.o'
+`gcc -fPIC -fno-stack-protector -c src/mypam.c`
+`sudo ld -x --shared -o /lib/security/mypam.so mypam.o`
 
 **Issue 01**
 * Following error would be prompted
