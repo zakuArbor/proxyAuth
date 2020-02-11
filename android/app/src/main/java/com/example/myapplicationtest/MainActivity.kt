@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layout.activity_main)
+        /*
         list_view.setOnClickListener { /*parent, view, position, id ->
 
             Toast.makeText(this, "Clicked item :" + " " + position, Toast.LENGTH_SHORT).show()
@@ -34,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         }*/
 
         }
+
+         */
 
 
 
