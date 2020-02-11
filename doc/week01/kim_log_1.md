@@ -15,7 +15,7 @@
 ## TODO
 * Clone the repo [Simple PAM](https://github.com/beatgammit/simple-pam) and see what dependencies and set up are needed to get the PAM working
 * Configure PAM to replace sudo
-    * **NOTE: ** Ensure to open a root shell before attempting changing `/etc/pam.d/sudo` so I can revert my changes and gain access to root shell if I mess up
+    * **NOTE:** Ensure to open a root shell before attempting changing `/etc/pam.d/sudo` so I can revert my changes and gain access to root shell if I mess up
 * If replacing sudo works, create a logging system for debug purposes
 * Research a bluetooth library and try to implement a bluetooth scanning program in C
 
@@ -165,7 +165,7 @@ NOTE: In Ubuntu 14.10 and later versions, -fstack-protector-strong is enabled by
 ```
     * still unclear as to why though: [https://stackoverflow.com/questions/10712972/what-is-the-use-of-fno-stack-protector](https://stackoverflow.com/questions/10712972/what-is-the-use-of-fno-stack-protector)
 
-* `-c`: to compile but not link. For our purpose, we do not want to create a library that is dynmically linked or at least that is how I understand it.
+* `-c`: to compile but not link. For our purpose, we do want to create a library that is dynmically linked or at least that is how I understand it.
 ```
     Compile or assemble the source files, but do not link. The linking stage simply is not done. The ultimate output is in the form of an object file for each source file. 
 ```
@@ -246,7 +246,7 @@ pikachu
 pikachu@zaku-VirtualBox:/home/zaku$ sudo echo "This is a test on echoing as sudo"
 This is a test on echoing as sudo
 ```
-**[success] - Does not ask for password unlike for other users
+**[success]** - Does not ask for password unlike for other users
 
 ## Look into how log in for Desktop GUI works
 * Ubuntu uses GNOME by default. Looking into Arch wiki, GDM is the graphical GUI that handles login
@@ -384,8 +384,6 @@ Special Thanks to Riddle from The White Van for suggesting this
 `sudo apt install bluez`
 
 ## Resources
-
-===
 
 http://nickdesaulniers.github.io/blog/2016/11/20/static-and-dynamic-libraries/
 
