@@ -4,7 +4,7 @@ Usage
 This is the bluetooth module of our PAM application, which will use BlueZ - part of the official linux stack. http://www.bluez.org/
 simple.c - scans and detects nearby bluetooth devices (buggy with my current bluetooth adapter) and returns their MAC address 
 Compile with 
-# gcc -o simple simple.c -lbluetooth
+gcc -o simple simple.c -lbluetooth
 
 
 
