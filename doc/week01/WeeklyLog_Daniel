@@ -1,0 +1,8 @@
+Done:   
+      Bluetooth Scanner and MAC address detection. 
+      
+TODO: 
+      Fix detection issues (software hang or failure to detect) 
+      Merge into PAM module
+      
+     
