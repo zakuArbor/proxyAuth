@@ -210,5 +210,82 @@ Tue Feb 11 03:06:42 2020: zaku logged on
 **[PASSED]**
 
 
+### Test with no Bluetooth on the Machine
+I am curious what would happen if I turn off bluetooth.
+
+First I will run the simple bluetooth scanner with bluetooth adapter turned off. I just want to make sure there's no seg fault.
+```
+$ hciconfig
+hci0:	Type: Primary  Bus: USB
+	BD Address: 1C:36:BB:23:B5:CB  ACL MTU: 1021:8  SCO MTU: 64:1
+	DOWN 
+	RX bytes:870 acl:0 sco:0 events:35 errors:0
+	TX bytes:383 acl:0 sco:0 commands:35 errors:0
+
+#Bluetooth is turned off
+
+$ gcc simple.c -l bluetooth
+$ ./a.out 
+opening socket: No such device
+```
+
+**Test GDM Login Result:** I was locked out of my laptop. GDM Login is refusing to accept any input of my password and eventually refuses to let me have the option to type in my password.
+
+**Solution:** There are a few remediations I suggested but the answer Furkan Alaca, the professor overseeing our project, was the best solution. On my mac laptop, I need to press in `crtl + alt + fn + f3` to switch to terminal mode in which I can use to log in. Since I have not overwritten the PAM modules for login, I was able to successfully log in.
+
+**Problem:**
+Looking at the logs `/var/log/syslog`, I see the following:
+```
+Feb 11 16:48:59 zaku-laptop systemd[1]: Starting Fingerprint Authentication Daemon...
+Feb 11 16:48:59 zaku-laptop gdm-session-worker[1798]: opening socket: No such device
+Feb 11 16:48:59 zaku-laptop gdm-session-worker[1798]: Try to find device: C0:1A:DA:7A:30:B7
+Feb 11 16:48:59 zaku-laptop gdm3: Freeing conversation 'gdm-password' with active job
+Feb 11 16:48:59 zaku-laptop dbus-daemon[1052]: [system] Successfully activated service 'net.reactivated.Fprint'
+Feb 11 16:48:59 zaku-laptop systemd[1]: Started Fingerprint Authentication Daemon.
+Feb 11 16:48:59 zaku-laptop gdm-session-worker[1812]: opening socket: No such device
+Feb 11 16:48:59 zaku-laptop gdm-session-worker[1812]: Try to find device: C0:1A:DA:7A:30:B7
+Feb 11 16:48:59 zaku-laptop gdm3: Freeing conversation 'gdm-password' with active job
+Feb 11 16:48:59 zaku-laptop gdm-session-worker[1816]: opening socket: No such device
+Feb 11 16:48:59 zaku-laptop gdm-session-worker[1816]: Try to find device: C0:1A:DA:7A:30:B7
+Feb 11 16:48:59 zaku-laptop gdm3: Freeing conversation 'gdm-password' with active job
+Feb 11 16:49:00 zaku-laptop gdm-session-worker[1820]: opening socket: No such device
+```
+
+As expected, there is nothing out of ordinary. However, `pam_proxy.so` is supposed to also prompt the user for the password if it fails to locate the device which it did not. The program must be terminating early.
+
+Looking at the source code under `pam/src/pam_proxy.c`, the problem code is:
+```
+if (dev_id < 0 || sock < 0) {
+    perror("opening socket");
+    exit(1);
+}
+
+```
+
+We should not be terminating the program but rather exiting the function (`return`).
+
+**TEST: Does the fix work**
+* Check bluetooth is disabled
+```
+$ hciconfig
+hci0:	Type: Primary  Bus: USB
+	BD Address: 1C:36:BB:23:B5:CB  ACL MTU: 1021:8  SCO MTU: 64:1
+	DOWN 
+	RX bytes:870 acl:0 sco:0 events:35 errors:0
+	TX bytes:383 acl:0 sco:0 commands:35 errors:0
+```
+
+Was able to log in via password without bluetooth enabled with no issue.
+
+Output in `/var/log/syslog`
+```
+Feb 11 18:59:15 zaku-laptop systemd[1]: Started Fingerprint Authentication Daemon.
+Feb 11 18:59:15 zaku-laptop gdm-session-worker[4501]: opening socket: No such device
+Feb 11 18:59:19 zaku-laptop gdm-session-worker[4501]: Try to find device: C0:1A:DA:7A:30:B7
+Feb 11 18:59:19 zaku-laptop gdm-session-worker[4501]: Welcome zaku
+Feb 11 18:59:19 zaku-laptop gdm-session-worker[4501]: This is a simple PAM says Pikachu
+```
+**[PASSED]**
+
 ## REFLECTION
 * The login via bluetooth takes a while to login.

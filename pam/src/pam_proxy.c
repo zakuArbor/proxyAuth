@@ -27,7 +27,7 @@ int find_device(char *dev_addr) {
     sock = hci_open_dev( dev_id );
     if (dev_id < 0 || sock < 0) {
         perror("opening socket");
-        exit(1);
+        return(0);
     }
 
     len  = 8;
