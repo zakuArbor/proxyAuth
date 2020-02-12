@@ -10,9 +10,11 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import com.example.myapplicationtest.R.layout
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -25,15 +27,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layout.activity_main)
-        list_view.setOnClickListener { /*parent, view, position, id ->
 
-            Toast.makeText(this, "Clicked item :" + " " + position, Toast.LENGTH_SHORT).show()
-            //Intent intent = new Intent(CurrentActivity.this, NextActivity.class);
-            //intent.putExtra("position", position);
-            //this.startActivity(intent);
-        }*/
-
-        }
 
 
 
@@ -69,16 +63,20 @@ class MainActivity : AppCompatActivity() {
 
         Log.i("BTBTBT", "made it here ----------------------------")
 
-        val discoverableIntent: Intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-            putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60)
-        }
+        //val discoverableIntent: Intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
+        //    putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60)
+        //}
+
+
         //val context: Context = MainActivity.
 
         //receiver.onReceive(applicationContext,discoverableIntent)
-        startActivity(discoverableIntent)
+        //startActivity(discoverableIntent)
 
-
-
+        list_view.setOnItemClickListener { adapterView: AdapterView<*>?,
+                                           view: View?, position: Int, id: Long ->
+            Log.i("BTBTBT","BT_Device-------------------" + mDeviceList[position])
+        }
         button_change.setOnClickListener {
             TB.text = "new text"
             /*
