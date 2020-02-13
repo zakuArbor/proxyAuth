@@ -1,34 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/control_led_on"
+    <TextView
+        android:id="@+id/connectedDevice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/on"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        android:text="@string/connectedDevice"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/deviceAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/deviceAddress"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/connectedDevice"
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
-        android:id="@+id/control_led_off"
+        android:id="@+id/test_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/off"
+        android:layout_marginTop="144dp"
+        android:fontFamily="@font/acme"
+        android:text="@string/helloWorld"
+        android:textSize="18sp"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/control_led_on"/>
+        app:layout_constraintTop_toBottomOf="@+id/deviceAddress" />
 
     <Button
         android:id="@+id/control_led_disconnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:fontFamily="@font/acme"
         android:text="@string/disconnect"
+        android:textSize="18sp"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/control_led_off"/>
+        app:layout_constraintTop_toBottomOf="@+id/test_button" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
