@@ -7,14 +7,10 @@
 
 ## SUMMARY OF TASKS
 * Organize team to specific tasks
+* Guide teammates with their tasks
 * Wrote MAKE file for PAM
 * Worked on integrating bluetooth with PAM
-
-## COMMITS
-d4aced2cf23bb93d5000cabf0eb8c9f0156a2de3
-808bb09810503093f7f2f5c04b218fad63f7caca
-8d417702c53fd879d0e9cf9c375c693e2b7c3876
-207338b03bdaf5615245be9a1a4ff6e02703740c
+* Tested the write server Anurag wrote
 
 ## PROBLEMS
 * Development must be on VM because we do not have root access to the DH Machines
@@ -286,6 +282,35 @@ Feb 11 18:59:19 zaku-laptop gdm-session-worker[4501]: Welcome zaku
 Feb 11 18:59:19 zaku-laptop gdm-session-worker[4501]: This is a simple PAM says Pikachu
 ```
 **[PASSED]**
+
+## Testing Android App
+
+As Areeb and the others write the server to read input from the Android application, I will be verifying the Android application does work with an already implemented bluetooth server that I can find on the internet. I will be looking at a [Python Bluetooth Server](https://github.com/simondlevy/PythonBluetoothServer) implementation written by Simon D. Levy.
+
+I'll be using my Fire Tablet to test the Android Application
+**Fire Tablet Bluetooth Mac:** F0:81:73:92:2E:C2
+
+The `ON` button from the Android Application sends `a`
+The `OFF` button from the Android Application sends `b`
+
+```
+Waiting for connection on RFCOMM channel 1
+Accepted connection from ('F0:81:73:92:2E:C2', 1)
+pika received data
+a
+pika received data
+b
+pika received data
+a
+pika received data
+b
+pika received data
+b
+pika received data
+a
+```
+
+The Android Application works. Now it is the matter of writing a server in C.
 
 ## REFLECTION
 * The login via bluetooth takes a while to login.

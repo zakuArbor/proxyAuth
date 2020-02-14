@@ -16,7 +16,7 @@ import java.util.*
 class ControlActivity: AppCompatActivity(){
 
     companion object{
-        var m_myUUID: UUID = UUID.fromString("70eb6b56-4e02-11ea-b77f-2e728ce88125")
+        var m_myUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
         var m_bluetoothSocket: BluetoothSocket? = null
         lateinit var m_progress: ProgressDialog
         lateinit var m__bluetoothAdapter: BluetoothAdapter
@@ -41,6 +41,8 @@ class ControlActivity: AppCompatActivity(){
     private fun sendCommand(input: String){
         if (m_bluetoothSocket != null){
             try{
+                Log.d("data", "PIKA PIKA PIKA PIKA DATA DATA DATA")
+                Log.d("data", input)
                 m_bluetoothSocket!!.outputStream.write(input.toByteArray())
             } catch (e: IOException){
                 e.printStackTrace()
@@ -88,6 +90,7 @@ class ControlActivity: AppCompatActivity(){
 
             }catch (e: IOException){
                 connectSuccess =  false
+                Log.d("data", "FAILED PIKA PIKA PIKA PIKA PIKA PIKA PIKA\n")
                 e.printStackTrace()
 
             }
@@ -99,6 +102,7 @@ class ControlActivity: AppCompatActivity(){
             if(!connectSuccess){
                 Log.i("data", "couldn't connect")
             } else {
+                Log.i("data", "PIKA CONNECTED PIKA CONNECTED")
                 m_isConnected = true
             }
             m_progress.dismiss()
