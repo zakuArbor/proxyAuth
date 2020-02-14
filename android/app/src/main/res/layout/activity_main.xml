@@ -27,7 +27,7 @@
         app:layout_constraintBottom_toTopOf="@id/button_change"
         app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <Button style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/button_change"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

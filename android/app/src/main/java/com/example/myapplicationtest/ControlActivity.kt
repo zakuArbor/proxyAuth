@@ -18,7 +18,7 @@ class ControlActivity: AppCompatActivity(){
 
     companion object{
         //random UUID you assign to your android phone
-        var m_myUUID: UUID = UUID.fromString("70eb6b56-4e02-11ea-b77f-2e728ce88125")
+        var m_myUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
         var m_bluetoothSocket: BluetoothSocket? = null
         lateinit var m_progress: ProgressDialog
         lateinit var m__bluetoothAdapter: BluetoothAdapter
