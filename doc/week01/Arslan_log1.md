@@ -5,7 +5,8 @@
 ---
 
 ## OBJECTIVES
-* 
+* Run the simple pam module
+* Peform testing 
 
 ## SOURCES USED 
 * https://www.tecmint.com/configure-pam-in-centos-ubuntu-linux/
@@ -25,8 +26,9 @@
 
 ### STEPS
 **Install SSH to login from your computer's terminal due to display size problem** `sudo apt update sudo apt` `install openssh-server`
+
 **Check IP address for connection** `ip a` or through your browser
-***Install Git to clone the repo*** `sudo apt install git`
+**Install Git to clone the repo** `sudo apt install git`
 **Firewall Configuration to allow SSH connection**
 ```
 sudo ufw allow ssh
@@ -57,17 +59,18 @@ src/mypam.c:4:10: fatal error: security/pam_appl.h: No such file or directory
       |          ^~~~~~~~~~~~~~~~~~~~~
 ```
 **Solution:**
-Install the missing libraris 
+Install the missing libraries 
 ```
 sudo apt-get install libpam0g-dev
 ``` 
 
 **Issue 02:**
-The directory `lib/security/` does not exist.
+* The directory `lib/security/` does not exist.
 ```
 $ sudo ld -x --shared -o /lib/security/mypam.so mypam.o
 ld: cannot open output file /lib/security/mypam.so: No such file or directory
 ```
+**Solution:** 
 cd to the lib directory and create the security directory
 ```
 mkdir /lib/security/
