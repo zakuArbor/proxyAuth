@@ -1,12 +1,16 @@
 package com.example.myapplicationtest
 
 
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothServerSocket
+import android.bluetooth.BluetoothSocket
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -17,44 +21,125 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import com.example.myapplicationtest.R.layout
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.toast
+import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
 
+    private var m_bluetoothAdapter: BluetoothAdapter? = null
+    private lateinit var m_pairedDevices: Set<BluetoothDevice>
+    //readonly
+    private val REQUEST_ENABLE_BLUETOOTH = 1
 
-    var mDeviceList = ArrayList<String>()
+    companion object {
+        val EXTRA_ADDRESS: String = "Device_address"
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layout.activity_main)
 
+        m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+
+        if(m_bluetoothAdapter == null){
+            toast("Device does not support bluetooth")
+            return
+        }
+
+        //!! means m_bluetooth is not going to be null
+        if(!m_bluetoothAdapter!!.isEnabled){
+            val enableBluetoothIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH)
+
+        }
+
+        //Once the refresh button is clicked, pairedDeviceList function is called
+        button_change.setOnClickListener{ pairedDeviceList()}
+    }
+
+    private fun pairedDeviceList() {
+        m_pairedDevices = m_bluetoothAdapter!!.bondedDevices
+        val list : ArrayList<BluetoothDevice> = ArrayList ()
+
+        // if there's any data in it
+        if (m_pairedDevices.isNotEmpty()){
+            for (device: BluetoothDevice in m_pairedDevices){
+                list.add(device)
+                Log.i("device", ""+device)
+            }
+        } else {
+            //device is empty
+            toast("no paired devices found")
+        }
+
+        val adapter = ArrayAdapter( this, android.R.layout.simple_list_item_1, list)
+        list_view.adapter = adapter
+        list_view.onItemClickListener = AdapterView.OnItemClickListener{_, _, position, _ ->
+            val device: BluetoothDevice = list[position]
+            val address: String = device.address
+
+            val intent = Intent(this, ControlActivity::class.java)
+            intent.putExtra(EXTRA_ADDRESS, address)
+            startActivity(intent)
+        }
 
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_ENABLE_BLUETOOTH){
+            if (resultCode == Activity.RESULT_OK){
+                if(m_bluetoothAdapter!!.isEnabled){
+                    toast("Bluetooth has been enabled")
+                } else {
+                    toast("Bluetooth has been disabled")
+                }
+
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // bluetooth enabling cancelled
+                toast("Bluetooth enabling has been cancelled")
+            }
+        }
+    }
+
+        /*var mDeviceList = ArrayList<String>()
+    val REQUEST_ENABLE_BLUETOOTH = 1
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(layout.activity_main)
 
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null) {
             // Device doesn't support Bluetooth
+            toast("Device does not support bluetooth")
+            return
         }
 
-        if (bluetoothAdapter?.isEnabled == false) {
+        if (!bluetoothAdapter?.isEnabled) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, 1)
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH)
         }
+
 
         val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
         pairedDevices?.forEach { device ->
             val deviceName = device.name
             val deviceHardwareAddress = device.address // MAC address
             mDeviceList.add(device.name + "\n" + device.address)
-            Log.i("BTBTBT", device.name + "\n" + device.address + "---------------------------PP")
-            list_view.adapter = ArrayAdapter<String>(applicationContext,
-                android.R.layout.simple_list_item_1, mDeviceList)
-            /*{
-                @Override
-                fun V
-            }
+            Log.i(
+                "BTBTBT",
+                device.name + "\n" + device.address + "---------------------------PP"
+            )
+            list_view.adapter = ArrayAdapter<String>(
+                applicationContext,
+                android.R.layout.simple_list_item_1, mDeviceList
+            )
 
-             */
         }
 
         // Register for broadcasts when a device is discovered.
@@ -63,40 +148,13 @@ class MainActivity : AppCompatActivity() {
 
         Log.i("BTBTBT", "made it here ----------------------------")
 
-        //val discoverableIntent: Intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-        //    putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60)
-        //}
-
-
-        //val context: Context = MainActivity.
-
-        //receiver.onReceive(applicationContext,discoverableIntent)
-        //startActivity(discoverableIntent)
 
         list_view.setOnItemClickListener { adapterView: AdapterView<*>?,
                                            view: View?, position: Int, id: Long ->
-            Log.i("BTBTBT","BT_Device-------------------" + mDeviceList[position])
+            Log.i("BTBTBT", "BT_Device-------------------" + mDeviceList[position])
         }
         button_change.setOnClickListener {
             TB.text = "new text"
-            /*
-            val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-            if (bluetoothAdapter == null) {
-                // Device doesn't support Bluetooth
-            }
-
-            if (bluetoothAdapter?.isEnabled == false) {
-                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                startActivityForResult(enableBtIntent, 1)
-            }
-
-            val discoverableIntent: Intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-                putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60)
-            }
-
-            startActivity(discoverableIntent)
-
-             */
         }
     }
 
@@ -111,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             val action: String = intent.action
             Log.i("BTBTBT", "called here ----------------------------")
-            when(action) {
+            when (action) {
                 BluetoothDevice.ACTION_FOUND -> {
                     // Discovery has found a device. Get the BluetoothDevice
                     // object and its info from the Intent.
@@ -122,70 +180,21 @@ class MainActivity : AppCompatActivity() {
                     mDeviceList.add(device.name + "\n" + device.address)
 
 
-                    Log.i("BTBTBT", device.name + "\n" + device.address + "---------------------------DD")
+                    Log.i(
+                        "BTBTBT",
+                        device.name + "\n" + device.address + "---------------------------DD"
+                    )
 
-                    list_view.adapter = ArrayAdapter<String>(context,
-                        android.R.layout.simple_list_item_1, mDeviceList)
+                    list_view.adapter = ArrayAdapter<String>(
+                        context,
+                        android.R.layout.simple_list_item_1, mDeviceList
+                    )
 
 
                 }
             }
         }
-    }
-
-
-    /*
-    private inner class ConnectThread(device: BluetoothDevice) : Thread() {
-
-        private val mmSocket: BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
-            device.createRfcommSocketToServiceRecord(0)
-        }
-
-        public override fun run() {
-
-            val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-            if (bluetoothAdapter == null) {
-                // Device doesn't support Bluetooth
-            }
-
-            if (bluetoothAdapter?.isEnabled == false) {
-                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                startActivityForResult(enableBtIntent, 1)
-            }
-
-            val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
-            pairedDevices?.forEach { device ->
-                val deviceName = device.name
-                val deviceHardwareAddress = device.address // MAC address
-            }
-
-            // Cancel discovery because it otherwise slows down the connection.
-            bluetoothAdapter?.cancelDiscovery()
-
-            mmSocket?.use { socket ->
-                // Connect to the remote device through the socket. This call blocks
-                // until it succeeds or throws an exception.
-                socket.connect()
-
-                // The connection attempt succeeded. Perform work associated with
-                // the connection in a separate thread.
-                //manageMyConnectedSocket(socket)
-            }
-        }
-
-        // Closes the client socket and causes the thread to finish.
-        fun cancel() {
-            try {
-                mmSocket?.close()
-            } catch (e: IOException) {
-                Log.e(TAG, "Could not close the client socket", e)
-            }
-        }
-    }
-    */
-
-
-
-
-
+    }*/
 }
+
+
