@@ -115,7 +115,7 @@ int main(int argc, char **argv)
     char buf[1024] = { 0 };
     int s, client, bytes_read;
     socklen_t opt = sizeof(rem_addr);
-    int port = 1;
+    int port = 1;    //added
 
     // allocate socket
     s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
@@ -128,8 +128,8 @@ int main(int argc, char **argv)
     // bind socket to port 1 of the first available 
     bind(s, (struct sockaddr *)&loc_addr, sizeof(loc_addr));
 
-    //register service
-    sdp_session_t *session = register_service(port);
+    //register service added
+    sdp_session_t *session = register_service(port);    
 
     // put socket into listening mode
     listen(s, 1);
