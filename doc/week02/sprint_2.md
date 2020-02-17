@@ -12,9 +12,13 @@
     * tested and fixed a minor bug on the Android communication with the C program
 
 ## Goals for Next Sprint (Will be subject to change)
-* Android app that messages via bluetooth to the desktop (not read, just write)
-* PAM - authenticate user if the bluetooth device is within the vinicity (no protocols nor any authentication scheme)
-* Write a Python or C program that reads input from the mobile device via bluetooth
+**PAM:**
+* Remove the lag associated with the PAM when entering the password (i.e. when logging into the machine via password, there's a signficiant delay)
+* Improve the speed of login to the system via bluetooth
+
+* Improve the C bluetooth server to be able to read and send messages to the Android device.
+
+**Android:**
 
 ## To Improve in the Next Sprint
 
