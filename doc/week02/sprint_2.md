@@ -15,8 +15,11 @@
 **PAM:**
 * Remove the lag associated with the PAM when entering the password (i.e. when logging into the machine via password, there's a signficiant delay)
 * Improve the speed of login to the system via bluetooth
-
+* Store Trusted Bluetooth Device to a file (we are not going to check how a device is trusted, that’s for another sprint)
 * Improve the C bluetooth server to be able to read and send messages to the Android device.
+* Modularize PAM to allow different levels of authentication (i.e. In the near future, we will allow users to choose different levels of authentication, i.e. zero knowledge, one factor, two factor, etc)
+* Create a background script to keep reading input from Android App + implement deauthentication 
+
 
 **Android:**
 
