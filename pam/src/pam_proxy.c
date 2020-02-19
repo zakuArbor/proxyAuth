@@ -10,7 +10,9 @@
 #include <bluetooth/hci.h>
 #include <bluetooth/hci_lib.h>
 
-#define DEVICE_ADDR "C0:1A:DA:7A:30:B7"
+//#define DEVICE_ADDR "C0:1A:DA:7A:30:B7"
+#define PASSWORD_LOGIN 0
+#define DEVICE_ADDR "F0:81:73:92:2E:C2"
 
 
 /*
@@ -94,11 +96,15 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
             fprintf(fp, "%s: Device %s NOT found\n", curr_time, DEVICE_ADDR);
         }
     } 
+
+    #ifdef PASSWORD_LOGIN
 	if ((retval = pam_get_user(pamh, &pUsername, "Username: ") == PAM_SUCCESS)) {
         if (fp) {
             fprintf(fp, "%s: %s logged on\n", curr_time, pUsername);
         }
     }
+    #endif
+    
 	printf("Welcome %s\n", pUsername);
     printf("This is a simple PAM says Pikachu\n");
    
