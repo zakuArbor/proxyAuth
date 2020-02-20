@@ -92,29 +92,46 @@ int get_num_lines() {
 * Check if the directory exists. If not try to create the directory
 *
 * @param dir_path: The path to the directory
+* @param log_fp: the handle of the log file
 * @return:
 *   -1: cannot access dir or file is not a directory or directory could not be created
 *   0: created the directory
 *   1: file exists and it is a directory
 */
-int check_or_creat_dir(char *dir_path) {
+int check_or_creat_dir(char *dir_path, FILE *log_fp) {
     struct stat s;
     int status = -1;
 
     int exist = stat(dir_path, &s);
+    printf("stat returned %d\n", exist);
     if (exist == -1) {
-        if(exist == ENOENT) {
+        if(errno == ENOENT) {
             /* does not exist */
             if (mkdir(dir_path, 0755) == 0) {
                 status = 0;
             }
+
+            if (log_fp){
+                fprintf(log_fp, "Created dir: %s\n", dir_path);    
+            }
         } 
         else {
             fprintf(stderr, "Cannot access %s\n", dir_path);
+            
+            if (log_fp){
+                fprintf(log_fp, "Cannot access %s\n", dir_path);    
+            }
         }
     } 
     else if (!S_ISDIR(s.st_mode)) {
         fprintf(stderr, "Error: %s is not a directory\n", dir_path);
+
+        if (log_fp) {
+            fprintf(log_fp, "Error: %s is not a directory\n", dir_path);
+        }
+    }
+    else {
+        status = 1;
     }
     return status;
 }
@@ -122,23 +139,19 @@ int check_or_creat_dir(char *dir_path) {
 /*
 * Populate the array with trusted devices
 *
-* @return 
+* @param log_fp: the file handle for the log file
 * @return the list of trusted devices
 */
 char **find_trusted_devces(FILE *log_fp) {
     char **trusted_devices = NULL;
     FILE *trusted_dev_fp = NULL;
 
-    char *trusted_log_dir = "/etc/proxy_auth/";
+    char *trusted_log_dir = "/etc/proxy_auth/";  
 
-    
-
-    if (check_or_creat_dir(trusted_log_dir) <= 0) {
+    if (check_or_creat_dir(trusted_log_dir, log_fp) <= 0) {
         //NOTE: ret status of 0 means directory just got created, so there are no trusted device
         goto terminate;
     }
-
-
 
     if (!(trusted_dev_fp = fopen("/etc/proxy_auth_devices", "r"))) {
         perror("There are no trusted device");
@@ -168,7 +181,6 @@ int bluetooth_login(FILE *log_file) {
     get_login_time(curr_time);
     /*******************/
 
-    #ifdef LOG
     if (log_file){
         if ((bluetooth_login = find_device(DEVICE_ADDR))) {
             printf("Device found\n");
@@ -182,7 +194,6 @@ int bluetooth_login(FILE *log_file) {
             }
         }
     }
-    #endif 
 
     return bluetooth_login;
 }
@@ -196,36 +207,38 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
 }
 
 PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, const char **argv ) {
+    return PAM_SUCCESS;
+
 	int retval = 0;
 
 	const char* username;
     int device_found = 0;
 
-    /*** LOGIN TIME ***/
-    char curr_time[50];
-    get_login_time(curr_time);
-    /*******************/
-
     FILE *fp = NULL;
-    #ifdef LOG
-    if (!(fp = fopen("/var/log/simple-pam.log", "a"))) {
-        perror("Failed to open file\n");
+
+    if (!(fp = fopen("/var/log/pam-proxy-auth.log", "a"))) {
+        perror("Failed to open file");
     }
-    #endif
+
+    fprintf(fp, "Pika test\n");
     
+    char *trusted_log_dir = "/etc/proxy_auth/";  
+    if (check_or_creat_dir(trusted_log_dir, fp) <= 0) {
+        //NOTE: ret status of 0 means directory just got created, so there are no trusted device
+        goto terminate;
+    }
+
     if (pam_get_user(pamh, &username, "Username: ") != PAM_SUCCESS) {
-        perror("Could not find username\n");
+        perror("Could not find username");
         if (fp) {
             fprintf(fp, "Could not find username\n");
         }
         return 0;
     }
 
-    
-
 	printf("Welcome %s. Login via Auth Proxy.\n", username);
-    fprintf(fp, "Time is: %s\n", curr_time);
-    return PAM_SUCCESS;
+
+terminate:
     if (fp) {
         fclose(fp);
     }
