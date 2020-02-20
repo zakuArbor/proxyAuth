@@ -18,6 +18,8 @@
 #define LOG 1
 #define DEVICE_ADDR "F0:81:73:92:2E:C2"
 
+const char *trusted_log_dir = "/etc/proxy_auth/";
+
 /*
 * Set the login time to the given pointer
 * Format: %a %b %d %H:%M:%S %Y
@@ -137,6 +139,44 @@ int check_or_creat_dir(char *dir_path, FILE *log_fp) {
 }
 
 /*
+* Return file pointer for the user's trusted bluetooth device
+*/
+FILE *get_trusted_dev_file(char *trusted_dir_path, char *username, FILE *log_fp) {
+    FILE *trusted_dev_fp = NULL;
+
+    char file_name[NAME_MAX];
+    int len = 0;
+    strcpy(file_name, "");
+    
+    if (strlen(trusted_dir_path) > 0) {
+        strncat(file_name, trusted_dir_path, strlen(trusted_dir_path));
+        len += strlen(trusted_dir_path);
+    }
+    if (strlen(username) > 0) {
+        strncat(file_name, username, strlen(username));
+        len += strlen(username);
+    }
+    //I am paranoid
+    if (len > NAME_MAX) {
+        file_name[NAME_MAX] = '\0';
+    }
+    else {
+        file_name[len] = '\0';
+    }
+
+    if (!(trusted_dev_fp = fopen(file_name, "r"))) {
+        perror("There are no trusted device");
+        if (log_fp) {
+            fprintf(log_fp, "File: %s does not exist. There are no trusted device for the user: %s\n", file_name, username);
+
+        }
+        fprintf(stderr, "File: %s does not exist. There are no trusted device for the user: %s\n", file_name, username);
+        return NULL;
+    }
+    return trusted_dev_fp;
+}
+
+/*
 * Populate the array with trusted devices
 *
 * @param log_fp: the file handle for the log file
@@ -209,25 +249,30 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
 PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, const char **argv ) {
     return PAM_SUCCESS;
 
-	int retval = 0;
+	int pam_status = 0;
+    int bluetooth_status = 0;
 
+    
 	const char* username;
-    int device_found = 0;
 
     FILE *fp = NULL;
 
+    /*** OPEN LOG FILE ***/
     if (!(fp = fopen("/var/log/pam-proxy-auth.log", "a"))) {
         perror("Failed to open file");
     }
+    /*********************/
 
     fprintf(fp, "Pika test\n");
     
-    char *trusted_log_dir = "/etc/proxy_auth/";  
+    /*** Check if the trusted device directory exist ***/
     if (check_or_creat_dir(trusted_log_dir, fp) <= 0) {
         //NOTE: ret status of 0 means directory just got created, so there are no trusted device
         goto terminate;
     }
+    /***************************************************/
 
+    /*** Get Username ***/
     if (pam_get_user(pamh, &username, "Username: ") != PAM_SUCCESS) {
         perror("Could not find username");
         if (fp) {
@@ -235,6 +280,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
         }
         return 0;
     }
+    /*******************/
 
 	printf("Welcome %s. Login via Auth Proxy.\n", username);
 
@@ -243,8 +289,8 @@ terminate:
         fclose(fp);
     }
 
-	if (retval != PAM_SUCCESS && !device_found) {
-		return retval;
+	if (pam_status != PAM_SUCCESS && !device_found) {
+		return pam_status;
 	}
 
 	return PAM_SUCCESS;
