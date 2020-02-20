@@ -15,6 +15,8 @@
 #include <security/pam_modules.h>
 
 //#define DEVICE_ADDR "C0:1A:DA:7A:30:B7"
+#define BT_MAC_LEN 17
+
 #define LOG 1
 #define DEVICE_ADDR "F0:81:73:92:2E:C2"
 
@@ -103,7 +105,9 @@ int get_num_lines(FILE *fp) {
     }
 
     while ((read = getline(&line, &len, fp)) != -1) {
-        num_lines++;
+        if (strcmp(line, "\n") != 0) {
+            num_lines++;
+        }
     }
 
     if (line) {
@@ -204,6 +208,36 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
 }
 
 /*
+* Write to the array all the trusted bluetooth MAC addresses.
+*
+* @param trusted_dev_fp: the file handle of the user's trusted device file
+* @param trusted_devices: a 2d array
+*/
+void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_trusted_devices) {
+    int i = 0;
+
+    char *line = NULL;
+    char **dev = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    if (trusted_dev_fp && trusted_devices && num_trusted_devices > 0) {
+        fseek(trusted_dev_fp, 0, SEEK_SET);
+        while ((read = getline(&line, &len, trusted_dev_fp)) != -1 && i < num_trusted_devices) {
+            if (strcmp(line, "\n") != 0) {
+                dev = trusted_devices + i;
+                if ((*dev = malloc(sizeof(char) * BT_MAC_LEN + 1))) {
+                    strncpy(*dev, line, BT_MAC_LEN);
+                    (*dev)[BT_MAC_LEN] = '\0';
+                    printf("Dev: %s\n", *dev);
+                    i++;
+                }
+            }
+        }
+    }
+}
+
+/*
 * Populate the array with trusted devices
 *
 * @param log_fp: the file handle for the log file
@@ -212,6 +246,7 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
 char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const char *username) {
     char **trusted_devices = NULL;
     FILE *trusted_dev_fp = NULL;
+    int num_of_devices = 0;
 
     /*** Check if the trusted device directory exist ***/
     if (check_or_creat_dir(trusted_dir_path, log_fp) <= 0) {
@@ -224,9 +259,18 @@ char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const ch
         goto terminate;
     }
 
-    int get_num_of_devices = get_num_lines(trusted_dev_fp);
-    printf("the number of trusted_devices are: %d\n", get_num_of_devices);
-    //find_trusted_devces = malloc();
+    if (!(num_of_devices = get_num_lines(trusted_dev_fp))) {
+        goto terminate;
+    }
+    printf("the number of trusted_devices are: %d\n", num_of_devices);
+
+    if (!(trusted_devices = malloc(sizeof(char *) * num_of_devices))) {
+        perror("malloc");
+        goto terminate;
+    }
+
+    set_trusted_devices(trusted_dev_fp, trusted_devices, num_of_devices);
+
 terminate:
     if (trusted_dev_fp) {
         fclose(trusted_dev_fp);

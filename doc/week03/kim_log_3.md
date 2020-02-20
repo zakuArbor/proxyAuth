@@ -238,12 +238,59 @@ the number of trusted_devices are: 1
 ```
 **Expected:** 1
 
-**Got:** 1
+**Got:** 1	
 
 **[PASSED]**
 
-## Design Decisions
+* **CASE 3:** One device but a newline
+**Scenario**:
+```
+$ cat /etc/proxy_auth/zaku                                                                                      
+C0:1A:DA:7A:30:B7
 
+zaku@zaku-laptop:~/Documents/csc490/proxyAuth/pam/src$ ./a.out 
+the number of trusted_devices are: 2
+```
+* The program thinks a newline counts as a valid device. For now I have written to make the program not count `\n` as a device but in future iteration, I am thinking of adding a file checker to sanitize the file.
+
+**[TO BE WORKED ON]**
+
+### Writing the mac addresses from the file to memory (an array)
+* This is done through the function `set_trusted_devices` which gets called by `find_trusted_devices`
+
+* I have modified `find_trusted_devices` to display all the mac addresses found in the array
+
+**One Device:**
+```
+$ ./a.out  
+the number of trusted_devices are: 1                                                                                                                                 
+Dev: C0:1A:DA:7A:30:B7                                                                                                                                               
+=====                                                                                                                                                                
+in the array:                                                                                                                                                        
+C0:1A:DA:7A:30:B7                                  
+```
+
+**Two Devices:**
+Show there's two devices in the file
+```
+$ cat /etc/proxy_auth/zaku                                                                                   
+C0:1A:DA:7A:30:B7
+
+F0:81:73:92:2E:C2
+```
+
+The program shows:
+```
+$ ./a.out                                                                                        
+the number of trusted_devices are: 2
+Dev: C0:1A:DA:7A:30:B7
+Dev: F0:81:73:92:2E:C2
+=====
+in the array:
+C0:1A:DA:7A:30:B7
+F0:81:73:92:2E:C2
+```
+**[PASSED]**
 
 ## SIDENOTES:
 * Interesting to know where the macro `NAME_MAX` is located
