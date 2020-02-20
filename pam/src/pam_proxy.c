@@ -84,10 +84,33 @@ int find_device(char *dev_addr) {
 /*
 * Return the number of lines there are in the file
 *
+* Use Case: Each user will have a list of trusted bluetooth MAC stored in a file. E
+*   Each line will contain a trusted bluetooth MAC address.
+*   The number of lines in the file will represent the number of trusted devices
+*
 * @param FILE *fp: the file handle that contains the user's device
+* @return: the number of lines there are in the file
 */
-int get_num_lines() {
-    return 0;
+int get_num_lines(FILE *fp) {
+    int num_lines = 0;
+
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    if (!fp) {
+        return num_lines;
+    }
+
+    while ((read = getline(&line, &len, fp)) != -1) {
+        num_lines++;
+    }
+
+    if (line) {
+        free(line);
+    }
+
+    return num_lines;
 }
 
 /*
@@ -100,12 +123,11 @@ int get_num_lines() {
 *   0: created the directory
 *   1: file exists and it is a directory
 */
-int check_or_creat_dir(char *dir_path, FILE *log_fp) {
+int check_or_creat_dir(const char *dir_path, FILE *log_fp) {
     struct stat s;
     int status = -1;
 
     int exist = stat(dir_path, &s);
-    printf("stat returned %d\n", exist);
     if (exist == -1) {
         if(errno == ENOENT) {
             /* does not exist */
@@ -140,8 +162,13 @@ int check_or_creat_dir(char *dir_path, FILE *log_fp) {
 
 /*
 * Return file pointer for the user's trusted bluetooth device
+*
+* @param trusted_dir_path: the path to where all the user's trusted device file is located
+* @param username: the username
+* @param log_fp: the handle for the log file
+* @return: the file handle of the user's trusted device file
 */
-FILE *get_trusted_dev_file(char *trusted_dir_path, char *username, FILE *log_fp) {
+FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, FILE *log_fp) {
     FILE *trusted_dev_fp = NULL;
 
     char file_name[NAME_MAX];
@@ -182,27 +209,32 @@ FILE *get_trusted_dev_file(char *trusted_dir_path, char *username, FILE *log_fp)
 * @param log_fp: the file handle for the log file
 * @return the list of trusted devices
 */
-char **find_trusted_devces(FILE *log_fp) {
+char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const char *username) {
     char **trusted_devices = NULL;
     FILE *trusted_dev_fp = NULL;
 
-    char *trusted_log_dir = "/etc/proxy_auth/";  
-
-    if (check_or_creat_dir(trusted_log_dir, log_fp) <= 0) {
+    /*** Check if the trusted device directory exist ***/
+    if (check_or_creat_dir(trusted_dir_path, log_fp) <= 0) {
         //NOTE: ret status of 0 means directory just got created, so there are no trusted device
         goto terminate;
     }
+    /***************************************************/
 
-    if (!(trusted_dev_fp = fopen("/etc/proxy_auth_devices", "r"))) {
-        perror("There are no trusted device");
-        return NULL;
+    if (!(trusted_dev_fp = get_trusted_dev_file(trusted_dir_path, username, log_fp))) {
+        goto terminate;
     }
 
+    int get_num_of_devices = get_num_lines(trusted_dev_fp);
+    printf("the number of trusted_devices are: %d\n", get_num_of_devices);
     //find_trusted_devces = malloc();
 terminate:
     if (trusted_dev_fp) {
-        free(trusted_dev_fp);
+        fclose(trusted_dev_fp);
     }
+    if (trusted_devices) {
+        free(trusted_devices);
+    }
+
     return trusted_devices;
 }
 
@@ -265,13 +297,6 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
 
     fprintf(fp, "Pika test\n");
     
-    /*** Check if the trusted device directory exist ***/
-    if (check_or_creat_dir(trusted_log_dir, fp) <= 0) {
-        //NOTE: ret status of 0 means directory just got created, so there are no trusted device
-        goto terminate;
-    }
-    /***************************************************/
-
     /*** Get Username ***/
     if (pam_get_user(pamh, &username, "Username: ") != PAM_SUCCESS) {
         perror("Could not find username");
@@ -284,12 +309,11 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
 
 	printf("Welcome %s. Login via Auth Proxy.\n", username);
 
-terminate:
     if (fp) {
         fclose(fp);
     }
 
-	if (pam_status != PAM_SUCCESS && !device_found) {
+	if (pam_status != PAM_SUCCESS && !bluetooth_status) {
 		return pam_status;
 	}
 
