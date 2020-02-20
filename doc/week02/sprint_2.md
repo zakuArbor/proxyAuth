@@ -10,6 +10,10 @@
     * wrote C program that reads a single message sent by the Android App
     * wrote the PAM to login after detecting the device
     * tested and fixed a minor bug on the Android communication with the C program
+* Arslan Qamar 
+    * Understand the basics of Bluetooth server, client for Pam module 
+    * Worked on Bluetooth server 
+
 
 ## Goals for Next Sprint (Will be subject to change)
 **PAM:**
