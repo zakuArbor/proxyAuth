@@ -292,6 +292,14 @@ F0:81:73:92:2E:C2
 ```
 **[PASSED]**
 
+### Login via known device
+```
+Thu Feb 20 22:02:32 2020: Device C0:1A:DA:7A:30:B7 found
+Login via Auth Proxy
+Exiting PAM with: 0
+```
+**[PASSED]**
+
 ## SIDENOTES:
 * Interesting to know where the macro `NAME_MAX` is located
 ```

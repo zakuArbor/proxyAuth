@@ -54,13 +54,7 @@ void get_login_time(char *curr_time) {
 * @return: 1 iff the given address is one of the trusted devices the user trusts. Else return 0
 */
 int is_dev_trusted(FILE *log_fp, char *dev, char **trusted_devices, int num_of_devices) {
-    if (log_fp) {
-        fprintf(log_fp, "=========\nis_dev_trusted: %s\n", dev);
-    }
     for (int i = 0; i < num_of_devices; i++) {
-        if (log_fp) {
-            fprintf(log_fp, "device: %s == %s\n", dev, trusted_devices[i]);
-        }
         if (strcmp(dev, trusted_devices[i]) == 0) {
             return 1;
         }
@@ -81,10 +75,6 @@ int is_dev_trusted(FILE *log_fp, char *dev, char **trusted_devices, int num_of_d
 int find_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char **detected_dev) {
     if (!trusted_devices) {
         return 0;
-    }
-
-    if (log_fp) {
-        fprintf(log_fp, "On find_device\n");
     }
 
     inquiry_info *ii = NULL;
@@ -113,23 +103,21 @@ int find_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char *
         }
         perror("hci_inquiry");
     }
-    fprintf(log_fp, "start scanning\nnum_rsp: %d\n", num_rsp);
+    
     for (i = 0; i < num_rsp; i++) {
         ba2str(&(ii+i)->bdaddr, addr);
-        if (log_fp) {
-            fprintf(log_fp, "Detected a device\n");
-            fprintf(log_fp, "detected: %s\n", addr);
-        }
+
         if (is_dev_trusted(log_fp, addr, trusted_devices, num_of_devices)) {
-            printf("Found Device: %s\n", addr);
-            strncpy(*detected_dev, addr, BT_MAC_LEN);
-            *detected_dev[BT_MAC_LEN] = '\0';
+            if (log_fp) {
+                fprintf(log_fp, "Trusted Device: %s\n", addr);
+            }
+            if ((*detected_dev = malloc(sizeof(char) * (BT_MAC_LEN + 1)))) {
+                strncpy(*detected_dev, addr, BT_MAC_LEN);
+                (*detected_dev)[BT_MAC_LEN] = '\0';
+            }
             trusted_dev_found = 1;
             break;
         }
-    }
-    if (log_fp) {
-        fprintf(log_fp, "find_device will return %d\n", trusted_dev_found);
     }
 
     if (ii) {
@@ -285,10 +273,9 @@ void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_t
         while ((read = getline(&line, &len, trusted_dev_fp)) != -1 && i < num_trusted_devices) {
             if (strcmp(line, "\n") != 0) {
                 dev = trusted_devices + i;
-                if ((*dev = malloc(sizeof(char) * BT_MAC_LEN + 1))) {
+                if ((*dev = malloc(sizeof(char) * (BT_MAC_LEN + 1)))) {
                     strncpy(*dev, line, BT_MAC_LEN);
                     (*dev)[BT_MAC_LEN] = '\0';
-                    printf("Dev: %s\n", *dev);
                     i++;
                 }
             }
@@ -325,8 +312,7 @@ char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const ch
     if (!(num_of_devices_lc = get_num_lines(trusted_dev_fp))) {
         goto terminate;
     }
-    printf("the number of trusted_devices are: %d\n", num_of_devices_lc);
-
+   
     if (!(trusted_devices = malloc(sizeof(char *) * num_of_devices_lc))) {
         perror("malloc");
         if (trusted_devices) {
@@ -375,8 +361,7 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
         fprintf(log_fp, "%s: Call find device\n", curr_time);
     }
     if ((bluetooth_status = find_device(log_fp, trusted_devices, num_of_devices, &detected_dev))) {
-        printf("Device found\n");
-        if (log_fp) {
+        if (log_fp && detected_dev) {
             fprintf(log_fp, "%s: Device %s found\n", curr_time, detected_dev);
         }
     }
@@ -428,14 +413,12 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     /*******************/
 
     if (bluetooth_login(log_fp, trusted_dir_path, username)) {
-	   printf("Welcome %s. Login via Auth Proxy.\n", username);
-       if (log_fp) {
+	   if (log_fp) {
             fprintf(log_fp, "Login via Auth Proxy\n");
         }
        bluetooth_status = PAM_SUCCESS;
     }
 
-    fprintf(log_fp, "Exiting PAM with: %d\n", bluetooth_status);
     if (log_fp) {
         fclose(log_fp);
     }
