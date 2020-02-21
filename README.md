@@ -38,4 +38,8 @@ and add the following near or at the top of the file:
 auth sufficient pam_proxy.so
 auth required pam_warn.so
 ```
- 
+
+
+===
+# ACKNOWLEDGEMENTS
+* [Simple PAM](https://github.com/beatgammit/simple-pam) - Helped us learn how to work with PAM
