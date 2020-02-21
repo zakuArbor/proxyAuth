@@ -255,10 +255,25 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
 }
 
 /*
+* Free the list of trusted bluetooth MAC addresses from memory
+*
+* @param trusted_devices: the list of trusted bluetooth MAC addresses
+* @param num_trusted_devices: the cardinality of trusted_devices array - represents the number of trusted bluetooth devices stored in memory
+*/
+void free_trusted_devices(char **trusted_devices, int num_trusted_devices) {
+    if (trusted_devices) {
+        for (int i = 0; i < num_trusted_devices; i++) {
+            free(trusted_devices[i]);
+        }
+        free(trusted_devices);
+    }
+}
+
+/*
 * Write to the array all the trusted bluetooth MAC addresses.
 *
 * @param trusted_dev_fp: the file handle of the user's trusted device file
-* @param trusted_devices: a 2d array
+* @param trusted_devices: an array that will contain all the user's trusted bluetooth MAC addresses to authenticate from
 */
 void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_trusted_devices) {
     int i = 0;
@@ -281,6 +296,10 @@ void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_t
             }
         }
     }
+
+    if (line) {
+        free(line);
+    }
 }
 
 /*
@@ -301,29 +320,26 @@ char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const ch
     /*** Check if the trusted device directory exist ***/
     if (check_or_creat_dir(trusted_dir_path, log_fp) <= 0) {
         //NOTE: ret status of 0 means directory just got created, so there are no trusted device
-        goto terminate;
+        goto find_trusted_devices_terminate;
     }
     /***************************************************/
 
     if (!(trusted_dev_fp = get_trusted_dev_file(trusted_dir_path, username, log_fp))) {
-        goto terminate;
+        goto find_trusted_devices_terminate;
     }
 
     if (!(num_of_devices_lc = get_num_lines(trusted_dev_fp))) {
-        goto terminate;
+        goto find_trusted_devices_terminate;
     }
    
     if (!(trusted_devices = malloc(sizeof(char *) * num_of_devices_lc))) {
         perror("malloc");
-        if (trusted_devices) {
-            free(trusted_devices);
-        }
-        goto terminate;
+        goto find_trusted_devices_terminate;
     }
 
     set_trusted_devices(trusted_dev_fp, trusted_devices, num_of_devices_lc);
 
-terminate:
+find_trusted_devices_terminate:
     if (trusted_dev_fp) {
         fclose(trusted_dev_fp);
     }
@@ -373,7 +389,10 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
 
 bluetooth_login_terminate:
     if (trusted_devices) {
-        free(trusted_devices);
+        free_trusted_devices(trusted_devices, num_of_devices);
+    }
+    if (detected_dev) {
+        free(detected_dev);
     }
     
     return bluetooth_status;
@@ -408,7 +427,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
         if (log_fp) {
             fprintf(log_fp, "Could not find username\n");
         }
-        return bluetooth_status;
+        goto pam_sm_authenticate;
     }
     /*******************/
 
@@ -418,6 +437,8 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
         }
        bluetooth_status = PAM_SUCCESS;
     }
+
+pam_sm_authenticate:
 
     if (log_fp) {
         fclose(log_fp);

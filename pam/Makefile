@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS += -std=gnu11 -Wall -Werror -DNDEBUG -fPIC -fno-stack-protector
+CFLAGS += -std=gnu11 -Wall -Werror -DNDEBUG -fPIC -fno-stack-protector -fsanitize=address
 LDFLAGS = -x --shared
 LINUX_PAM_PATH = /lib/security/
 PAM_PATH = $(LINUX_PAM_PATH)/pam_proxy.so
