@@ -18,9 +18,8 @@
 #define BT_MAC_LEN 17
 
 #define LOG 1
-#define DEVICE_ADDR "F0:81:73:92:2E:C2"
 
-const char *trusted_log_dir = "/etc/proxy_auth/";
+const char *trusted_dir_path = "/etc/proxy_auth/";
 
 /*
 * Set the login time to the given pointer
@@ -46,12 +45,54 @@ void get_login_time(char *curr_time) {
     curr_time[(time_len - 1)] = '\0'; //asctime appends a \n to the string
 }
 
-int find_device(char *dev_addr) {
+/*
+* Return 1 iff the given address is one of the trusted devices the user trusts
+*
+* @param log_fp: the handle of the log file
+* @param trusted_devices: the array of trusted bluetooth MAC addresses of the user
+* @param num_of_devices: the number of devices the user trusts
+* @return: 1 iff the given address is one of the trusted devices the user trusts. Else return 0
+*/
+int is_dev_trusted(FILE *log_fp, char *dev, char **trusted_devices, int num_of_devices) {
+    if (log_fp) {
+        fprintf(log_fp, "=========\nis_dev_trusted: %s\n", dev);
+    }
+    for (int i = 0; i < num_of_devices; i++) {
+        if (log_fp) {
+            fprintf(log_fp, "device: %s == %s\n", dev, trusted_devices[i]);
+        }
+        if (strcmp(dev, trusted_devices[i]) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/*
+* Return 1 iff a trusted device for the user is detected
+*
+* @param log_fp: the handle of the log file
+* @param trusted_devices: the array of trusted bluetooth MAC addresses of the user
+* @param num_of_devices: the number of devices the user trusts
+* @param detected_dev: the address of the detected device
+*   NOTE: detected_dev will be set in this function if a device was detected
+* @return: 1 iff a trusted device for the user is detected
+*/
+int find_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char **detected_dev) {
+    if (!trusted_devices) {
+        return 0;
+    }
+
+    if (log_fp) {
+        fprintf(log_fp, "On find_device\n");
+    }
+
     inquiry_info *ii = NULL;
     int max_rsp, num_rsp;
     int dev_id, sock, len, flags;
     int i;
     char addr[19] = { 0 };
+    int trusted_dev_found = 0;
 
     dev_id = hci_get_route(NULL);
     sock = hci_open_dev( dev_id );
@@ -66,21 +107,39 @@ int find_device(char *dev_addr) {
     ii = (inquiry_info*)malloc(max_rsp * sizeof(inquiry_info));
 
     num_rsp = hci_inquiry(dev_id, len, max_rsp, NULL, &ii, flags);
-    if( num_rsp < 0 ) perror("hci_inquiry");
-
+    if(num_rsp < 0) {
+        if (log_fp) {
+            fprintf(log_fp, "Error: hci_inquiry\n");
+        }
+        perror("hci_inquiry");
+    }
+    fprintf(log_fp, "start scanning\nnum_rsp: %d\n", num_rsp);
     for (i = 0; i < num_rsp; i++) {
         ba2str(&(ii+i)->bdaddr, addr);
-        if (strcmp(addr, dev_addr) == 0) {
-            printf("Found Device: %s\n", addr);
-            return(1);
+        if (log_fp) {
+            fprintf(log_fp, "Detected a device\n");
+            fprintf(log_fp, "detected: %s\n", addr);
         }
-        printf("%s\n", addr);
+        if (is_dev_trusted(log_fp, addr, trusted_devices, num_of_devices)) {
+            printf("Found Device: %s\n", addr);
+            strncpy(*detected_dev, addr, BT_MAC_LEN);
+            *detected_dev[BT_MAC_LEN] = '\0';
+            trusted_dev_found = 1;
+            break;
+        }
+    }
+    if (log_fp) {
+        fprintf(log_fp, "find_device will return %d\n", trusted_dev_found);
     }
 
-    free( ii );
-    close( sock );
+    if (ii) {
+        free(ii);
+    }
+    if (sock) {
+        close(sock);
+    }
 
-    return(0);
+    return trusted_dev_found;
 }
 
 /*
@@ -241,12 +300,16 @@ void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_t
 * Populate the array with trusted devices
 *
 * @param log_fp: the file handle for the log file
+* @param trusted_dir_path: the path where the trusted bluetooth device files for all users are located
+* @param username: the username of the user that wants to log in
+* @param num_of_devices: the number of devices the users trust to authenticate their system
+*   Note: the number is set in this function
 * @return the list of trusted devices
 */
-char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const char *username) {
+char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const char *username, int *num_of_devices) {
     char **trusted_devices = NULL;
     FILE *trusted_dev_fp = NULL;
-    int num_of_devices = 0;
+    int num_of_devices_lc = 0; //localalizing for possible memory performance improvement
 
     /*** Check if the trusted device directory exist ***/
     if (check_or_creat_dir(trusted_dir_path, log_fp) <= 0) {
@@ -259,59 +322,76 @@ char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const ch
         goto terminate;
     }
 
-    if (!(num_of_devices = get_num_lines(trusted_dev_fp))) {
+    if (!(num_of_devices_lc = get_num_lines(trusted_dev_fp))) {
         goto terminate;
     }
-    printf("the number of trusted_devices are: %d\n", num_of_devices);
+    printf("the number of trusted_devices are: %d\n", num_of_devices_lc);
 
-    if (!(trusted_devices = malloc(sizeof(char *) * num_of_devices))) {
+    if (!(trusted_devices = malloc(sizeof(char *) * num_of_devices_lc))) {
         perror("malloc");
+        if (trusted_devices) {
+            free(trusted_devices);
+        }
         goto terminate;
     }
 
-    set_trusted_devices(trusted_dev_fp, trusted_devices, num_of_devices);
+    set_trusted_devices(trusted_dev_fp, trusted_devices, num_of_devices_lc);
 
 terminate:
     if (trusted_dev_fp) {
         fclose(trusted_dev_fp);
     }
-    if (trusted_devices) {
-        free(trusted_devices);
-    }
 
+    *num_of_devices = num_of_devices_lc;
     return trusted_devices;
 }
 
 /*
 * Deals whether or not the device is able to login via bluetooth
+*
+* @param log_fp: the file handle for the log file
+* @param trusted_dir_path: the path of where all the user's trusted devices are located
+* @param username: the username of the user who wants to login
+* @return: return 1 if the trusted bluetooth device is detected
 */
-int bluetooth_login(FILE *log_file) {
-    int bluetooth_login = 0;
+int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *username) {
+    int bluetooth_status = 0;
     char curr_time[50];
-    
-    printf("Try to find device: %s\n", DEVICE_ADDR);
 
-    bluetooth_login = find_device(DEVICE_ADDR);
+    int num_of_devices = 0;
+
+    char **trusted_devices = NULL;
+    char *detected_dev = NULL;
+
+    if (!(trusted_devices = find_trusted_devices(log_fp, trusted_dir_path, username, &num_of_devices))) {
+        goto bluetooth_login_terminate;
+    }
 
     /*** LOGIN TIME ***/
     get_login_time(curr_time);
     /*******************/
 
-    if (log_file){
-        if ((bluetooth_login = find_device(DEVICE_ADDR))) {
-            printf("Device found\n");
-            if (log_file) {
-                fprintf(log_file, "%s: Device %s found\n", curr_time, DEVICE_ADDR);
-            }
+    if (log_fp) {
+        fprintf(log_fp, "%s: Call find device\n", curr_time);
+    }
+    if ((bluetooth_status = find_device(log_fp, trusted_devices, num_of_devices, &detected_dev))) {
+        printf("Device found\n");
+        if (log_fp) {
+            fprintf(log_fp, "%s: Device %s found\n", curr_time, detected_dev);
         }
-        else {
-            if (log_file) {
-                fprintf(log_file, "%s: Device %s NOT found\n", curr_time, DEVICE_ADDR);
-            }
+    }
+    else {
+        if (log_fp) {
+            fprintf(log_fp, "%s: No trusted devices was found %d\n", curr_time, bluetooth_status);
         }
     }
 
-    return bluetooth_login;
+bluetooth_login_terminate:
+    if (trusted_devices) {
+        free(trusted_devices);
+    }
+    
+    return bluetooth_status;
 }
 
 PAM_EXTERN int pam_sm_setcred( pam_handle_t *pamh, int flags, int argc, const char **argv ) {
@@ -323,43 +403,42 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
 }
 
 PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, const char **argv ) {
-    return PAM_SUCCESS;
+	int bluetooth_status = PAM_AUTH_ERR;
 
-	int pam_status = 0;
-    int bluetooth_status = 0;
-
-    
 	const char* username;
 
-    FILE *fp = NULL;
+    FILE *log_fp = NULL;
 
     /*** OPEN LOG FILE ***/
-    if (!(fp = fopen("/var/log/pam-proxy-auth.log", "a"))) {
+    if (!(log_fp = fopen("/var/log/pam-proxy-auth.log", "a"))) {
         perror("Failed to open file");
     }
     /*********************/
 
-    fprintf(fp, "Pika test\n");
+    fprintf(log_fp, "Pika test\n");
     
     /*** Get Username ***/
     if (pam_get_user(pamh, &username, "Username: ") != PAM_SUCCESS) {
         perror("Could not find username");
-        if (fp) {
-            fprintf(fp, "Could not find username\n");
+        if (log_fp) {
+            fprintf(log_fp, "Could not find username\n");
         }
-        return 0;
+        return bluetooth_status;
     }
     /*******************/
 
-	printf("Welcome %s. Login via Auth Proxy.\n", username);
-
-    if (fp) {
-        fclose(fp);
+    if (bluetooth_login(log_fp, trusted_dir_path, username)) {
+	   printf("Welcome %s. Login via Auth Proxy.\n", username);
+       if (log_fp) {
+            fprintf(log_fp, "Login via Auth Proxy\n");
+        }
+       bluetooth_status = PAM_SUCCESS;
     }
 
-	if (pam_status != PAM_SUCCESS && !bluetooth_status) {
-		return pam_status;
-	}
+    fprintf(log_fp, "Exiting PAM with: %d\n", bluetooth_status);
+    if (log_fp) {
+        fclose(log_fp);
+    }
 
-	return PAM_SUCCESS;
+	return bluetooth_status;
 }
