@@ -13,6 +13,10 @@
 * Arslan Qamar 
     * Understand the basics of Bluetooth server, client for Pam module 
     * Worked on Bluetooth server 
+* Anurag Bist
+    * Worked with the Android App
+    * Implemented the app's functionality to establish RFCOMM channel with paired bluetooth device 
+    * Implemented the app's functionality to send data to the connected bluetooth device 
 
 
 ## Goals for Next Sprint (Will be subject to change)
