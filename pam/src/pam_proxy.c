@@ -1,3 +1,9 @@
+/*
+* AUTHOR: zakuarbor (Ju Hong Kim)
+* DESC: PAM module for the ProxyAuth project. Authenticates users via bluetooth proximity
+*/
+
+
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
