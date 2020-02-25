@@ -36,11 +36,11 @@ class MainActivity : AppCompatActivity() {
         val EXTRA_ADDRESS: String = "Device_address"
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layout.activity_main)
 
+        //get the default adaptor
         m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
         if(m_bluetoothAdapter == null){
@@ -48,11 +48,11 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        //!! means m_bluetooth is not going to be null
+        // means m_bluetooth is not going to be null
+        // enabling the bluetooth
         if(!m_bluetoothAdapter!!.isEnabled){
             val enableBluetoothIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH)
-
         }
 
         //Once the refresh button is clicked, pairedDeviceList function is called
@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun pairedDeviceList() {
+        //paired devices query
         m_pairedDevices = m_bluetoothAdapter!!.bondedDevices
         val list : ArrayList<BluetoothDevice> = ArrayList ()
 
