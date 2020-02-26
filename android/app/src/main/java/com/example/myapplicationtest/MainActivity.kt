@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         val EXTRA_ADDRESS: String = "Device_address"
+        val DEVICE_NAME: String = "Device_name"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,9 +81,12 @@ class MainActivity : AppCompatActivity() {
         list_view.onItemClickListener = AdapterView.OnItemClickListener{_, _, position, _ ->
             val device: BluetoothDevice = list[position]
             val address: String = device.address
+            val name: String = device.name
 
             val intent = Intent(this, ControlActivity::class.java)
             intent.putExtra(EXTRA_ADDRESS, address)
+            intent.putExtra(DEVICE_NAME, name)
+
             startActivity(intent)
         }
 
