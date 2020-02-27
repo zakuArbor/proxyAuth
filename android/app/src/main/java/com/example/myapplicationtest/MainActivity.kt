@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         val EXTRA_ADDRESS: String = "Device_address"
+        val DEVICE_NAME: String = "Device_name"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,6 +120,7 @@ class MainActivity : AppCompatActivity() {
 
                     val intent = Intent(this, ControlActivity::class.java)
                     intent.putExtra(EXTRA_ADDRESS, device.address)
+                    intent.putExtra(DEVICE_NAME, device.name)
                     startActivity(intent)
                 }
 
@@ -132,6 +134,7 @@ class MainActivity : AppCompatActivity() {
         list_view.adapter = adapter
         list_view.onItemClickListener = AdapterView.OnItemClickListener{_, _, position, _ ->
             val device: BluetoothDevice = list[position]
+
             val address: String = device.address.toString()
             //------------------------------------------
             val filename = "rem_devices.txt"
@@ -141,15 +144,8 @@ class MainActivity : AppCompatActivity() {
             file2.delete()
             file2.createNewFile()
 
-            /*
-            val fos: FileOutputStream =
-                openFileOutput(filename, Context.MODE_PRIVATE)
-            Log.i("path", "CONNECT TO ME OUTSTREAM "+address)
-            fos.write(address.toByteArray())
-            Log.i("path", "CONNECT TO ME OUTSTREAM "+address.toByteArray())
-            fos.close()
 
-             */
+
             Log.i("path", "CONNECT TO ME OUTSTREAM "+address)
             val bArray = address.toByteArray(Charsets.UTF_8)
             for (b in bArray){
@@ -165,8 +161,14 @@ class MainActivity : AppCompatActivity() {
 
             Log.i("path", "CONNECT TO ME OUTSTREAM "+bArray.toString(Charsets.UTF_8))
 
+
+            val name: String = device.name
+
+
             val intent = Intent(this, ControlActivity::class.java)
             intent.putExtra(EXTRA_ADDRESS, address)
+            intent.putExtra(DEVICE_NAME, name)
+
             startActivity(intent)
 
 
@@ -194,96 +196,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-        /*var mDeviceList = ArrayList<String>()
-    val REQUEST_ENABLE_BLUETOOTH = 1
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(layout.activity_main)
-
-        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter == null) {
-            // Device doesn't support Bluetooth
-            toast("Device does not support bluetooth")
-            return
-        }
-
-        if (!bluetoothAdapter?.isEnabled) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BLUETOOTH)
-        }
-
-
-        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
-        pairedDevices?.forEach { device ->
-            val deviceName = device.name
-            val deviceHardwareAddress = device.address // MAC address
-            mDeviceList.add(device.name + "\n" + device.address)
-            Log.i(
-                "BTBTBT",
-                device.name + "\n" + device.address + "---------------------------PP"
-            )
-            list_view.adapter = ArrayAdapter<String>(
-                applicationContext,
-                android.R.layout.simple_list_item_1, mDeviceList
-            )
-
-        }
-
-        // Register for broadcasts when a device is discovered.
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        registerReceiver(receiver, filter)
-
-        Log.i("BTBTBT", "made it here ----------------------------")
-
-
-        list_view.setOnItemClickListener { adapterView: AdapterView<*>?,
-                                           view: View?, position: Int, id: Long ->
-            Log.i("BTBTBT", "BT_Device-------------------" + mDeviceList[position])
-        }
-        button_change.setOnClickListener {
-            TB.text = "new text"
-        }
-    }
-
-    override fun onDestroy() {
-        unregisterReceiver(receiver)
-        super.onDestroy()
-    }
-
-    // Create a BroadcastReceiver for ACTION_FOUND.
-    private val receiver = object : BroadcastReceiver() {
-
-        override fun onReceive(context: Context, intent: Intent) {
-            val action: String = intent.action
-            Log.i("BTBTBT", "called here ----------------------------")
-            when (action) {
-                BluetoothDevice.ACTION_FOUND -> {
-                    // Discovery has found a device. Get the BluetoothDevice
-                    // object and its info from the Intent.
-                    val device: BluetoothDevice =
-                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    //val deviceName = device.name
-                    //val deviceHardwareAddress = device.address // MAC address
-                    mDeviceList.add(device.name + "\n" + device.address)
-
-
-                    Log.i(
-                        "BTBTBT",
-                        device.name + "\n" + device.address + "---------------------------DD"
-                    )
-
-                    list_view.adapter = ArrayAdapter<String>(
-                        context,
-                        android.R.layout.simple_list_item_1, mDeviceList
-                    )
-
-
-                }
-            }
-        }
-    }*/
 }
 
 
