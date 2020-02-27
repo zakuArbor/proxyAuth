@@ -11,6 +11,7 @@
 * **Daniel Wang:** Implement a bluetooth scanner in C that detects nearby bluetooth devices
 * **Arslan Qamar:** Set up the VM, Worked On Linux simple pam, fixed the errors, and was able to login. 
 * **Anurag Bist:** Java Android Application Implementation
+* **Areeb Siddiqui:** Research Linux PAM, rfcomm, and setup VM
 
 ## Goals for Next Sprint (Will be subject to change)
 * Android app that messages via bluetooth to the desktop (not read, just write)

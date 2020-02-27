@@ -21,7 +21,10 @@
    * Worked with the Android App
    * Created base listview interface for displaying bluetooth device data
    * Added initial bluetooth error handling and code for checking if bluetooth is enabled and identifying bluetooth paired devices
-
+* Areeb Siddiqui
+   * Wrote C Server application that establishes an rfcomm (bluetooth) socket connection with a client
+   * Wrote mock C client (instead of the eventual Android app client) to test server
+   * Blocked by inability to test bluetooth as both Linux VMs and Linux Subsystem on Windows don't support complete bluetooth capabilites.
 
 
 ## Goals for Next Sprint (Will be subject to change)
