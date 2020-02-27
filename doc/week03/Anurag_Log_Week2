@@ -1,8 +1,8 @@
-1. Worked on bluetooth adaptor connection
+## 1. Worked on bluetooth adaptor connection
 
-2. Researched the use of bluetooth in the background (for the app)
+## 2. Researched the use of bluetooth in the background (for the app)
 
-Bluetooth adaptor
+## Bluetooth adaptor
 
   Setup
   - Followed instructions on bluetooth adaptor packaging 
@@ -19,7 +19,7 @@ Bluetooth adaptor
   - The adaptor did not appear inside the VirtualBox
   - Need to find a solution to this (because the adaptor worked with MAC OS)
   
-Bluetooth in the background
+## Bluetooth in the background
 
   START_STICKY flag
   - Service is restarted when the parent app terminates when using the START_STICKY flag
