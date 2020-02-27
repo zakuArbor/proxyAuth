@@ -4,9 +4,13 @@
     <string name="text_change">Some Text</string>
     <string name="text_other">Some Other Text</string>
     <string name="refresh">Refresh</string>
+    <string name="helloWorld">Hello World</string>
     <string name="on">On</string>
     <string name="off">Off</string>
     <string name="disconnect">Disconnect</string>
+    <string name="Devices">Devices</string>
+    <string name="connectedDevice">Connected Device</string>
+    <string name="deviceAddress">Device Address</string>
 
     <string-array name="Colors">
         <item name="color">Black</item>

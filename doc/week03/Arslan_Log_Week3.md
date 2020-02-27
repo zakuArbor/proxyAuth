@@ -33,7 +33,7 @@ hci0:	Type: Primary  Bus: USB
 ```
 * Ccompile the simple.c
 `gcc -o simplescan simple.c -lbluetooth`
-* Even after running the simple for many times, it won't show any devices. I alos run the hcitool scan but that didn't work either 
+* Even after running the simple for many times, it won't show any devices. I also run the hcitool scan but that didn't work either 
 ```
 arslan@arslan-VirtualBox:~/proxyAuth/bluetoothBasics$ gcc -o simple simple.c -lbluetooth
 arslan@arslan-VirtualBox:~/proxyAuth/bluetoothBasics$ ./simple

@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.control_layout.*
+import org.jetbrains.anko.toast
 import java.io.IOException
 import java.util.*
 
@@ -22,18 +23,24 @@ class ControlActivity: AppCompatActivity(){
         lateinit var m__bluetoothAdapter: BluetoothAdapter
         var m_isConnected: Boolean = false
         lateinit var m_address: String
+        lateinit var m_name: String
 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.control_layout)
+
         m_address = intent.getStringExtra(MainActivity.EXTRA_ADDRESS)
+        m_name = intent.getStringExtra(MainActivity.DEVICE_NAME)
+
+        val cDevice = "Connected device: $m_name"
+        val cDeviceAddr = "Device Address: $m_address"
+        connectedDevice.text = cDevice
+        deviceAddress.text = cDeviceAddr
 
         ConnectToDevice(this).execute()
-
-        control_led_on.setOnClickListener{ sendCommand("a")}
-        control_led_off.setOnClickListener{ sendCommand("b")}
+        test_button.setOnClickListener{ sendCommand("Hello World!")}
         control_led_disconnect.setOnClickListener{ disconnect()}
 
     }
