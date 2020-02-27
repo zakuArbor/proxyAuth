@@ -16,7 +16,12 @@
 * Anurag Bist
     * Worked with the Android App
     * Implemented the app's functionality to establish RFCOMM channel with paired bluetooth device 
-    * Implemented the app's functionality to send data to the connected bluetooth device 
+    * Implemented the app's functionality to send data to the connected bluetooth device
+* Sean Coutinho
+   * Worked with the Android App
+   * Created base listview interface for displaying bluetooth device data
+   * Added initial bluetooth error handling and code for checking if bluetooth is enabled and identifying bluetooth paired devices
+
 
 
 ## Goals for Next Sprint (Will be subject to change)
@@ -32,6 +37,11 @@
 **Android:**
 
 ## To Improve in the Next Sprint
+* Remember a selected device and connect to it, rather than have the user re-select a device.
+* Allow a Bluetooth connection to be maintained in the background when app is out of focus or the phone is locked.
+* Update UI to allow the user to select prefered security level during setup.
+* Start creating a message list for our Bluetooth connection. 
+
 
 ## PROBLEMS
 * Bluetooth **[BLOCKING]**: Memebers need an external bluetooth adapter to be able to work on their assigned tasks.
