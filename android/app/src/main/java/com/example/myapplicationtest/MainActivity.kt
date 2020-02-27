@@ -19,6 +19,8 @@ import java.io.File
 import java.io.FileInputStream
 
 import com.example.myapplicationtest.R.layout
+import java.math.BigInteger
+import java.security.MessageDigest
 
 //import com.example.myapplicationtest.R.layout
 
@@ -98,11 +100,7 @@ class MainActivity : AppCompatActivity() {
             val file2 =
                 File(this.filesDir.toString() + File.separator.toString() + "rem_devices.txt")
             val fis = FileInputStream(file2/*openFileInput(filename)*/)
-            //val scanner = Scanner(fis)
-            //scanner.useDelimiter("\\Z")
-            val str = "1"
-            val buffer = str.toByteArray()
-            val fileContent = StringBuffer("")
+
 
             //val remAddress = fis.readBytes().toString()
             val remAddress = fis.readBytes().toString(Charsets.UTF_8)
@@ -114,9 +112,9 @@ class MainActivity : AppCompatActivity() {
             for (device: BluetoothDevice in m_pairedDevices){
                 list.add(device)
                 Log.i("device", ""+device)
-                Log.i("device", "Address = "+device.address)
+                Log.i("device", "Address = "+device.address.sha())
 
-                if(remAddress == device.address){
+                if(remAddress.sha() == device.address.toString().sha()){
 
                     val intent = Intent(this, ControlActivity::class.java)
                     intent.putExtra(EXTRA_ADDRESS, device.address)
@@ -135,7 +133,7 @@ class MainActivity : AppCompatActivity() {
         list_view.onItemClickListener = AdapterView.OnItemClickListener{_, _, position, _ ->
             val device: BluetoothDevice = list[position]
 
-            val address: String = device.address.toString()
+            val address = device.address.toString().sha()
             //------------------------------------------
             val filename = "rem_devices.txt"
 
@@ -166,7 +164,7 @@ class MainActivity : AppCompatActivity() {
 
 
             val intent = Intent(this, ControlActivity::class.java)
-            intent.putExtra(EXTRA_ADDRESS, address)
+            intent.putExtra(EXTRA_ADDRESS, device.address)
             intent.putExtra(DEVICE_NAME, name)
 
             startActivity(intent)
@@ -194,6 +192,11 @@ class MainActivity : AppCompatActivity() {
                 toast("Bluetooth enabling has been cancelled")
             }
         }
+    }
+
+    fun String.sha(): String {
+        val sh = MessageDigest.getInstance("SHA-256")
+        return BigInteger(1, sh.digest(toByteArray())).toString(16).padStart(32, '0')
     }
 
 }
