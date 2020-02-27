@@ -1,6 +1,8 @@
 package com.example.myapplicationtest
 
 
+//import sun.text.normalizer.UTF16.append
+
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -13,14 +15,12 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
-//import sun.text.normalizer.UTF16.append
 import java.io.File
-import java.io.FileOutputStream
-import java.io.FileWriter
-import java.util.*
-import kotlin.collections.ArrayList
+import java.io.FileInputStream
 
 import com.example.myapplicationtest.R.layout
+
+//import com.example.myapplicationtest.R.layout
 
 
 class MainActivity : AppCompatActivity() {
@@ -93,13 +93,20 @@ class MainActivity : AppCompatActivity() {
 
             //--------------------------------------------
             //val rem_address = this.openFileInput(filename).bufferedReader().readLine()
-            val filename = "rem_devices.txt"
-            val fis = openFileInput(filename)
+            //val filename = "rem_devices.txt"
+            val file2 =
+                File(this.filesDir.toString() + File.separator.toString() + "rem_devices.txt")
+            val fis = FileInputStream(file2/*openFileInput(filename)*/)
             //val scanner = Scanner(fis)
             //scanner.useDelimiter("\\Z")
-            val remAddress = fis.readBytes().toString()
+            val str = "1"
+            val buffer = str.toByteArray()
+            val fileContent = StringBuffer("")
 
-            Log.i("device", "remAddress = "+remAddress)
+            //val remAddress = fis.readBytes().toString()
+            val remAddress = fis.readBytes().toString(Charsets.UTF_8)
+
+            Log.i("path", "CONNECT TO ME INPUTSTREAM "+remAddress)
             fis.close()
             ///data/user/0/com.example.myapplicationtest/files/app_rem_devices: open failed: ENOENT (No such file or directory)
 
@@ -109,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                 Log.i("device", "Address = "+device.address)
 
                 if(remAddress == device.address){
-                    Log.i("path", "CONNECT TO ME "+device)
+
                     val intent = Intent(this, ControlActivity::class.java)
                     intent.putExtra(EXTRA_ADDRESS, device.address)
                     startActivity(intent)
@@ -125,13 +132,38 @@ class MainActivity : AppCompatActivity() {
         list_view.adapter = adapter
         list_view.onItemClickListener = AdapterView.OnItemClickListener{_, _, position, _ ->
             val device: BluetoothDevice = list[position]
-            val address: String = device.address
+            val address: String = device.address.toString()
             //------------------------------------------
             val filename = "rem_devices.txt"
+
+            val file2 =
+                File(this.filesDir.toString() + File.separator.toString() + "rem_devices.txt")
+            file2.delete()
+            file2.createNewFile()
+
+            /*
             val fos: FileOutputStream =
                 openFileOutput(filename, Context.MODE_PRIVATE)
+            Log.i("path", "CONNECT TO ME OUTSTREAM "+address)
             fos.write(address.toByteArray())
+            Log.i("path", "CONNECT TO ME OUTSTREAM "+address.toByteArray())
             fos.close()
+
+             */
+            Log.i("path", "CONNECT TO ME OUTSTREAM "+address)
+            val bArray = address.toByteArray(Charsets.UTF_8)
+            for (b in bArray){
+                Log.i("path", "CONNECT TO ME OUTSTREAM "+b.toChar())
+            }
+            //val bytes: ByteArray = address.getBytes("UTF-8")
+            this.openFileOutput(filename, Context.MODE_PRIVATE).use {
+
+                it.write(bArray)
+                it.flush()
+                it.close()
+            }
+
+            Log.i("path", "CONNECT TO ME OUTSTREAM "+bArray.toString(Charsets.UTF_8))
 
             val intent = Intent(this, ControlActivity::class.java)
             intent.putExtra(EXTRA_ADDRESS, address)
