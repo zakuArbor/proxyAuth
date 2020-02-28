@@ -13,6 +13,9 @@
 * Daniel Wang: 
 
 * Arslan Qamar 
+   * Setup the bluetooth adaptor for virtual machine
+   * able to connect to andriod app and received the "hello world" message 
+   * researching on bluetooth background services 
 
 * Anurag Bist
 
