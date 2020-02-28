@@ -55,24 +55,28 @@ arslan@arslan-VirtualBox:~/proxyAuth/bluetoothBasics$ hcitool scan
 Scanning ...
 ^C
 ```
-* 
+* It did pick up one device in 20 and so attempts. I still have to find the solution for this. *
+* Now, run the rfcomm-server.c program, make sure your bluetooth is turned on and paired, and coonected to device with the android app. 
 `$ gcc rfcomm-server.c -l bluetooth`
 ```$ ./a.out 
 Registering UUID 00001101-0000-1000-8000-00805f9b34fb
 Segmentation fault (core dumped)
-'''
-
-``$ sudo vim /etc/systemd/system/dbus-org.bluez.service
+```
+* The seg fault occured, when callinng the sdp_record_register(). It register the bluetooth service in SDP using BlueZ. Apparently, the seg fault is coming from broken stptool in BLuez. 
+* Run this command and enter your sudo password 
+```$ sudo vim /etc/systemd/system/dbus-org.bluez.service
 Welcome arslan
 This is simple PAM module
 [sudo] password for arslan: 
 Acct mgmt
 ```
-
-
+* Then change this line `ExecStart=/usr/lib/bluetooth/bluetoothd` to `ExecStart=/usr/lib/bluetooth/bluetoothd --compat`
+* Restart the blietooth like this and change the permission
 ```$ sudo systemctl daemon-reload
 $ sudo systemctl restart bluetooth
 $ sudo chmod 777 /var/run/sdp
 ```
+
+
 
 
