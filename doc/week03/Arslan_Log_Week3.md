@@ -55,4 +55,24 @@ arslan@arslan-VirtualBox:~/proxyAuth/bluetoothBasics$ hcitool scan
 Scanning ...
 ^C
 ```
+* 
+`$ gcc rfcomm-server.c -l bluetooth`
+```$ ./a.out 
+Registering UUID 00001101-0000-1000-8000-00805f9b34fb
+Segmentation fault (core dumped)
+'''
+
+``$ sudo vim /etc/systemd/system/dbus-org.bluez.service
+Welcome arslan
+This is simple PAM module
+[sudo] password for arslan: 
+Acct mgmt
+```
+
+
+```$ sudo systemctl daemon-reload
+$ sudo systemctl restart bluetooth
+$ sudo chmod 777 /var/run/sdp
+```
+
 
