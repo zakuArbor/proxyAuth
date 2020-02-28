@@ -65,6 +65,7 @@
 
 ## To Improve in the Next Sprint
 * Have members work earlier and communicate directly to members on their progress
+* Create a draft sprint before meeting with the Supervisor (Professor and Teacher Assistant) so we can be concise and on-point during the meeting.
 
 ## PROBLEMS
 * Bluetooth setup on Virtual Machine
