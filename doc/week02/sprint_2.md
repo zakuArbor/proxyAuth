@@ -10,6 +10,10 @@
     * wrote C program that reads a single message sent by the Android App
     * wrote the PAM to login after detecting the device
     * tested and fixed a minor bug on the Android communication with the C program
+* Daniel Wang: 
+    * wrote C program that read messages from BlueTerm (3rd party android application)
+    * Program opened and read from serial rfcomm channel with BlueTerm (allowing you to write to the channel in realtime)
+    * Later extended by Kim to read input from our Android application
 * Arslan Qamar 
     * Understand the basics of Bluetooth server, client for Pam module 
     * Worked on Bluetooth server 
