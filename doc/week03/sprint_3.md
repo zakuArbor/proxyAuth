@@ -61,7 +61,7 @@
 **Android:**
 
 ## To Improve in the Next Sprint
-* Have members work earlier and communicate directly to memebers on their progress
+* Have members work earlier and communicate directly to members on their progress
 
 ## PROBLEMS
 * Bluetooth setup on Virtual Machine
