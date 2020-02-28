@@ -14,6 +14,7 @@
     * wrote C program that read messages from BlueTerm (3rd party android application)
     * Program opened and read from serial rfcomm channel with BlueTerm (allowing you to write to the channel in realtime)
     * Later extended by Kim to read input from our Android application
+    *https://github.com/Sxx125/proxyAuth/issues/3
 * Arslan Qamar 
     * Understand the basics of Bluetooth server, client for Pam module 
     * Worked on Bluetooth server 
