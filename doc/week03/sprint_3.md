@@ -1,11 +1,15 @@
-# Sprint 2
+# Sprint 3
+
+## Date: Feb 14 - Feb 28
 
 ## Accomplishments
-
+* Authenticate trusted devices only on PAM
+* Authenticate trusted devices only on Android
 
 ## Participants Contribution:
 * Ju Hong Kim: 
-    
+    * Restructure PAM and ensure no memory leaks
+    * Authenticate trusted devices on PAM
 * Daniel Wang: 
 
 * Arslan Qamar 
@@ -49,14 +53,16 @@
 
 ## Goals for Next Sprint (Will be subject to change)
 **PAM:**
-
+* [Login if device is paired](https://github.com/Sxx125/proxyAuth/issues/5)
+* [Toggle between password and bluetooth scan](https://github.com/Sxx125/proxyAuth/issues/10)
 
 **Android:**
 
 ## To Improve in the Next Sprint
-
+* Have members work earlier and communicate directly to memebers on their progress
 
 ## PROBLEMS
+* Bluetooth setup on Virtual Machine
 
 ## Extra Information
-* Read `doc/week02/kim_log_2.md` for details about what Kim did for the week
+* Read `doc/week03/kim_log_3.md` for details about what Kim did for the week
