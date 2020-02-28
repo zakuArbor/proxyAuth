@@ -38,7 +38,28 @@ and add the following near or at the top of the file:
 auth sufficient pam_proxy.so
 auth required pam_warn.so
 ```
+## Running Bluetooth Server
 
+**Requirements:**
+
+* Follow the instructions from [here](https://raspberrypi.stackexchange.com/questions/41776/failed-to-connect-to-sdp-server-on-ffffff000000-no-such-file-or-directory). I'll list the steps though:
+
+1. `sudo vi /etc/systemd/system/dbus-org.bluez.service`
+
+2. Change `ExecStart=/usr/lib/bluetooth/bluetoothd` to `ExecStart=/usr/lib/bluetooth/bluetoothd --compat`
+
+3. Restart bluetooth: 
+```
+sudo systemctl daemon-reload
+sudo systemctl restart bluetooth
+```
+
+4. Change the permission of `/var/run/sdp`: `sudo chmod 777 /var/run/sdp`
+
+This is to avoid segmentation fault when running sdp tools. According to the link above, sdptool is broken in Bluez 5
+
+**Running:**
+* Compile the server: `gcc -o server rfcomm-server.c -lbluetooth`
 
 # ACKNOWLEDGEMENTS
 * [Simple PAM](https://github.com/beatgammit/simple-pam) - Helped us learn how to work with PAM
