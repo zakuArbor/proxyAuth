@@ -47,6 +47,8 @@
       - All app processes have the same lifetime as the app itself
 
 * Sean Coutinho
+   * Read/Write a paired device's information in Android app internal storage. (Improved to read/write hashval instead)
+   * Automatically connected to a paired device stored in memory.
   
 * Areeb Siddiqui
 
