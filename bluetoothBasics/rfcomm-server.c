@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
-
+#include <fcntl.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
 #include <bluetooth/sdp.h>
@@ -218,6 +218,7 @@ int main (int argc, char **argv)
 
     // accept one connection
     client = accept(s, (struct sockaddr *)&rem_addr, &opt);
+    fcntl(client, F_SETFL, O_NONBLOCK); //set FD to nonblocking 
 
     //bdaddr_t stores information about the bluetooth device address.
     ba2str( &rem_addr.rc_bdaddr, buf ); //converts the bluetooth data structure to string
