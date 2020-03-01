@@ -197,64 +197,61 @@ int init_server(struct sockaddr_rc *loc_addr) {
     return s;   
 }
 
+int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt) {
+    // accept one connection
+    char buf[1024] = { 0 };
 
+    int client = accept(s, (struct sockaddr *)rem_addr, opt);
+    fcntl(client, F_SETFL, O_NONBLOCK); //set FD to nonblocking 
+
+    //bdaddr_t stores information about the bluetooth device address.
+    ba2str(&(rem_addr->rc_bdaddr), buf); //converts the bluetooth data structure to string
+    fprintf(stderr, "accepted connection from %s\n", buf);
+
+    return client;
+}
 
 int main (int argc, char **argv)
 {
     struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
-    char buf[1024] = { 0 };
     int s, client, bytes_read;
     socklen_t opt = sizeof(rem_addr);
 
-    /* SELECT VARIABLES */
-    struct timeval tv;
-    int ndfs; //set to highest numbered file descriptor in any of the three sets plus 1
-    fd_set readfds, writefds, exceptfds;
-
-    /* Wait up to five seconds. */
-    tv.tv_sec = 5;
-    tv.tv_usec = 0;
-    /****************************/
-
     s = init_server(&loc_addr);
 
-    // accept one connection
-    client = accept(s, (struct sockaddr *)&rem_addr, &opt);
-    fcntl(client, F_SETFL, O_NONBLOCK); //set FD to nonblocking 
-
-    //bdaddr_t stores information about the bluetooth device address.
-    ba2str( &rem_addr.rc_bdaddr, buf ); //converts the bluetooth data structure to string
-    fprintf(stderr, "accepted connection from %s\n", buf);
+    
     time_t start, stop;
-    start = time(NULL);
-    int is_locked = 1; 
-    while(1)
-    {
-        //if (select(nfds, &readfds, &writefds, &exceptfds, &tv);
+    int is_locked = 0; 
+    client = -1;
 
+    while(1) {
+        if (client < 0) {
+            client = connect_client(s, &rem_addr, &opt);
+            start = time(NULL);
+            is_locked = 0; 
+        }
 
-    	char input[1024];
+    	char buf[1024];
     	memset(buf, 0, sizeof(buf));
 
     	// read data from the client
     	bytes_read = read(client, buf, sizeof(buf));
-    	if( bytes_read > 0 ) {
+    	if(bytes_read > 0) {
             printf("received [%s]\n", buf);
             start = time(NULL);
-            is_locked = 1; 
+            is_locked = 0; 
     	}
         
         stop = time(NULL);  
-        if ((stop - start) > 10 && is_locked){
+        if ((stop - start) > 10 && !is_locked){
             //exec no response being read lock user out
-            is_locked = 0; 
+            is_locked = 1; 
+            close(client);
+            client = -1;
             system("dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock");
         }
-        
-    	//printf("Send message to device:\n");
-    	//scanf("%s", input);
     	
-    	if(write(client, input, strlen(input) < 0)){
+    	if (bytes_read > 0 && write(client, buf, strlen(buf) < 0)) {
     	    perror("Error writing to client");	
     	}
     }
