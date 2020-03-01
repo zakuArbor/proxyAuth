@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <bluetooth/bluetooth.h>
@@ -9,6 +10,7 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <time.h>
 
 #define SERVICE_NAME "Proxy Auth"
 #define SERVICE_DESC "Continuous Authentication via Bluetooth"
@@ -223,7 +225,8 @@ int main (int argc, char **argv)
     //bdaddr_t stores information about the bluetooth device address.
     ba2str( &rem_addr.rc_bdaddr, buf ); //converts the bluetooth data structure to string
     fprintf(stderr, "accepted connection from %s\n", buf);
-
+    time_t start, stop;
+    start = time(NULL);
     while(1)
     {
         //if (select(nfds, &readfds, &writefds, &exceptfds, &tv);
@@ -236,8 +239,14 @@ int main (int argc, char **argv)
     	bytes_read = read(client, buf, sizeof(buf));
     	if( bytes_read > 0 ) {
             printf("received [%s]\n", buf);
-    	}
+            start = time(NULL);
 
+    	}
+        stop = time(NULL);  
+        if ((stop - stop) > 10){
+            //exec no response being read lock user out
+            system("dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock");
+        }
     	printf("Send message to device:\n");
     	scanf("%s", input);
     	
