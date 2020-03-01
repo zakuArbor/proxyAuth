@@ -227,6 +227,7 @@ int main (int argc, char **argv)
     fprintf(stderr, "accepted connection from %s\n", buf);
     time_t start, stop;
     start = time(NULL);
+    int is_locked = 1; 
     while(1)
     {
         //if (select(nfds, &readfds, &writefds, &exceptfds, &tv);
@@ -240,15 +241,18 @@ int main (int argc, char **argv)
     	if( bytes_read > 0 ) {
             printf("received [%s]\n", buf);
             start = time(NULL);
-
+            is_locked = 1; 
     	}
+        
         stop = time(NULL);  
-        if ((stop - stop) > 10){
+        if ((stop - start) > 10 && is_locked){
             //exec no response being read lock user out
+            is_locked = 0; 
             system("dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock");
         }
-    	printf("Send message to device:\n");
-    	scanf("%s", input);
+        
+    	//printf("Send message to device:\n");
+    	//scanf("%s", input);
     	
     	if(write(client, input, strlen(input) < 0)){
     	    perror("Error writing to client");	
