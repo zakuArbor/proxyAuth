@@ -170,13 +170,13 @@ char *check_is_paired(GVariant *properties) {
 
         g_print("pika: %s\n", g_variant_get_string(addr_gvariant, NULL));
 
-        if (!(addr = malloc(sizeof(char) * BT_MAC_LEN))) {
+        if (!(addr = malloc(sizeof(char) * BT_MAC_LEN + 1))) {
             perror("malloc");
             return NULL;
         }
 
         strncpy(addr, (char *)g_variant_get_string(addr_gvariant, NULL), BT_MAC_LEN);
-
+        addr[BT_MAC_LEN] = '\0';
     }
 
     return addr;
@@ -277,13 +277,29 @@ char **get_paired_devices(int *num_of_paired) {
 *   NOTE: detected_dev will be set in this function if a device was detected
 * @return: 1 iff a trusted device for the user is detected
 */
-int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char **detected_dev) {
-    if (!trusted_devices) {
+int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char **paired_devices, int num_of_paired, char **detected_dev) {
+    if (!trusted_devices || !paired_devices) {
         return 0;
     }
+    printf("test\n");
+    int trusted_dev_found = 0;
 
+    for (int i = 0; i < num_of_paired; i++) {
+        printf("comparing: %s\n", paired_devices[i]);
+        if (is_dev_trusted(log_fp, paired_devices[i], trusted_devices, num_of_devices)) {
+            if (log_fp) {
+                fprintf(log_fp, "Trusted Device: %s\n", paired_devices[i]);
+            }
+            if ((*detected_dev = malloc(sizeof(char) * (BT_MAC_LEN + 1)))) {
+                strncpy(*detected_dev, paired_devices[i], BT_MAC_LEN);
+                (*detected_dev)[BT_MAC_LEN] = '\0';
+            }
+            trusted_dev_found = 1;
+            break;
+        }
+    }
     
-    return 0;
+    return trusted_dev_found;
 }
 
 /*
@@ -517,8 +533,10 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
     char curr_time[50];
 
     int num_of_devices = 0;
+    int num_of_paired = 0;
 
     char **trusted_devices = NULL;
+    char **paired_devices = get_paired_devices(&num_of_paired);
     char *detected_dev = NULL;
 
     if (!(trusted_devices = find_trusted_devices(log_fp, trusted_dir_path, username, &num_of_devices))) {
@@ -532,7 +550,15 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
     if (log_fp) {
         fprintf(log_fp, "%s: Call find device\n", curr_time);
     }
-    if ((bluetooth_status = find_device(log_fp, trusted_devices, num_of_devices, &detected_dev))) {
+    if (paired_devices) {
+        printf("Hello world\n");
+    }
+    if (paired_devices && (bluetooth_status = find_trusted_paired_device(log_fp, trusted_devices, num_of_devices, paired_devices, num_of_paired, &detected_dev))) {
+        if (log_fp && detected_dev) {
+            fprintf(log_fp, "%s: Device %s found\n", curr_time, detected_dev);
+        }
+    }
+    else if ((bluetooth_status = find_device(log_fp, trusted_devices, num_of_devices, &detected_dev))) {
         if (log_fp && detected_dev) {
             fprintf(log_fp, "%s: Device %s found\n", curr_time, detected_dev);
         }
@@ -547,6 +573,11 @@ bluetooth_login_terminate:
     if (trusted_devices) {
         free_trusted_devices(trusted_devices, num_of_devices);
     }
+
+    if (paired_devices) {
+        free_trusted_devices(paired_devices, num_of_paired);
+    }
+
     if (detected_dev) {
         free(detected_dev);
     }
@@ -560,25 +591,17 @@ bluetooth_login_terminate:
 
 int main(int argc, char **argv)
 {
-    int num_of_paired = 0;
-    char **paired_devices = get_paired_devices(&num_of_paired);
-    if (paired_devices) {
-        for (int i = 0; i < num_of_paired; i++) {
-            free(paired_devices[i]);
-        }
-        free(paired_devices);
-    }
-    /*const char *trusted_dir_path = "/etc/proxy_auth/";
+    const char *trusted_dir_path = "/etc/proxy_auth/";
     const char *username = "zaku";
 
     FILE *log_fp = NULL;
-    */
+    
     /*** OPEN LOG FILE ***/
     /*if (!(log_fp = fopen("/var/log/pam-proxy-auth.log", "a"))) {
         perror("Failed to open file");
     }*/
     /*********************/
-    /*printf("start bluetooth_login\n");
+    printf("start bluetooth_login\n");
     if (bluetooth_login(log_fp, trusted_dir_path, username)) {
        printf("Welcome %s. Login via Auth Proxy.\n", username);
     }
@@ -588,5 +611,5 @@ int main(int argc, char **argv)
 
     if (log_fp) {
         fclose(log_fp);
-    }*/
+    }
 }
