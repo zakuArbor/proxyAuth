@@ -17,11 +17,13 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/hci.h>
 #include <bluetooth/hci_lib.h>
+#include <glib.h>
+#include <gio/gio.h>
 #include <security/pam_appl.h>
 #include <security/pam_modules.h>
 
-//#define DEVICE_ADDR "C0:1A:DA:7A:30:B7"
 #define BT_MAC_LEN 17
+#define BT_MAX_CONN 7 //Bluetooth Adapters can only connect up to 7 devices
 
 #define LOG 1
 
@@ -133,6 +135,191 @@ int find_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char *
         close(sock);
     }
 
+    return trusted_dev_found;
+}
+
+/*
+* Return Bluetooth address if the device is paired. Else return NULL
+*
+* @param properties: An 'object' that holds a specific bluetooth device's metadata
+* @return: Return Bluetooth address if the device is paired. Else return NULL
+*/
+char *check_is_paired(GVariant *properties) {
+    char *addr = NULL;
+
+    GVariantDict prop_dict;
+    GVariant *is_connected_gvariant;
+    GVariant *is_trusted_gvariant;
+    GVariant *addr_gvariant;
+
+    g_variant_dict_init(&prop_dict, properties);
+    
+    if (!(is_connected_gvariant = g_variant_dict_lookup_value(&prop_dict, "Connected", G_VARIANT_TYPE("b")))) {
+        perror("No such key or Unexpected type");
+        return NULL;
+    }
+    
+    if (!(is_trusted_gvariant = g_variant_dict_lookup_value(&prop_dict, "Trusted", G_VARIANT_TYPE("b")))) {
+        perror("No such key or Unexpected type");
+        return NULL;
+    }
+    
+    if (g_variant_get_boolean(is_connected_gvariant) && g_variant_get_boolean(is_trusted_gvariant)) {
+        if (!(addr_gvariant = g_variant_dict_lookup_value(&prop_dict, "Address", G_VARIANT_TYPE("s")))) {
+            perror("No such key or Unexpected type");
+            return NULL;
+        }
+
+        g_print("pika: %s\n", g_variant_get_string(addr_gvariant, NULL));
+
+        if (!(addr = malloc(sizeof(char) * BT_MAC_LEN + 1))) {
+            perror("malloc");
+            return NULL;
+        }
+
+        strncpy(addr, (char *)g_variant_get_string(addr_gvariant, NULL), BT_MAC_LEN);
+        addr[BT_MAC_LEN] = '\0';
+    }
+
+    return addr;
+}
+
+/*
+*Return a list of paired devices
+* 
+* @param num_of_paired: the number of devices that are paired
+*   NOTE: The number is set in this function
+* @param result: The object returned by request to DBUS for all managed bluetooth object
+* @return: returns a list of paired devices. Need to free
+*/
+char **process_dbus_bt_list(GVariant *result, int *num_of_paired) {
+    if(!result) {
+        return NULL;
+    }
+
+    char **paired_devices = NULL;
+    int num_of_paired_lc = 0;
+
+    if (!(paired_devices = malloc(sizeof(char *) *BT_MAX_CONN))) {
+        perror("malloc");
+        return NULL;
+    }
+
+    GVariantIter i;
+    const gchar *object_path;
+    GVariant *ifaces_and_properties;
+
+    result = g_variant_get_child_value(result, 0);
+    g_variant_iter_init(&i, result);
+    while(g_variant_iter_next(&i, "{&o@a{sa{sv}}}", &object_path, &ifaces_and_properties)) {
+        const gchar *interface_name;
+        GVariant *properties;
+        GVariantIter ii;
+        g_variant_iter_init(&ii, ifaces_and_properties);
+        while(g_variant_iter_next(&ii, "{&s@a{sv}}", &interface_name, &properties)) {
+            gchar *interface_name_lower = g_ascii_strdown(interface_name, -1);
+            if(g_strstr_len(interface_name_lower, -1, "device")) {
+                char *addr;
+                if ((addr = check_is_paired(properties))) {
+                    paired_devices[num_of_paired_lc] = addr;
+                    num_of_paired_lc++;
+                }
+            }
+            g_free(interface_name_lower);
+            g_variant_unref(properties);
+        }
+        g_variant_unref(ifaces_and_properties);
+    }
+
+    *num_of_paired = num_of_paired_lc;
+    return paired_devices;
+}
+
+/*
+* Return a list of Bluetooth addresses that is currently paired (connected) to the host
+*
+* Approach: Use dbus to list all the bluetooth devices and see the connected property
+*           The paired property only indicates if the device has been paired with the host before and not if it is currently paired
+*
+* @param log_fp: the handle of the log file
+* @param num_of_paired: the number of devices paired to the host
+*   NOTE: the value is set within the helper function that the function will call
+* @return: return a list of bluetooth addresses connected to the host 
+*/
+char **get_paired_devices(FILE *log_fp, int *num_of_paired) {
+    GDBusConnection *conn;
+
+    GVariant *result = NULL;
+    char **paired_devices = NULL;
+
+    if(!(conn = g_bus_get_sync(G_BUS_TYPE_SYSTEM, NULL, NULL))) {
+        g_print("Not able to get connection to system bus\n");
+        if (log_fp) {
+            fprintf(log_fp, "Error: UNable to connect to system bus\n");   
+        }
+
+        return NULL;
+    }
+    if (log_fp) {
+        fprintf(log_fp, "Connect to system bus\n");   
+    }
+
+    result = g_dbus_connection_call_sync(
+        conn,                                   //connection
+        "org.bluez",                            //bus_name
+        "/",                                    //object_path
+        "org.freedesktop.DBus.ObjectManager",   //interface_name
+        "GetManagedObjects",                    //method_name
+        NULL,                                   //parameters
+        G_VARIANT_TYPE("(a{oa{sa{sv}}})"),      //return type
+        G_DBUS_CALL_FLAGS_NONE,                 //flag
+        1000,                                   //timeout_msec
+        NULL,                                   //cancel error
+        NULL                                    //error if parameter is not compatible with D-Bus protocol
+    );
+    if (!result) {
+        exit(1);
+    }
+
+    paired_devices = process_dbus_bt_list(result, num_of_paired);
+
+    g_variant_unref(result);
+
+    g_object_unref(conn);
+
+    return paired_devices;
+}
+
+/*
+* Return 1 iff a trusted device for the user is connected
+*
+* @param log_fp: the handle of the log file
+* @param trusted_devices: the array of trusted bluetooth MAC addresses of the user
+* @param num_of_devices: the number of devices the user trusts
+* @param detected_dev: the address of the detected device
+*   NOTE: detected_dev will be set in this function if a device was detected
+* @return: 1 iff a trusted device for the user is detected
+*/
+int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char **paired_devices, int num_of_paired, char **detected_dev) {
+    if (!trusted_devices || !paired_devices) {
+        return 0;
+    }
+    int trusted_dev_found = 0;
+
+    for (int i = 0; i < num_of_paired; i++) {
+        if (is_dev_trusted(log_fp, paired_devices[i], trusted_devices, num_of_devices)) {
+            if (log_fp) {
+                fprintf(log_fp, "Trusted Device: %s\n", paired_devices[i]);
+            }
+            if ((*detected_dev = malloc(sizeof(char) * (BT_MAC_LEN + 1)))) {
+                strncpy(*detected_dev, paired_devices[i], BT_MAC_LEN);
+                (*detected_dev)[BT_MAC_LEN] = '\0';
+            }
+            trusted_dev_found = 1;
+            break;
+        }
+    }
+    
     return trusted_dev_found;
 }
 
@@ -261,17 +448,17 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
 }
 
 /*
-* Free the list of trusted bluetooth MAC addresses from memory
+* Free the list of bluetooth MAC addresses from memory
 *
-* @param trusted_devices: the list of trusted bluetooth MAC addresses
-* @param num_trusted_devices: the cardinality of trusted_devices array - represents the number of trusted bluetooth devices stored in memory
+* @param device_list: the list of bluetooth MAC addresses
+* @param num_of_devices: the cardinality of device array - represents the number of bluetooth devices stored in the array
 */
-void free_trusted_devices(char **trusted_devices, int num_trusted_devices) {
-    if (trusted_devices) {
-        for (int i = 0; i < num_trusted_devices; i++) {
-            free(trusted_devices[i]);
+void free_device_list(char **device_list, int num_of_devices) {
+    if (device_list) {
+        for (int i = 0; i < num_of_devices; i++) {
+            free(device_list[i]);
         }
-        free(trusted_devices);
+        free(device_list);
     }
 }
 
@@ -367,8 +554,11 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
     char curr_time[50];
 
     int num_of_devices = 0;
+    int num_of_paired = 0;
 
     char **trusted_devices = NULL;
+    char **paired_devices = get_paired_devices(log_fp, &num_of_paired);
+
     char *detected_dev = NULL;
 
     if (!(trusted_devices = find_trusted_devices(log_fp, trusted_dir_path, username, &num_of_devices))) {
@@ -379,10 +569,21 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
     get_login_time(curr_time);
     /*******************/
 
+
+    if (log_fp) {
+        fprintf(log_fp, "%s: %d devices are paired to host\n", curr_time, num_of_paired);
+    }
+
     if (log_fp) {
         fprintf(log_fp, "%s: Call find device\n", curr_time);
     }
-    if ((bluetooth_status = find_device(log_fp, trusted_devices, num_of_devices, &detected_dev))) {
+
+    if (paired_devices && (bluetooth_status = find_trusted_paired_device(log_fp, trusted_devices, num_of_devices, paired_devices, num_of_paired, &detected_dev))) {
+        if (log_fp && detected_dev) {
+            fprintf(log_fp, "%s: Device %s paired\n", curr_time, detected_dev);
+        }
+    }
+    else if ((bluetooth_status = find_device(log_fp, trusted_devices, num_of_devices, &detected_dev))) {
         if (log_fp && detected_dev) {
             fprintf(log_fp, "%s: Device %s found\n", curr_time, detected_dev);
         }
@@ -395,8 +596,13 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
 
 bluetooth_login_terminate:
     if (trusted_devices) {
-        free_trusted_devices(trusted_devices, num_of_devices);
+        free_device_list(trusted_devices, num_of_devices);
     }
+
+    if (paired_devices) {
+        free_device_list(paired_devices, num_of_paired);
+    }
+
     if (detected_dev) {
         free(detected_dev);
     }
@@ -424,8 +630,6 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
         perror("Failed to open file");
     }
     /*********************/
-
-    fprintf(log_fp, "Pika test\n");
     
     /*** Get Username ***/
     if (pam_get_user(pamh, &username, "Username: ") != PAM_SUCCESS) {

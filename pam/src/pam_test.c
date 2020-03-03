@@ -22,7 +22,6 @@
 #include <security/pam_appl.h>
 #include <security/pam_modules.h>
 
-//#define DEVICE_ADDR "C0:1A:DA:7A:30:B7"
 #define BT_MAC_LEN 17
 #define BT_MAX_CONN 7 //Bluetooth Adapters can only connect up to 7 devices
 
@@ -140,7 +139,10 @@ int find_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char *
 }
 
 /*
+* Return Bluetooth address if the device is paired. Else return NULL
 *
+* @param properties: An 'object' that holds a specific bluetooth device's metadata
+* @return: Return Bluetooth address if the device is paired. Else return NULL
 */
 char *check_is_paired(GVariant *properties) {
     char *addr = NULL;
@@ -182,6 +184,14 @@ char *check_is_paired(GVariant *properties) {
     return addr;
 }
 
+/*
+*Return a list of paired devices
+* 
+* @param num_of_paired: the number of devices that are paired
+*   NOTE: The number is set in this function
+* @param result: The object returned by request to DBUS for all managed bluetooth object
+* @return: returns a list of paired devices. Need to free
+*/
 char **process_dbus_bt_list(GVariant *result, int *num_of_paired) {
     if(!result) {
         return NULL;
@@ -231,6 +241,8 @@ char **process_dbus_bt_list(GVariant *result, int *num_of_paired) {
 * Approach: Use dbus to list all the bluetooth devices and see the connected property
 *           The paired property only indicates if the device has been paired with the host before and not if it is currently paired
 *
+* @param num_of_paired: the number of devices paired to the host
+*   NOTE: the value is set within the helper function that the function will call
 * @return: return a list of bluetooth addresses connected to the host 
 */
 char **get_paired_devices(int *num_of_paired) {
@@ -427,17 +439,17 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
 }
 
 /*
-* Free the list of trusted bluetooth MAC addresses from memory
+* Free the list of bluetooth MAC addresses from memory
 *
-* @param trusted_devices: the list of trusted bluetooth MAC addresses
-* @param num_trusted_devices: the cardinality of trusted_devices array - represents the number of trusted bluetooth devices stored in memory
+* @param device_list: the list of bluetooth MAC addresses
+* @param num_of_devices: the cardinality of device array - represents the number of bluetooth devices stored in the array
 */
-void free_trusted_devices(char **trusted_devices, int num_trusted_devices) {
-    if (trusted_devices) {
-        for (int i = 0; i < num_trusted_devices; i++) {
-            free(trusted_devices[i]);
+void free_device_list(char **device_list, int num_of_devices) {
+    if (device_list) {
+        for (int i = 0; i < num_of_devices; i++) {
+            free(device_list[i]);
         }
-        free(trusted_devices);
+        free(device_list);
     }
 }
 
@@ -550,9 +562,7 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
     if (log_fp) {
         fprintf(log_fp, "%s: Call find device\n", curr_time);
     }
-    if (paired_devices) {
-        printf("Hello world\n");
-    }
+    
     if (paired_devices && (bluetooth_status = find_trusted_paired_device(log_fp, trusted_devices, num_of_devices, paired_devices, num_of_paired, &detected_dev))) {
         if (log_fp && detected_dev) {
             fprintf(log_fp, "%s: Device %s found\n", curr_time, detected_dev);
@@ -571,11 +581,11 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
 
 bluetooth_login_terminate:
     if (trusted_devices) {
-        free_trusted_devices(trusted_devices, num_of_devices);
+        free_device_list(trusted_devices, num_of_devices);
     }
 
     if (paired_devices) {
-        free_trusted_devices(paired_devices, num_of_paired);
+        free_device_list(paired_devices, num_of_paired);
     }
 
     if (detected_dev) {
