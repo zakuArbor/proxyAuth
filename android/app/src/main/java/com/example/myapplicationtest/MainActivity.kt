@@ -27,7 +27,7 @@ import java.security.MessageDigest
 
 class MainActivity : AppCompatActivity() {
 
-    private var m_bluetoothAdapter: BluetoothAdapter? = null
+    private var m_bluetoothAdapter: BluetoothAdapter? = null // bluetooth adaptor is intially NULL
     private lateinit var m_pairedDevices: Set<BluetoothDevice>
     //readonly
     private val REQUEST_ENABLE_BLUETOOTH = 1
@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layout.activity_main)
 
-
         if(filename.isEmpty()){
             this.filesDir
         } else {
@@ -50,30 +49,25 @@ class MainActivity : AppCompatActivity() {
             //this.getFileStreamPath()
             Log.i("path", ""+ directory)
             ///data/user/0/com.example.myapplicationtest/app_rem_devices
-
         }
 
-        val file2 =
-            File(this.filesDir.toString() + File.separator.toString() + "rem_devices.txt")
+        val file2 = File(this.filesDir.toString() + File.separator.toString() + "rem_devices.txt")
         //file2.delete()
         if(!file2.exists()){
             file2.createNewFile()
-
         }
 
-        //get the default adaptor
+        //get the default adaptor, otherwise no support for bluetooth
         m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-
         if(m_bluetoothAdapter == null){
             toast("Device does not support bluetooth")
             return
         }
 
-        // means m_bluetooth is not going to be null
-        // enabling the bluetooth
+        // m_bluetooth is not going to be null and enabling the bluetooth
         if(!m_bluetoothAdapter!!.isEnabled){
             val enableBluetoothIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH)
+            startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH) //overrides to onActivityResult func.
         }
 
 
@@ -198,6 +192,9 @@ class MainActivity : AppCompatActivity() {
         val sh = MessageDigest.getInstance("SHA-256")
         return BigInteger(1, sh.digest(toByteArray())).toString(16).padStart(32, '0')
     }
+
+
+
 
 }
 
