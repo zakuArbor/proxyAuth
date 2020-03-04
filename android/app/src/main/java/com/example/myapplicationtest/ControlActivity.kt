@@ -71,16 +71,16 @@ class ControlActivity: AppCompatActivity(){
         while (true) {
             // Read from the InputStream.
             numBytes = try {
-                //mmInStream.read(mmBuffer)
                 m_bluetoothSocket!!.inputStream.read(mmBuffer)
             } catch (e: IOException) {
                 Log.d("data", "Input stream was disconnected", e)
                 break
             }
 
-            Log.d("data", mmBuffer.toString(Charsets.UTF_8))
+
             // we have the data from the computer in the buffer mmBuffer now
             // turn it into text here
+            Log.d("data", mmBuffer.toString(Charsets.UTF_8))
         }
 
     }
@@ -93,6 +93,10 @@ class ControlActivity: AppCompatActivity(){
                 m_isConnected = false
             } catch (e: IOException){
                 e.printStackTrace()
+            } finally {
+                m_bluetoothSocket!!.outputStream.close()
+                m_bluetoothSocket!!.inputStream.close()
+                m_bluetoothSocket!!.close()
             }
         }
         finish()
