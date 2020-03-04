@@ -46,7 +46,8 @@ class ControlActivity: AppCompatActivity(){
         ConnectToDevice(this).execute()
         // should be receiving messages from the server at all times
         // not sure if we should just call the method or
-        receiveCommand()
+        
+        //receiveCommand()
         test_button.setOnClickListener{ sendCommand("Hello World!")}
         control_led_disconnect.setOnClickListener{ disconnect()}
 
@@ -88,15 +89,13 @@ class ControlActivity: AppCompatActivity(){
     private fun disconnect(){
         if (m_bluetoothSocket != null){
             try {
+                m_bluetoothSocket!!.outputStream.close()
+                m_bluetoothSocket!!.inputStream.close()
                 m_bluetoothSocket!!.close()
                 m_bluetoothSocket = null
                 m_isConnected = false
             } catch (e: IOException){
                 e.printStackTrace()
-            } finally {
-                m_bluetoothSocket!!.outputStream.close()
-                m_bluetoothSocket!!.inputStream.close()
-                m_bluetoothSocket!!.close()
             }
         }
         finish()
