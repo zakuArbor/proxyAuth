@@ -66,6 +66,12 @@ class ControlActivity: AppCompatActivity(){
             } catch (e: IOException){
                 e.printStackTrace()
             }
+            /**finally { //close the socket added
+                m_bluetoothSocket!!.outputStream.close()
+                m_bluetoothSocket!!.inputStream.close()
+                m_bluetoothSocket!!.close()
+            }**/
+
         }
         finish()
     }
