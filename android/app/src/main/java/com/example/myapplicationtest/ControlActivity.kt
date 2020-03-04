@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.control_layout.*
 import org.jetbrains.anko.toast
 import java.io.IOException
+import java.io.OutputStream
 import java.util.*
 
 class ControlActivity: AppCompatActivity(){
@@ -24,6 +25,8 @@ class ControlActivity: AppCompatActivity(){
         var m_isConnected: Boolean = false
         lateinit var m_address: String
         lateinit var m_name: String
+        private val mmBuffer: ByteArray = ByteArray(1024) // mmBuffer store for the stream
+
 
     }
 
@@ -39,7 +42,11 @@ class ControlActivity: AppCompatActivity(){
         connectedDevice.text = cDevice
         deviceAddress.text = cDeviceAddr
 
+        // connecting to the device
         ConnectToDevice(this).execute()
+        // should be receiving messages from the server at all times
+        // not sure if we should just call the method or
+        receiveCommand()
         test_button.setOnClickListener{ sendCommand("Hello World!")}
         control_led_disconnect.setOnClickListener{ disconnect()}
 
@@ -55,6 +62,27 @@ class ControlActivity: AppCompatActivity(){
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun receiveCommand(){
+        var numBytes: Int // bytes returned from read()
+
+        // Keep listening to the InputStream until an exception occurs.
+        while (true) {
+            // Read from the InputStream.
+            numBytes = try {
+                //mmInStream.read(mmBuffer)
+                m_bluetoothSocket!!.inputStream.read(mmBuffer)
+            } catch (e: IOException) {
+                Log.d("data", "Input stream was disconnected", e)
+                break
+            }
+
+            Log.d("data", mmBuffer.toString(Charsets.UTF_8))
+            // we have the data from the computer in the buffer mmBuffer now
+            // turn it into text here
+        }
+
     }
 
     private fun disconnect(){
@@ -115,4 +143,5 @@ class ControlActivity: AppCompatActivity(){
             m_progress.dismiss()
         }
     }
+
 }
