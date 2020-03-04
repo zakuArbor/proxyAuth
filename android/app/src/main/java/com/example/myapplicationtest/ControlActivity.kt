@@ -46,7 +46,7 @@ class ControlActivity: AppCompatActivity(){
         ConnectToDevice(this).execute()
         // should be receiving messages from the server at all times
         // not sure if we should just call the method or
-        
+
         //receiveCommand()
         test_button.setOnClickListener{ sendCommand("Hello World!")}
         control_led_disconnect.setOnClickListener{ disconnect()}
@@ -56,7 +56,7 @@ class ControlActivity: AppCompatActivity(){
     private fun sendCommand(input: String){
         if (m_bluetoothSocket != null){
             try{
-                Log.d("data", "PIKA PIKA PIKA PIKA DATA DATA DATA")
+                Log.d("data", "Sending Data")
                 Log.d("data", input)
                 m_bluetoothSocket!!.outputStream.write(input.toByteArray())
             } catch (e: IOException){
@@ -128,7 +128,7 @@ class ControlActivity: AppCompatActivity(){
 
             }catch (e: IOException){
                 connectSuccess =  false
-                Log.d("data", "FAILED PIKA PIKA PIKA PIKA PIKA PIKA PIKA\n")
+                Log.d("data", "FAILED TO CONNECT\n")
                 e.printStackTrace()
 
             }
@@ -138,9 +138,9 @@ class ControlActivity: AppCompatActivity(){
         override  fun onPostExecute(result: String?){
             super.onPostExecute(result)
             if(!connectSuccess){
-                Log.i("data", "couldn't connect")
+                Log.i("data", "Couldn't CONNECT")
             } else {
-                Log.i("data", "PIKA CONNECTED PIKA CONNECTED")
+                Log.i("data", "CONNECTED")
                 m_isConnected = true
             }
             m_progress.dismiss()
