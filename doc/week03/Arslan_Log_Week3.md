@@ -10,6 +10,7 @@
 ## SOURCES USED 
 * https://www.tecmint.com/configure-pam-in-centos-ubuntu-linux/
 * https://people.csail.mit.edu/albert/bluez-intro/
+* https://raspberrypi.stackexchange.com/questions/41776/failed-to-connect-to-sdp-server-on-ffffff000000-no-such-file-or-directory
 
 ## TODO
 * We have to used the bluetooth adaptor since Virtual machine doesn't scan the bluetooth hardware from the machine. 
@@ -55,6 +56,48 @@ arslan@arslan-VirtualBox:~/proxyAuth/bluetoothBasics$ hcitool scan
 Scanning ...
 ^C
 ```
+* It did pick up one device in 20 and so attempts. I still have to find the solution for this. 
+* Now, run the rfcomm-server.c program, make sure your bluetooth is turned on and paired, and connected to device with the android app. 
+```
+$ gcc rfcomm-server.c -l bluetooth
+$ ./a.out 
+Registering UUID 00001101-0000-1000-8000-00805f9b34fb
+Segmentation fault (core dumped)
+```
+* The seg fault occured, when callinng the sdp_record_register(). It register the bluetooth service in SDP using BlueZ. Apparently, the seg fault is coming from broken stptool in BLuez. 
+* Run this command and enter your sudo password 
+```
+$ sudo vim /etc/systemd/system/dbus-org.bluez.service
+Welcome arslan
+This is simple PAM module
+[sudo] password for arslan: 
+Acct mgmt
+```
+* Then change this line `ExecStart=/usr/lib/bluetooth/bluetoothd` to `ExecStart=/usr/lib/bluetooth/bluetoothd --compat`
+* Restart the blietooth like this and change the permission
+```
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart bluetooth
+$ sudo chmod 777 /var/run/sdp
+```
+*  Now connected the device again. Connection successful, able to recieve the hellow world message from the andorid app. 
+```$ ./a.out 
+Registering UUID 00001101-0000-1000-8000-00805f9b34fb
+accepted connection from 50:46:5D:1F:74:E6
+hireceived [Hello World!]
+Send message to device:
+hello
+received [Hello World!]
+Send message to device:
+hello 
+received [Hello World!Hello World!Hello World!]
+Send message to device:
+^C
+arslan@arslan-VirtualBox:~/proxyAuth/bluetoothBasics$ 
+```
+
+
+
 
 
 

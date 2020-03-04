@@ -1,8 +1,8 @@
 /*
 * AUTHOR: zakuarbor (Ju Hong Kim)
-* DESC: PAM module for the ProxyAuth project. Authenticates users via bluetooth proximity
+* DESC: For testing new features of the PAM module before deployment testing (i.e. Test if feature works as intended without any obvious bugs). 
+*   This does not replace testing the PAM module. It is suppose to be used for quick, dirty and simple runtime testing with memory leak checker.
 */
-
 
 #include <errno.h>
 #include <limits.h>
@@ -241,12 +241,11 @@ char **process_dbus_bt_list(GVariant *result, int *num_of_paired) {
 * Approach: Use dbus to list all the bluetooth devices and see the connected property
 *           The paired property only indicates if the device has been paired with the host before and not if it is currently paired
 *
-* @param log_fp: the handle of the log file
 * @param num_of_paired: the number of devices paired to the host
 *   NOTE: the value is set within the helper function that the function will call
 * @return: return a list of bluetooth addresses connected to the host 
 */
-char **get_paired_devices(FILE *log_fp, int *num_of_paired) {
+char **get_paired_devices(int *num_of_paired) {
     GDBusConnection *conn;
 
     GVariant *result = NULL;
@@ -254,14 +253,7 @@ char **get_paired_devices(FILE *log_fp, int *num_of_paired) {
 
     if(!(conn = g_bus_get_sync(G_BUS_TYPE_SYSTEM, NULL, NULL))) {
         g_print("Not able to get connection to system bus\n");
-        if (log_fp) {
-            fprintf(log_fp, "Error: UNable to connect to system bus\n");   
-        }
-
         return NULL;
-    }
-    if (log_fp) {
-        fprintf(log_fp, "Connect to system bus\n");   
     }
 
     result = g_dbus_connection_call_sync(
@@ -277,9 +269,6 @@ char **get_paired_devices(FILE *log_fp, int *num_of_paired) {
         NULL,                                   //cancel error
         NULL                                    //error if parameter is not compatible with D-Bus protocol
     );
-    if (!result) {
-        exit(1);
-    }
 
     paired_devices = process_dbus_bt_list(result, num_of_paired);
 
@@ -304,9 +293,11 @@ int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, int num_of_
     if (!trusted_devices || !paired_devices) {
         return 0;
     }
+    printf("test\n");
     int trusted_dev_found = 0;
 
     for (int i = 0; i < num_of_paired; i++) {
+        printf("comparing: %s\n", paired_devices[i]);
         if (is_dev_trusted(log_fp, paired_devices[i], trusted_devices, num_of_devices)) {
             if (log_fp) {
                 fprintf(log_fp, "Trusted Device: %s\n", paired_devices[i]);
@@ -557,8 +548,7 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
     int num_of_paired = 0;
 
     char **trusted_devices = NULL;
-    char **paired_devices = get_paired_devices(log_fp, &num_of_paired);
-
+    char **paired_devices = get_paired_devices(&num_of_paired);
     char *detected_dev = NULL;
 
     if (!(trusted_devices = find_trusted_devices(log_fp, trusted_dir_path, username, &num_of_devices))) {
@@ -569,18 +559,13 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
     get_login_time(curr_time);
     /*******************/
 
-
-    if (log_fp) {
-        fprintf(log_fp, "%s: %d devices are paired to host\n", curr_time, num_of_paired);
-    }
-
     if (log_fp) {
         fprintf(log_fp, "%s: Call find device\n", curr_time);
     }
-
+    
     if (paired_devices && (bluetooth_status = find_trusted_paired_device(log_fp, trusted_devices, num_of_devices, paired_devices, num_of_paired, &detected_dev))) {
         if (log_fp && detected_dev) {
-            fprintf(log_fp, "%s: Device %s paired\n", curr_time, detected_dev);
+            fprintf(log_fp, "%s: Device %s found\n", curr_time, detected_dev);
         }
     }
     else if ((bluetooth_status = find_device(log_fp, trusted_devices, num_of_devices, &detected_dev))) {
@@ -610,49 +595,31 @@ bluetooth_login_terminate:
     return bluetooth_status;
 }
 
-PAM_EXTERN int pam_sm_setcred( pam_handle_t *pamh, int flags, int argc, const char **argv ) {
-	return PAM_SUCCESS;
-}
+/*
+* 
+*/
 
-PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const char **argv) {
-	return PAM_SUCCESS;
-}
-
-PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, const char **argv ) {
-	int bluetooth_status = PAM_AUTH_ERR;
-
-	const char* username;
+int main(int argc, char **argv)
+{
+    const char *trusted_dir_path = "/etc/proxy_auth/";
+    const char *username = "zaku";
 
     FILE *log_fp = NULL;
-
-    /*** OPEN LOG FILE ***/
-    if (!(log_fp = fopen("/var/log/pam-proxy-auth.log", "a"))) {
-        perror("Failed to open file");
-    }
-    /*********************/
     
-    /*** Get Username ***/
-    if (pam_get_user(pamh, &username, "Username: ") != PAM_SUCCESS) {
-        perror("Could not find username");
-        if (log_fp) {
-            fprintf(log_fp, "Could not find username\n");
-        }
-        goto pam_sm_authenticate;
-    }
-    /*******************/
-
+    /*** OPEN LOG FILE ***/
+    /*if (!(log_fp = fopen("/var/log/pam-proxy-auth.log", "a"))) {
+        perror("Failed to open file");
+    }*/
+    /*********************/
+    printf("start bluetooth_login\n");
     if (bluetooth_login(log_fp, trusted_dir_path, username)) {
-	   if (log_fp) {
-            fprintf(log_fp, "Login via Auth Proxy\n");
-        }
-       bluetooth_status = PAM_SUCCESS;
+       printf("Welcome %s. Login via Auth Proxy.\n", username);
     }
-
-pam_sm_authenticate:
+    else {
+        printf("Failed");
+    }
 
     if (log_fp) {
         fclose(log_fp);
     }
-
-	return bluetooth_status;
 }
