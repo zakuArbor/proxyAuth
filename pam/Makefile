@@ -23,4 +23,4 @@ pam_test: src/pam_test.c
 	$(CC) -o $@ $< $(CFLAGS) -fsanitize=address $(BLUETOOTH_LIB) $(G_CFLAGS) $(GLIB)
 
 clean:
-	rm -f *.o *.so
+	rm -f *.o $(PAM_PATH)
