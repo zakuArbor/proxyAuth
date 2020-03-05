@@ -1,10 +1,12 @@
 package com.example.myapplicationtest
 
+import android.app.IntentService
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -40,7 +42,7 @@ class ControlActivity: AppCompatActivity(){
         deviceAddress.text = cDeviceAddr
 
         ConnectToDevice(this).execute()
-        test_button.setOnClickListener{ sendCommand("Hello World!")}
+        test_button.setOnClickListener{ sendCommand("Hello World!")} //for now sending this
         control_led_disconnect.setOnClickListener{ disconnect()}
 
     }
@@ -48,7 +50,7 @@ class ControlActivity: AppCompatActivity(){
     private fun sendCommand(input: String){
         if (m_bluetoothSocket != null){
             try{
-                Log.d("data", "PIKA PIKA PIKA PIKA DATA DATA DATA")
+                Log.d("data", "DATA incoming")
                 Log.d("data", input)
                 m_bluetoothSocket!!.outputStream.write(input.toByteArray())
             } catch (e: IOException){
@@ -75,6 +77,7 @@ class ControlActivity: AppCompatActivity(){
         finish()
     }
 
+
     private class ConnectToDevice(c: Context): AsyncTask<Void, Void, String>(){
 
         private var connectSuccess: Boolean = true
@@ -86,7 +89,7 @@ class ControlActivity: AppCompatActivity(){
 
         override fun onPreExecute(){
             super.onPreExecute()
-            m_progress = ProgressDialog.show(context, "Connecting...", "please wait")
+            m_progress = ProgressDialog.show(context, "Connecting...", "Please wait")
         }
 
         override fun doInBackground(vararg p0: Void?): String?{
@@ -99,10 +102,9 @@ class ControlActivity: AppCompatActivity(){
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
                     m_bluetoothSocket!!.connect()
                 }
-
             }catch (e: IOException){
                 connectSuccess =  false
-                Log.d("data", "FAILED PIKA PIKA PIKA PIKA PIKA PIKA PIKA\n")
+                Log.d("data", "FAILED \n")
                 e.printStackTrace()
 
             }
@@ -112,12 +114,15 @@ class ControlActivity: AppCompatActivity(){
         override  fun onPostExecute(result: String?){
             super.onPostExecute(result)
             if(!connectSuccess){
-                Log.i("data", "couldn't connect")
+                Log.i("data", "Unable to connect")
             } else {
-                Log.i("data", "PIKA CONNECTED PIKA CONNECTED")
+                Log.i("data", "Successfully connected")
                 m_isConnected = true
             }
             m_progress.dismiss()
         }
     }
 }
+
+
+
