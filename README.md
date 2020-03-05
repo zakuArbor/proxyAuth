@@ -10,6 +10,7 @@ PAMxAndroid via Bluetooth proximity based login
 Instructions are for Debian based systems that have GNOME.
 1. Need to install the PAM libraries
 `sudo apt-get install libpam0g-dev`
+`sudo apt-get install libglib2.0-dev`
 
 2. Install `bluez`
 ```
