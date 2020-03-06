@@ -54,6 +54,7 @@
    * Automatically connected to a paired device stored in memory.
   
 * Areeb Siddiqui
+   * Added write capabilities to C server program
 
 
 ## Goals for Next Sprint (Will be subject to change)
