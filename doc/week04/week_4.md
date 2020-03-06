@@ -10,6 +10,8 @@
     * Allow login if device is trusted and paired with the laptop (Resolves issue #5)
     * Worked with Daniel Wang on issue #18 #20 on how to approach the problem
 * Daniel Wang: 
+    * Fixed bugs with auto-lockout, added 10s timer for auto lock-out.
+    * Made file descriptors in recv loop unblocking
 
 * Arslan Qamar 
    
