@@ -20,6 +20,9 @@
 * Sean Coutinho
   
 * Areeb Siddiqui
+   * Researched encryption algorithms, key exchange algorithms, and security standards to apply to our data transfer
+   * Started implementing addition of SSL to our socket (w/ RSA encryption), using the C OpenSSL library      
+      * Originally planned to use Diffie-Hellman for key exchange and AES for encryption, maybe revert to this if necessary
 
 
 ## Goals for Next Sprint (Will be subject to change)
