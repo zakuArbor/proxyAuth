@@ -14,6 +14,8 @@
 * Arslan Qamar 
    
 * Anurag Bist
+   * Implemented Android app's ability to receive messages from C server
+   * Worked on Issue #21
 
 * Sean Coutinho
   
