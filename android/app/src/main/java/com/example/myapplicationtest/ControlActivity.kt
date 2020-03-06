@@ -71,7 +71,7 @@ class ControlActivity: AppCompatActivity(){
             finally { //close the socket added
                 m_bluetoothSocket!!.outputStream.close()
                 m_bluetoothSocket!!.inputStream.close()
-                m_bluetoothSocket!!.close()
+                //m_bluetoothSocket!!.close()
             }
         }
         finish()
