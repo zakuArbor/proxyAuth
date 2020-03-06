@@ -11,6 +11,7 @@
     * Restructure PAM and ensure no memory leaks
     * Authenticate trusted devices on PAM
 * Daniel Wang: 
+    * Enable auto-lockout for PAM
 
 * Arslan Qamar 
    * Setup the bluetooth adaptor for virtual machine
