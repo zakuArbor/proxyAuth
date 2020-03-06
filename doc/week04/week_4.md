@@ -14,6 +14,8 @@
     * Made file descriptors in recv loop unblocking
 
 * Arslan Qamar 
+    * 
+    * Worked on closing the android socket, once the connection with server is severed and Android bacground services, mainly implementing the Intent services.
    
 * Anurag Bist
    * Implemented Android app's ability to receive messages from C server
