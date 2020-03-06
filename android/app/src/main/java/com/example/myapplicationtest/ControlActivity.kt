@@ -77,10 +77,9 @@ class ControlActivity: AppCompatActivity(){
                 Log.d("data", "Input stream was disconnected", e)
                 break
             }
-
-
             // we have the data from the computer in the buffer mmBuffer now
             // turn it into text here
+            toast("data received")
             Log.d("data", mmBuffer.toString(Charsets.UTF_8))
         }
 
