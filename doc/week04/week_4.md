@@ -13,9 +13,9 @@
     * Fixed bugs with auto-lockout, added 10s timer for auto lock-out.
     * Made file descriptors in recv loop unblocking
 
-* Arslan Qamar 
-    * 
-    * Worked on closing the android socket, once the connection with server is severed and Android bacground services, mainly implementing the Intent services.
+* Arslan Qamar
+    * Worked on closing the android socket, once the connection with server is severed and Android background services, mainly implementing the Intent services Issue #08.
+    * Fixing other minor bugs within the app. 
    
 * Anurag Bist
    * Implemented Android app's ability to receive messages from C server
@@ -30,10 +30,24 @@
 
 
 ## Goals for Next Sprint (Will be subject to change)
-**PAM:**
-
 **Android:**
+   * Allow a Bluetooth Connection to be maintained in the background when app is running in the background and/or the phone is locked.
+   * Start creating a message list for our Bluetooth connection. 
+   * Update UI to allow the user to select prefered security level during setup.
+   * Implement continuous transmission of messages to Server
+
+ **PAM:**
+   * Create a secure channel between the Linux Pam (server side) & Android app (client side) and send challenge response 
+   * Rewrite Makefile and PAM to be more modular (mainly to allow testing and sanitation testing easier to perform)
+   * Implement the continuous transmission of messages to Android
+     
+ **Security Concerns:**
+   * Will be experimenting the man in the middle attacks
+   * Other security issues with the current implementation.
 
 ## To Improve in the Next Sprint
+   * Communicate effecctively
+
 
 ## PROBLEMS
+   * 
