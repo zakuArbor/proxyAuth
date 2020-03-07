@@ -4,6 +4,7 @@ package com.example.myapplicationtest
 //import sun.text.normalizer.UTF16.append
 
 import android.app.Activity
+import android.app.IntentService
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
@@ -52,12 +53,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         val file2 = File(this.filesDir.toString() + File.separator.toString() + "rem_devices.txt")
-        //file2.delete()
         if(!file2.exists()){
             file2.createNewFile()
         }
 
-        //get the default adaptor, otherwise no support for bluetooth
+        //get the default adaptor, otherwise no support for bluetooth devices
         m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if(m_bluetoothAdapter == null){
             toast("Device does not support bluetooth")
@@ -70,12 +70,7 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH) //overrides to onActivityResult func.
         }
 
-
-
-
-
         //Log.i("device", ""+files)
-
         //Once the refresh button is clicked, pairedDeviceList function is called
         button_change.setOnClickListener{ pairedDeviceList()}
     }
@@ -91,8 +86,7 @@ class MainActivity : AppCompatActivity() {
             //--------------------------------------------
             //val rem_address = this.openFileInput(filename).bufferedReader().readLine()
             //val filename = "rem_devices.txt"
-            val file2 =
-                File(this.filesDir.toString() + File.separator.toString() + "rem_devices.txt")
+            val file2 = File(this.filesDir.toString() + File.separator.toString() + "rem_devices.txt")
             val fis = FileInputStream(file2/*openFileInput(filename)*/)
 
 
@@ -128,7 +122,6 @@ class MainActivity : AppCompatActivity() {
             val device: BluetoothDevice = list[position]
 
             val address = device.address.toString().sha()
-            //------------------------------------------
             val filename = "rem_devices.txt"
 
             val file2 =
@@ -162,13 +155,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra(DEVICE_NAME, name)
 
             startActivity(intent)
-
-
-
-
         }
-
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -180,7 +167,6 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     toast("Bluetooth has been disabled")
                 }
-
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // bluetooth enabling cancelled
                 toast("Bluetooth enabling has been cancelled")
@@ -188,14 +174,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //stores and compares sha-256 hash, and address is not stored in plaintext
     fun String.sha(): String {
         val sh = MessageDigest.getInstance("SHA-256")
         return BigInteger(1, sh.digest(toByteArray())).toString(16).padStart(32, '0')
     }
+}
 
+// subclass for simple background operations
+class RSSPullService : IntentService(RSSPullService::class.simpleName) {
 
-
-
+    override fun onHandleIntent(workIntent: Intent) {
+        // Gets data from the incoming Intent
+        val dataString = workIntent.dataString
+        // Do work here, based on the contents of dataString
+    }
 }
 
 
