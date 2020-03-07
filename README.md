@@ -10,6 +10,7 @@ PAMxAndroid via Bluetooth proximity based login
 Instructions are for Debian based systems that have GNOME.
 1. Need to install the PAM libraries
 `sudo apt-get install libpam0g-dev`
+`sudo apt-get install libglib2.0-dev`
 
 2. Install `bluez`
 ```
@@ -38,6 +39,13 @@ and add the following near or at the top of the file:
 auth sufficient pam_proxy.so
 auth required pam_warn.so
 ```
+
+**To add Trusted Device**
+1. Create the directory if it does not exist: `/etc/proxy_auth/`
+    * This is where all the user's MAC Addresses are stored
+2. Create a file that lists the user's trusted bluetooth devices: `echo <bluetooth_address> >> /etc/proxy_auth/$USER`
+
+
 ## Running Bluetooth Server
 
 **Requirements:**

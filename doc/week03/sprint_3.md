@@ -11,6 +11,7 @@
     * Restructure PAM and ensure no memory leaks
     * Authenticate trusted devices on PAM
 * Daniel Wang: 
+    * Enable auto-lockout for PAM
 
 * Arslan Qamar 
    * Setup the bluetooth adaptor for virtual machine
@@ -54,6 +55,7 @@
    * Automatically connected to a paired device stored in memory.
   
 * Areeb Siddiqui
+   * Added write capabilities to C server program
 
 
 ## Goals for Next Sprint (Will be subject to change)
