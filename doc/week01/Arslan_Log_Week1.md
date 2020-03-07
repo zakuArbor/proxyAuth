@@ -5,8 +5,8 @@
 ---
 
 ## OBJECTIVES
-* Run the simple pam module
-* Peform testing 
+* Run the simple Pam Module
+* Peform Testing 
 
 ## SOURCES USED 
 * https://www.tecmint.com/configure-pam-in-centos-ubuntu-linux/
@@ -21,8 +21,8 @@
 ## PAM Module SETUP 
 
 ### GOALS
-* Install the UBUNTU on virtual machine
-* Install packages/tools that we be using e.g. ssh, git, gcc and others
+* Install the UBUNTU on Virtual Machine
+* Install packages/dependencies/tools that we be using e.g. ssh, git, gcc and others
 
 ### STEPS
 **Install SSH to login from your computer's terminal due to display size problem** `sudo apt update sudo apt` `install openssh-server`
