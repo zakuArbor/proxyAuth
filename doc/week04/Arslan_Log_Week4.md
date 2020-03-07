@@ -3,8 +3,8 @@
 ---
 
 ## OBJECTIVES
-* **Previously** Setup the Bluetooth adaptor that can allow us to connect to Bluetooth within Virtual Environment but there was slow because of two reasons: running the Virtual Machine and using the external Bluetooth Adaptor 
-* Perform the Dual-boot, Implement the SSH server 
+* **Previously,** setup the Bluetooth adaptor that can allow us to connect to Bluetooth within Virtual Environment but it was really slow because of two reasons: running the Virtual Machine and using the external Bluetooth Adaptor 
+* Perform the Dual-boot, Implement the SSH Server 
 
 ## SOURCES USED 
 * https://www.tecmint.com/configure-pam-in-centos-ubuntu-linux/
@@ -16,14 +16,14 @@
 ## TODO
 * Peform the dual-boot 
 * Install the packages/tools/dependencies
-* Configure the SSH server for connection Over Internet using Public IP address (requires Port Forwarding)
+* Configure the SSH Server for Connection Over Internet using Public IP Address (requires Port Forwarding)
 
 ---
 
 ## BLUETOOTH
 ### SETUP
 
-* Log in to the server comuter using public IP address
+* Log in to the server computer using Public IP Address
 ```
 Arslans-MBP:proxyAuth arslanqamar$ ssh moon@99.251.252.240
 moon@99.251.252.240's password: 
@@ -94,13 +94,13 @@ moon@moon-ThinkPad-T61:~/proxyAuth/bluetoothBasics$ sudo vim /etc/systemd/system
 
 ```
 * Then change this line **FROM** `ExecStart=/usr/lib/bluetooth/bluetoothd` **TO** `ExecStart=/usr/lib/bluetooth/bluetoothd --compat`
-* Restart the Blietooth and change the permission
+* Restart the Blietooth and change the permissions
 ```
 moon@moon-ThinkPad-T61:~/proxyAuth/bluetoothBasics$ sudo systemctl daemon-reload
 moon@moon-ThinkPad-T61:~/proxyAuth/bluetoothBasics$ sudo systemctl restart bluetooth
 moon@moon-ThinkPad-T61:~/proxyAuth/bluetoothBasics$ sudo chmod 777 /var/run/sdp
 ```
-*  Now connect the device again. Connection successful, able to recieve the [Hello World!] message from the Andorid App (without pressing any keys)
+*  Now connect the device again. Connection Successful, able to recieve the [Hello World!] message from the Andorid App (without pressing any keys)
 ```
 moon@moon-ThinkPad-T61:~/proxyAuth/bluetoothBasics$ ./server
 Registering UUID 00001101-0000-1000-8000-00805f9b34fb
