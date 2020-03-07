@@ -4,7 +4,7 @@
 ---
 
 ## OBJECTIVES
-* Setup the bluetooth adaptor that can allow us to connect to bluetooth in virtual environment
+* Setup the Bluetooth adaptor that can allow us to connect to Bluetooth within Virtual Environment
 * Peform testing 
 
 ## SOURCES USED 
@@ -13,17 +13,16 @@
 * https://raspberrypi.stackexchange.com/questions/41776/failed-to-connect-to-sdp-server-on-ffffff000000-no-such-file-or-directory
 
 ## TODO
-* We have to used the bluetooth adaptor since Virtual machine doesn't scan the bluetooth hardware from the machine. 
-* 
+* We have to used the Bluetooth adaptor since Virtual machine doesn't scan the Bluetooth hardware from the machine. 
 
 ---
 
 ## BLUETOOTH
 ### SETUP
-* We will be using the bluez for bluetooth in vitual box. Install the bluetooth library
+* We will be using the Bluez for Bluetooth in Virtual Box. Install the Bluetooth library
 `sudo apt install bluez`
 `sudo apt-get install libbluetooth-dev`
-* Verify if bluez detects the bluetooth adaptor 
+* Verify if Bluez detects the Bluetooth adaptor 
 ```
 $ hciconfig
 hci0:	Type: Primary  Bus: USB
@@ -32,7 +31,7 @@ hci0:	Type: Primary  Bus: USB
 	RX bytes:2528 acl:0 sco:0 events:114 errors:0
 	TX bytes:4944 acl:0 sco:0 commands:70 errors:0
 ```
-* Ccompile the simple.c
+* Compile the simple.c
 `gcc -o simplescan simple.c -lbluetooth`
 * Even after running the simple for many times, it won't show any devices. I also run the hcitool scan but that didn't work either 
 ```
@@ -56,8 +55,8 @@ arslan@arslan-VirtualBox:~/proxyAuth/bluetoothBasics$ hcitool scan
 Scanning ...
 ^C
 ```
-* It did pick up one device in 20 and so attempts. I still have to find the solution for this. 
-* Now, run the rfcomm-server.c program, make sure your bluetooth is turned on and paired, and connected to device with the android app. 
+* It did pick up one device in 20 and so attempts. I still have to find the **solution** for this. 
+* Now, run the rfcomm-server.c program, make sure your Bluetooth is turned on and paired, and connected to device with the Android App. 
 ```
 $ gcc rfcomm-server.c -l bluetooth
 $ ./a.out 
@@ -65,7 +64,7 @@ Registering UUID 00001101-0000-1000-8000-00805f9b34fb
 Segmentation fault (core dumped)
 ```
 * The seg fault occured, when callinng the sdp_record_register(). It register the bluetooth service in SDP using BlueZ. Apparently, the seg fault is coming from broken stptool in BLuez. 
-* Run this command and enter your sudo password 
+* Run this command and enter your sudo password (if asked)
 ```
 $ sudo vim /etc/systemd/system/dbus-org.bluez.service
 Welcome arslan
@@ -73,14 +72,14 @@ This is simple PAM module
 [sudo] password for arslan: 
 Acct mgmt
 ```
-* Then change this line `ExecStart=/usr/lib/bluetooth/bluetoothd` to `ExecStart=/usr/lib/bluetooth/bluetoothd --compat`
-* Restart the blietooth like this and change the permission
+* Then change this line from `ExecStart=/usr/lib/bluetooth/bluetoothd` to `ExecStart=/usr/lib/bluetooth/bluetoothd --compat`
+* Restart the Bluetooth and change the permission
 ```
 $ sudo systemctl daemon-reload
 $ sudo systemctl restart bluetooth
 $ sudo chmod 777 /var/run/sdp
 ```
-*  Now connected the device again. Connection successful, able to recieve the hellow world message from the andorid app. 
+*  Now connect the device again. Connection successful, able to recieve the [Hello World!] message from the Andorid App. 
 ```$ ./a.out 
 Registering UUID 00001101-0000-1000-8000-00805f9b34fb
 accepted connection from 50:46:5D:1F:74:E6
