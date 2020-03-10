@@ -7,27 +7,17 @@
 
 ## Participants Contribution:
 * Ju Hong Kim: 
-    * Allow login if device is trusted and paired with the laptop (Resolves issue #5)
-    * Worked with Daniel Wang on issue #18 #20 on how to approach the problem
+    
 * Daniel Wang: 
-    * Fixed bugs with auto-lockout, added 10s timer for auto lock-out.
-    * Made file descriptors in recv loop unblocking
-
-* Arslan Qamar
-    * Worked on closing the android socket, once the connection with server is severed and Android background services, mainly implementing the Intent services Issue #08.
-    * Fixing other minor bugs within the app. 
    
+* Arslan Qamar
+    
 * Anurag Bist
-   * Implemented Android app's ability to receive messages from C server
-   * Worked on Issue #21
-
+ 
 * Sean Coutinho
   
 * Areeb Siddiqui
-   * Researched encryption algorithms, key exchange algorithms, and security standards to apply to our data transfer
-   * Started implementing addition of SSL to our socket (w/ RSA encryption), using the C OpenSSL library      
-      * Originally planned to use Diffie-Hellman for key exchange and AES for encryption, maybe revert to this if necessary
-
+  
 
 ## Goals for Next Sprint (Will be subject to change)
 **Android:**
@@ -46,7 +36,8 @@
    * Other security issues with the current implementation.
 
 ## To Improve in the Next Sprint
-   * Communicate effecctively
+   * Communicate & work effecctively
+   * Must prioritize the issues that fulfill the sprint.
 
 
 ## PROBLEMS
