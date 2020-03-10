@@ -36,7 +36,7 @@ class ControlActivity: AppCompatActivity(){
         m_address = intent.getStringExtra(MainActivity.EXTRA_ADDRESS)
         m_name = intent.getStringExtra(MainActivity.DEVICE_NAME)
 
-        val cDevice = "Connected device: $m_name"
+        val cDevice = "Connected Device: $m_name"
         val cDeviceAddr = "Device Address: $m_address"
         connectedDevice.text = cDevice
         deviceAddress.text = cDeviceAddr
@@ -50,7 +50,7 @@ class ControlActivity: AppCompatActivity(){
     private fun sendCommand(input: String){
         if (m_bluetoothSocket != null){
             try{
-                Log.d("data", "DATA incoming")
+                Log.d("data", "DATA Incoming")
                 Log.d("data", input)
                 m_bluetoothSocket!!.outputStream.write(input.toByteArray())
             } catch (e: IOException){
@@ -65,14 +65,14 @@ class ControlActivity: AppCompatActivity(){
                 m_bluetoothSocket!!.close()
                 m_bluetoothSocket = null
                 m_isConnected = false
+                m_bluetoothSocket!!.outputStream.close()
+                m_bluetoothSocket!!.inputStream.close()
             } catch (e: IOException){
                 e.printStackTrace()
             }
-            finally { //close the socket added
-                m_bluetoothSocket!!.outputStream.close()
-                m_bluetoothSocket!!.inputStream.close()
+           // finally { //close the socket
                 //m_bluetoothSocket!!.close()
-            }
+            //}
         }
         finish()
     }
@@ -89,7 +89,7 @@ class ControlActivity: AppCompatActivity(){
 
         override fun onPreExecute(){
             super.onPreExecute()
-            m_progress = ProgressDialog.show(context, "Connecting...", "Please wait")
+            m_progress = ProgressDialog.show(context, "Connecting...", "Please Wait")
         }
 
         override fun doInBackground(vararg p0: Void?): String?{
@@ -104,7 +104,7 @@ class ControlActivity: AppCompatActivity(){
                 }
             }catch (e: IOException){
                 connectSuccess =  false
-                Log.d("data", "FAILED \n")
+                Log.d("data", "Failed \n")
                 e.printStackTrace()
 
             }
@@ -114,9 +114,9 @@ class ControlActivity: AppCompatActivity(){
         override  fun onPostExecute(result: String?){
             super.onPostExecute(result)
             if(!connectSuccess){
-                Log.i("data", "Unable to connect")
+                Log.i("data", "Unable to Connect")
             } else {
-                Log.i("data", "Successfully connected")
+                Log.i("data", "Successfully Connected")
                 m_isConnected = true
             }
             m_progress.dismiss()

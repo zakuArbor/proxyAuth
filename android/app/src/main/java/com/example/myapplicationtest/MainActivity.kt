@@ -146,9 +146,7 @@ class MainActivity : AppCompatActivity() {
 
             Log.i("path", "CONNECT TO ME OUTSTREAM "+bArray.toString(Charsets.UTF_8))
 
-
             val name: String = device.name
-
 
             val intent = Intent(this, ControlActivity::class.java)
             intent.putExtra(EXTRA_ADDRESS, device.address)
@@ -182,12 +180,31 @@ class MainActivity : AppCompatActivity() {
 }
 
 // subclass for simple background operations
+/**
+ * A constructor is required, and should call the super [android.app.IntentService.IntentService]
+ * constructor with a name for the worker thread.
+ */
 class RSSPullService : IntentService(RSSPullService::class.simpleName) {
-
+    /**
+     * IntentService calls this method from the default worker thread in order
+     * to start the service. When this approach returns, IntentService
+     * may, if needed, interrupt the service.
+     */
     override fun onHandleIntent(workIntent: Intent) {
         // Gets data from the incoming Intent
+        // Normally we would do some work here, like download a file.
+        // For our sample, we just sleep for 5 seconds.
+
         val dataString = workIntent.dataString
         // Do work here, based on the contents of dataString
+
+//        try {
+//            Thread.sleep(5000)
+//        } catch (e: InterruptedException) {
+//            // Restore interrupt status.
+//            Thread.currentThread().interrupt()
+//        }
+
     }
 }
 
