@@ -7,6 +7,8 @@ LINUX_PAM_PATH = /lib/security/
 PAM_PATH = $(LINUX_PAM_PATH)/pam_proxy.so
 BLUETOOTH_LIB = -lbluetooth
 LDLIBS = -lc
+SRC = src
+LIB_DEP = $(SRC)/pam_bt_pair.h $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_trust.h
 # LD_PRELOAD=${LIB_ASAN_PATH} $(PAM_PATH)
 #gcc -print-file-name=libasan.so
 
@@ -19,7 +21,7 @@ pam_proxy.so: pam_proxy.o
 pam_proxy.o: src/pam_proxy.c
 	$(CC) -c $< $(CFLAGS) $(G_CFLAGS) -o $@ 
 
-pam_test: src/pam_test.c
+pam_test: src/pam_test.c $(LIB_DEP)
 	$(CC) -o $@ $< $(CFLAGS) -fsanitize=address $(BLUETOOTH_LIB) $(G_CFLAGS) $(GLIB)
 
 install: all
