@@ -199,7 +199,7 @@ class RSSPullService : IntentService(RSSPullService::class.simpleName) {
         // Do work here, based on the contents of dataString
 
 //        try {
-//            Thread.sleep(5000)
+//            Thread.sleep(10000)  // 10 seconds
 //        } catch (e: InterruptedException) {
 //            // Restore interrupt status.
 //            Thread.currentThread().interrupt()

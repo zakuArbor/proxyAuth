@@ -44,7 +44,6 @@ class ControlActivity: AppCompatActivity(){
         ConnectToDevice(this).execute()
         test_button.setOnClickListener{ sendCommand("Hello World!")} //for now sending this
         control_led_disconnect.setOnClickListener{ disconnect()}
-
     }
 
     private fun sendCommand(input: String){
@@ -67,16 +66,13 @@ class ControlActivity: AppCompatActivity(){
                 m_isConnected = false
                 m_bluetoothSocket!!.outputStream.close()
                 m_bluetoothSocket!!.inputStream.close()
+
             } catch (e: IOException){
                 e.printStackTrace()
             }
-           // finally { //close the socket
-                //m_bluetoothSocket!!.close()
-            //}
         }
         finish()
     }
-
 
     private class ConnectToDevice(c: Context): AsyncTask<Void, Void, String>(){
 
@@ -125,4 +121,7 @@ class ControlActivity: AppCompatActivity(){
 }
 
 
-
+// for disconnet(), if needed
+/** finally {
+    m_bluetoothSocket!!.close()
+} */
