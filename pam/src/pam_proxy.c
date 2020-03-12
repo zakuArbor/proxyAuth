@@ -71,74 +71,6 @@ int is_dev_trusted(FILE *log_fp, char *dev, char **trusted_devices, int num_of_d
 }
 
 /*
-* Return 1 iff a trusted device for the user is detected
-*
-* @param log_fp: the handle of the log file
-* @param trusted_devices: the array of trusted bluetooth MAC addresses of the user
-* @param num_of_devices: the number of devices the user trusts
-* @param detected_dev: the address of the detected device
-*   NOTE: detected_dev will be set in this function if a device was detected
-* @return: 1 iff a trusted device for the user is detected
-*/
-int find_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char **detected_dev) {
-    if (!trusted_devices) {
-        return 0;
-    }
-
-    inquiry_info *ii = NULL;
-    int max_rsp, num_rsp;
-    int dev_id, sock, len, flags;
-    int i;
-    char addr[19] = { 0 };
-    int trusted_dev_found = 0;
-
-    dev_id = hci_get_route(NULL);
-    sock = hci_open_dev( dev_id );
-    if (dev_id < 0 || sock < 0) {
-        perror("opening socket");
-        return(0);
-    }
-
-    len  = 8;
-    max_rsp = 255;
-    flags = IREQ_CACHE_FLUSH;
-    ii = (inquiry_info*)malloc(max_rsp * sizeof(inquiry_info));
-
-    num_rsp = hci_inquiry(dev_id, len, max_rsp, NULL, &ii, flags);
-    if(num_rsp < 0) {
-        if (log_fp) {
-            fprintf(log_fp, "Error: hci_inquiry\n");
-        }
-        perror("hci_inquiry");
-    }
-    
-    for (i = 0; i < num_rsp; i++) {
-        ba2str(&(ii+i)->bdaddr, addr);
-
-        if (is_dev_trusted(log_fp, addr, trusted_devices, num_of_devices)) {
-            if (log_fp) {
-                fprintf(log_fp, "Trusted Device: %s\n", addr);
-            }
-            if ((*detected_dev = malloc(sizeof(char) * (BT_MAC_LEN + 1)))) {
-                strncpy(*detected_dev, addr, BT_MAC_LEN);
-                (*detected_dev)[BT_MAC_LEN] = '\0';
-            }
-            trusted_dev_found = 1;
-            break;
-        }
-    }
-
-    if (ii) {
-        free(ii);
-    }
-    if (sock) {
-        close(sock);
-    }
-
-    return trusted_dev_found;
-}
-
-/*
 * Return Bluetooth address if the device is paired. Else return NULL
 *
 * @param properties: An 'object' that holds a specific bluetooth device's metadata
@@ -581,11 +513,6 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
     if (paired_devices && (bluetooth_status = find_trusted_paired_device(log_fp, trusted_devices, num_of_devices, paired_devices, num_of_paired, &detected_dev))) {
         if (log_fp && detected_dev) {
             fprintf(log_fp, "%s: Device %s paired\n", curr_time, detected_dev);
-        }
-    }
-    else if ((bluetooth_status = find_device(log_fp, trusted_devices, num_of_devices, &detected_dev))) {
-        if (log_fp && detected_dev) {
-            fprintf(log_fp, "%s: Device %s found\n", curr_time, detected_dev);
         }
     }
     else {
