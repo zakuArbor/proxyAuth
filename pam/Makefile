@@ -8,20 +8,20 @@ PAM_PATH = $(LINUX_PAM_PATH)/pam_proxy.so
 BLUETOOTH_LIB = -lbluetooth
 LDLIBS = -lc
 SRC = src
-LIB_DEP = $(SRC)/pam_bt_pair.h $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_trust.h
+LIB_DEP = $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_pair.h $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_trust.h
 # LD_PRELOAD=${LIB_ASAN_PATH} $(PAM_PATH)
 #gcc -print-file-name=libasan.so
 
 all: pam_proxy.so pam_test
 
-pam_proxy.so: pam_proxy.o
+pam_proxy.so: pam_proxy.o $(LIB_DEP)
 	sudo ld $(LDFLAGS) -o $(LINUX_PAM_PATH)$@ $< $(BLUETOOTH_LIB) $(LDLIBS) $(GLIB)
 	rm $<
 
-pam_proxy.o: src/pam_proxy.c
+pam_proxy.o: $(SRC)/pam_proxy.c
 	$(CC) -c $< $(CFLAGS) $(G_CFLAGS) -o $@ 
 
-pam_test: src/pam_test.c $(LIB_DEP)
+pam_test: $(SRC)/pam_test.c $(LIB_DEP)
 	$(CC) -o $@ $< $(CFLAGS) -fsanitize=address $(BLUETOOTH_LIB) $(G_CFLAGS) $(GLIB)
 
 install: all

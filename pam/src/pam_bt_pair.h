@@ -5,7 +5,6 @@
 #include <glib.h>
 #include <gio/gio.h>
 
-#include "pam_bt_misc.h"
 
 /*
 * Return Bluetooth address if the device is paired. Else return NULL

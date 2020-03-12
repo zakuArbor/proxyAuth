@@ -23,6 +23,7 @@
 #include <security/pam_modules.h>
 
 #include "pam_misc.h"
+#include "pam_bt_misc.h"
 #include "pam_bt_pair.h"
 #include "pam_bt_trust.h"
 
