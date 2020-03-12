@@ -6,7 +6,11 @@
 
 
 ## Participants Contribution:
-* Ju Hong Kim: 
+* Ju Hong Kim:
+    * Wrote an installation script in Perl to download Dependencies PAM has
+    * **Modularize PAM:** Place code to header and updated Makefile to reflect those changes. 
+        * Placing code to header allows me to be able to test PAM code on a program before deploying to PAM to avoid lock out and fix any memory leaks
+    * Remove Bluetooth Pairing
     
 * Daniel Wang: 
    
