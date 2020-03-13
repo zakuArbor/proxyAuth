@@ -20,7 +20,8 @@
  
 * Sean Coutinho
   
-* Areeb Siddiqui
+* Areeb Siddiqui:
+     * Continued SSL implementation on socket (switched to EVP_PKEY struct key gen, old functions deprecated).
   
 
 ## Goals for Next Sprint (Will be subject to change)
