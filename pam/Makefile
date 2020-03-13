@@ -24,7 +24,7 @@ pam_proxy.o: $(SRC)/pam_proxy.c
 pam_test: $(SRC)/pam_test.c $(LIB_DEP)
 	$(CC) -o $@ $< $(CFLAGS) -fsanitize=address $(BLUETOOTH_LIB) $(G_CFLAGS) $(GLIB)
 
-install: all
+install: 
 	perl install.pl
 
 clean:
