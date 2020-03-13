@@ -26,6 +26,7 @@ class ControlActivity: AppCompatActivity(){
         var m_isConnected: Boolean = false
         lateinit var m_address: String
         lateinit var m_name: String
+        private val mmBuffer: ByteArray = ByteArray(1024) // mmBuffer store for the stream
 
     }
 
@@ -42,6 +43,8 @@ class ControlActivity: AppCompatActivity(){
         deviceAddress.text = cDeviceAddr
 
         ConnectToDevice(this).execute()
+        //receiveCommand()
+
         test_button.setOnClickListener{ sendCommand("Hello World!")} //for now sending this
         control_led_disconnect.setOnClickListener{ disconnect()}
     }
@@ -58,14 +61,34 @@ class ControlActivity: AppCompatActivity(){
         }
     }
 
+    private fun receiveCommand(){
+        var numBytes: Int // bytes returned from read()
+
+        // Keep listening to the InputStream until an exception occurs.
+        while (true) {
+            // Read from the InputStream.
+            numBytes = try {
+                m_bluetoothSocket!!.inputStream.read(mmBuffer)
+            } catch (e: IOException) {
+                Log.d("data", "Input stream was disconnected", e)
+                break
+            }
+            // we have the data from the computer in the buffer mmBuffer now
+            // turn it into text here
+            toast("data received")
+            Log.d("data", mmBuffer.toString(Charsets.UTF_8))
+        }
+
+    }
+
     private fun disconnect(){
         if (m_bluetoothSocket != null){
             try {
                 m_bluetoothSocket!!.close()
-                m_bluetoothSocket = null
-                m_isConnected = false
                 m_bluetoothSocket!!.outputStream.close()
                 m_bluetoothSocket!!.inputStream.close()
+                m_bluetoothSocket = null
+                m_isConnected = false
 
             } catch (e: IOException){
                 e.printStackTrace()
