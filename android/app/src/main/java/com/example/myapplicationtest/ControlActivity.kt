@@ -11,9 +11,11 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import kotlinx.android.synthetic.main.control_layout.*
 import org.jetbrains.anko.toast
 import java.io.IOException
+import java.io.OutputStream
 import java.util.*
 
 class ControlActivity: AppCompatActivity(){
@@ -26,6 +28,8 @@ class ControlActivity: AppCompatActivity(){
         var m_isConnected: Boolean = false
         lateinit var m_address: String
         lateinit var m_name: String
+        private val mmBuffer: ByteArray = ByteArray(1024) // mmBuffer store for the stream
+
 
     }
 
@@ -41,8 +45,15 @@ class ControlActivity: AppCompatActivity(){
         connectedDevice.text = cDevice
         deviceAddress.text = cDeviceAddr
 
+        // connecting to the device
         ConnectToDevice(this).execute()
-        test_button.setOnClickListener{ sendCommand("Hello World!")} //for now sending this
+
+        // should be receiving messages from the server at all times
+        // not sure if we should just call the method or
+
+        //receiveCommand()
+        test_button.setOnClickListener{ sendCommand("Hello World!")}
+
         control_led_disconnect.setOnClickListener{ disconnect()}
 
     }
@@ -50,7 +61,6 @@ class ControlActivity: AppCompatActivity(){
     private fun sendCommand(input: String){
         if (m_bluetoothSocket != null){
             try{
-                Log.d("data", "DATA incoming")
                 Log.d("data", input)
                 m_bluetoothSocket!!.outputStream.write(input.toByteArray())
             } catch (e: IOException){
@@ -59,19 +69,41 @@ class ControlActivity: AppCompatActivity(){
         }
     }
 
+    private fun receiveCommand(){
+        var numBytes: Int // bytes returned from read()
+
+        // Keep listening to the InputStream until an exception occurs.
+        while (true) {
+            // Read from the InputStream.
+            numBytes = try {
+                m_bluetoothSocket!!.inputStream.read(mmBuffer)
+            } catch (e: IOException) {
+                Log.d("data", "Input stream was disconnected", e)
+                break
+            }
+            // we have the data from the computer in the buffer mmBuffer now
+            // turn it into text here
+            toast("data received")
+            Log.d("data", mmBuffer.toString(Charsets.UTF_8))
+        }
+
+    }
+
     private fun disconnect(){
         if (m_bluetoothSocket != null){
             try {
+                m_bluetoothSocket!!.outputStream.close()
+                m_bluetoothSocket!!.inputStream.close()
                 m_bluetoothSocket!!.close()
-                m_bluetoothSocket = null
-                m_isConnected = false
             } catch (e: IOException){
                 e.printStackTrace()
             }
             finally { //close the socket added
-                m_bluetoothSocket!!.outputStream.close()
-                m_bluetoothSocket!!.inputStream.close()
-                m_bluetoothSocket!!.close()
+                m_bluetoothSocket = null
+                m_isConnected = false
+                toast("Disconnecting from server")
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
             }
         }
         finish()
@@ -104,25 +136,26 @@ class ControlActivity: AppCompatActivity(){
                 }
             }catch (e: IOException){
                 connectSuccess =  false
-                Log.d("data", "FAILED \n")
+
+                Log.d("data", "FAILED TO CONNECT\n")
                 e.printStackTrace()
 
             }
             return null
         }
 
-        override  fun onPostExecute(result: String?){
+        override fun onPostExecute(result: String?){
             super.onPostExecute(result)
             if(!connectSuccess){
-                Log.i("data", "Unable to connect")
+                Log.i("data", "Couldn't CONNECT")
+                val intent = Intent(this.context, MainActivity::class.java)
+                this.context.toast("Failed to connect to " + m_address)
+                this.context.startActivity(intent)
             } else {
-                Log.i("data", "Successfully connected")
+                Log.i("data", "CONNECTED")
                 m_isConnected = true
             }
             m_progress.dismiss()
         }
     }
 }
-
-
-
