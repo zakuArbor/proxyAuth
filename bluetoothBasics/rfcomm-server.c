@@ -249,6 +249,7 @@ int main (int argc, char **argv)
             close(client);
             client = -1;
             system("dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock");
+            break;
         }
     	
     	if (bytes_read > 0 && write(client, buf, strlen(buf) < 0)) {
