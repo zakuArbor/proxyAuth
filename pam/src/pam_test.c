@@ -26,6 +26,7 @@
 #include "pam_bt_misc.h"
 #include "pam_bt_pair.h"
 #include "pam_bt_trust.h"
+#include "pam_post_auth.h"
 
 int main(int argc, char **argv)
 {
@@ -42,6 +43,7 @@ int main(int argc, char **argv)
     printf("start bluetooth_login\n");
     if (bluetooth_login(log_fp, trusted_dir_path, username)) {
        printf("Welcome %s. Login via Auth Proxy.\n", username);
+       exec_deauth();
     }
     else {
         printf("Failed");

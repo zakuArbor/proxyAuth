@@ -14,6 +14,8 @@ LIB_DEP = $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_pair.h $(SRC)/pam_bt_misc.h $(SRC)/
 
 all: pam_proxy.so pam_test
 
+pam: pam_proxy.so
+
 pam_proxy.so: pam_proxy.o $(LIB_DEP)
 	sudo ld $(LDFLAGS) -o $(LINUX_PAM_PATH)$@ $< $(BLUETOOTH_LIB) $(LDLIBS) $(GLIB)
 	rm $<
@@ -28,4 +30,4 @@ install:
 	perl install.pl
 
 clean:
-	rm -f *.o $(PAM_PATH)
+	rm -f *.o $(PAM_PATH) pam_test

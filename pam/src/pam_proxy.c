@@ -26,7 +26,7 @@
 #include "pam_bt_misc.h"
 #include "pam_bt_pair.h"
 #include "pam_bt_trust.h"
-
+#include "pam_post_auth.h"
 
 PAM_EXTERN int pam_sm_setcred( pam_handle_t *pamh, int flags, int argc, const char **argv ) {
 	return PAM_SUCCESS;
@@ -35,6 +35,7 @@ PAM_EXTERN int pam_sm_setcred( pam_handle_t *pamh, int flags, int argc, const ch
 PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const char **argv) {
 	return PAM_SUCCESS;
 }
+
 
 PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, const char **argv ) {
 	int bluetooth_status = PAM_AUTH_ERR;
@@ -63,7 +64,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
 	   if (log_fp) {
             fprintf(log_fp, "Login via Auth Proxy\n");
         }
-       bluetooth_status = PAM_SUCCESS;
+        bluetooth_status = PAM_SUCCESS;
     }
 
 pam_sm_authenticate:
