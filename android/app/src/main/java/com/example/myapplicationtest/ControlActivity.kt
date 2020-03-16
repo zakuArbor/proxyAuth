@@ -11,6 +11,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import kotlinx.android.synthetic.main.control_layout.*
 import org.jetbrains.anko.toast
 import java.io.IOException
@@ -137,17 +138,19 @@ class ControlActivity: AppCompatActivity(){
                 connectSuccess =  false
 
                 Log.d("data", "FAILED TO CONNECT\n")
-
                 e.printStackTrace()
 
             }
             return null
         }
 
-        override  fun onPostExecute(result: String?){
+        override fun onPostExecute(result: String?){
             super.onPostExecute(result)
             if(!connectSuccess){
                 Log.i("data", "Couldn't CONNECT")
+                val intent = Intent(this.context, MainActivity::class.java)
+                this.context.toast("Failed to connect to " + m_address)
+                this.context.startActivity(intent)
             } else {
                 Log.i("data", "CONNECTED")
                 m_isConnected = true
