@@ -25,6 +25,8 @@
 * Anurag Bist
  
 * Sean Coutinho
+  * Created test environment capable of running both the android and server code at the same time.
+  * Resolved andriod crash on disconnect error 
   
 * Areeb Siddiqui:
      * Continued SSL implementation on socket (switched to EVP_PKEY struct key gen, old functions deprecated).
