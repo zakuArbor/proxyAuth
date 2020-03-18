@@ -23,6 +23,7 @@
    * Tested modularize PAM
     
 * Anurag Bist
+  * Worked on troubleshooting of continuous communication between server and android app
  
 * Sean Coutinho
   * Created test environment capable of running both the android and server code at the same time.
