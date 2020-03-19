@@ -29,7 +29,6 @@ class ControlActivity: AppCompatActivity(){
         lateinit var m_address: String
         lateinit var m_name: String
         private val mmBuffer: ByteArray = ByteArray(1024) // mmBuffer store for the stream
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +55,7 @@ class ControlActivity: AppCompatActivity(){
     private fun sendCommand(input: String){
         if (m_bluetoothSocket != null){
             try{
-                Log.d("data", "DATA Incoming")
+                //Log.d("data", "DATA Incoming")
                 Log.d("data", input)
                 m_bluetoothSocket!!.outputStream.write(input.toByteArray())
             } catch (e: IOException){

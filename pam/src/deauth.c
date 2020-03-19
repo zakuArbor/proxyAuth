@@ -12,6 +12,8 @@
 #include <sys/types.h>
 #include <time.h>
 
+#include "pam_bt_misc.h"
+
 #define SERVICE_NAME "Proxy Auth"
 #define SERVICE_DESC "Continuous Authentication via Bluetooth"
 #define SERVICE_PROV "ProxyAuth"
@@ -117,7 +119,11 @@ sdp_session_t *register_service(uint8_t rfcomm_channel) {
     //maintain a list of four 32-bit uuid which will be used to form a 128-bit uuid for setting a uuid to our service
     uint32_t svc_uuid_int[] = { 0x01110000, 0x00100000, 0x80000080, 0xFB349B5F };
     
-    uuid_t root_uuid, l2cap_uuid, rfcomm_uuid, svc_uuid, svc_class_uuid;
+    uuid_t root_uuid; 
+    uuid_t l2cap_uuid; 
+    uuid_t rfcomm_uuid;
+    uuid_t svc_uuid;
+    uuid_t svc_class_uuid;
 
     //NOTE: sdp_list_t is a linkedlist which needs to be free using sdp_list_free after use
     sdp_list_t *l2cap_list = 0,
@@ -129,25 +135,25 @@ sdp_session_t *register_service(uint8_t rfcomm_channel) {
                  *profile_list = 0;
     sdp_data_t *channel = 0; 
     sdp_profile_desc_t profile;
-    sdp_record_t record = { 0 };
+    sdp_record_t *record = sdp_record_alloc();//{ 0 };
     sdp_session_t *session = 0;
 
     const char *service_name = SERVICE_NAME;
     const char *svc_dsc = SERVICE_DESC;
     const char *service_prov = SERVICE_PROV;
 
-    set_service(&svc_uuid, &svc_class_uuid, &svc_class_list, &record, svc_uuid_int);
+    set_service(&svc_uuid, &svc_class_uuid, &svc_class_list, record, svc_uuid_int);
     
-    set_bluetooth_service_info(&profile, &profile_list, &record);
+    set_bluetooth_service_info(&profile, &profile_list, record);
 
-    set_browsable(&root_list, &record, &root_uuid);
+    set_browsable(&root_list, record, &root_uuid);
 
     set_l2cap_info(&l2cap_list, &proto_list, &l2cap_uuid);
 
-    register_rfcomm_sock(&channel, &record, &rfcomm_list, &proto_list, &access_proto_list, &rfcomm_uuid, &rfcomm_channel);
+    register_rfcomm_sock(&channel, record, &rfcomm_list, &proto_list, &access_proto_list, &rfcomm_uuid, &rfcomm_channel);
 
     // set the name, provider, and description
-    sdp_set_info_attr(&record, service_name, service_prov, svc_dsc);
+    sdp_set_info_attr(record, service_name, service_prov, svc_dsc);
 
     // connect to the local SDP server, register the service record, and disconnect
     /*
@@ -155,27 +161,29 @@ sdp_session_t *register_service(uint8_t rfcomm_channel) {
     *   (Bluez implementation of SDP server which is a daemon) what to advertise. This is done through
     *   the pipe `/var/run/sdp`
     */
+
     session = sdp_connect(BDADDR_ANY, BDADDR_LOCAL, SDP_RETRY_IF_BUSY);
-    sdp_record_register(session, &record, 0);
+    sdp_record_register(session, record, 0);
 
     // cleanup
     sdp_data_free(channel);
     sdp_list_free(l2cap_list, 0);
     sdp_list_free(rfcomm_list, 0);
     sdp_list_free(root_list, 0);
+    sdp_list_free(proto_list, 0);
     sdp_list_free(access_proto_list, 0);
     sdp_list_free(svc_class_list, 0);
     sdp_list_free(profile_list, 0);
-
+    sdp_record_free(record);
     return session;
 }
 
 /*
 * Setup the bluetooth server
 * 
-* @return return the socket file descriptor
+* @return return the server's socket file descriptor
 */ 
-int init_server(struct sockaddr_rc *loc_addr) {
+int init_server(struct sockaddr_rc *loc_addr, sdp_session_t **session) {
     // allocate socket
     int s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
     int port = 1;
@@ -189,14 +197,22 @@ int init_server(struct sockaddr_rc *loc_addr) {
     bind(s, (struct sockaddr *)loc_addr, sizeof(*loc_addr));
 
     //register service added
-    sdp_session_t *session = register_service(port); 
+    *session = register_service(port);
 
     // put socket into listening mode
-    listen(s, 1);
+    listen(s, port);
 
     return s;   
 }
 
+/*
+* Connect a new client
+*
+* @param s: server's socket
+* @param rem_addr: a pointer to sockaddr structure that will store the address of the client socket
+* @param opt: the size of rem_addr
+* @return: The client's socket
+*/
 int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt) {
     // accept one connection
     char buf[1024] = { 0 };
@@ -211,14 +227,35 @@ int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt) {
     return client;
 }
 
+/*
+* Return 1 iff the given bluetooth address is valid
+*
+* @param argc: number of arguments (always >= 1 due to program name stored in argv[0])
+* @param argv: array that contains cmdline arguments
+* @return: True iff the cmd argument is a valid bluetooth device
+*/
+int is_trusted_client(int argc, char **argv) {
+    if (argc <= 1) {
+        fprintf(stderr, "usage: %s bt_addr\n", argv[0]);
+        return 0;
+    }
+
+    if (!verify_bt_addr(argv[1], NULL)) {
+        fprintf(stderr, "%s: %s is not a valid bluetooth address\n", argv[0], argv[1]);
+        return 0;
+    }
+
+    return 1;
+}
+
 int main (int argc, char **argv)
 {
     struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
     int s, client, bytes_read;
     socklen_t opt = sizeof(rem_addr);
+    sdp_session_t *session = NULL; //SDP socket
 
-    s = init_server(&loc_addr);
-
+    s = init_server(&loc_addr, &session);
     
     time_t start, stop;
     int is_locked = 0; 
@@ -260,5 +297,8 @@ int main (int argc, char **argv)
     // close connection
     close(client);
     close(s);
+    if (session) {
+        sdp_close(session);
+    }
     return 0;
 }
