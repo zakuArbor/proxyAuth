@@ -11,9 +11,11 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import kotlinx.android.synthetic.main.control_layout.*
 import org.jetbrains.anko.toast
 import java.io.IOException
+import java.io.OutputStream
 import java.util.*
 
 class ControlActivity: AppCompatActivity(){
@@ -42,7 +44,9 @@ class ControlActivity: AppCompatActivity(){
         connectedDevice.text = cDevice
         deviceAddress.text = cDeviceAddr
 
+        // connecting to the device
         ConnectToDevice(this).execute()
+
         //receiveCommand()
 
         test_button.setOnClickListener{ sendCommand("Hello World!")} //for now sending this
@@ -77,20 +81,23 @@ class ControlActivity: AppCompatActivity(){
             toast("data received")
             Log.d("data", mmBuffer.toString(Charsets.UTF_8))
         }
-
     }
 
     private fun disconnect(){
         if (m_bluetoothSocket != null){
             try {
-                m_bluetoothSocket!!.close()
+                //m_bluetoothSocket!!.close()
                 m_bluetoothSocket!!.outputStream.close()
                 m_bluetoothSocket!!.inputStream.close()
-                m_bluetoothSocket = null
-                m_isConnected = false
-
+                m_bluetoothSocket!!.close()
             } catch (e: IOException){
                 e.printStackTrace()
+            } finally { // close the socket
+                m_bluetoothSocket = null
+                m_isConnected = false
+                toast("Disconnecting from Server")
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
             }
         }
         finish()
@@ -122,17 +129,19 @@ class ControlActivity: AppCompatActivity(){
                 }
             }catch (e: IOException){
                 connectSuccess =  false
-                Log.d("data", "Failed \n")
+                Log.d("data", "Failed to Connect \n")
                 e.printStackTrace()
-
             }
             return null
         }
 
-        override  fun onPostExecute(result: String?){
+        override fun onPostExecute(result: String?){
             super.onPostExecute(result)
             if(!connectSuccess){
                 Log.i("data", "Unable to Connect")
+                val intent = Intent(this.context, MainActivity::class.java)
+                this.context.toast("Failed to Connect to " + m_address)
+                this.context.startActivity(intent)
             } else {
                 Log.i("data", "Successfully Connected")
                 m_isConnected = true

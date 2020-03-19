@@ -1,6 +1,5 @@
 package com.example.myapplicationtest
 
-
 //import sun.text.normalizer.UTF16.append
 
 import android.app.Activity
@@ -25,13 +24,12 @@ import java.security.MessageDigest
 
 //import com.example.myapplicationtest.R.layout
 
-
 class MainActivity : AppCompatActivity() {
 
     private var m_bluetoothAdapter: BluetoothAdapter? = null // bluetooth adaptor is intially NULL
     private lateinit var m_pairedDevices: Set<BluetoothDevice>
-    //readonly
-    private val REQUEST_ENABLE_BLUETOOTH = 1
+
+    private val REQUEST_ENABLE_BLUETOOTH = 1 //readonly
     private val filename = "rem_devices.txt"
 
     companion object {
@@ -161,13 +159,13 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_ENABLE_BLUETOOTH){
             if (resultCode == Activity.RESULT_OK){
                 if(m_bluetoothAdapter!!.isEnabled){
-                    toast("Bluetooth has been enabled")
+                    toast("Bluetooth has been Enabled")
                 } else {
-                    toast("Bluetooth has been disabled")
+                    toast("Bluetooth has been Disabled")
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // bluetooth enabling cancelled
-                toast("Bluetooth enabling has been cancelled")
+                toast("Bluetooth Enabling has been Cancelled")
             }
         }
     }
@@ -192,8 +190,7 @@ class RSSPullService : IntentService(RSSPullService::class.simpleName) {
      */
     override fun onHandleIntent(workIntent: Intent) {
         // Gets data from the incoming Intent
-        // Normally we would do some work here, like download a file.
-        // For our sample, we just sleep for 5 seconds.
+        // Normally we would do some work here, For our sample, we just sleep for 10 seconds.
 
         val dataString = workIntent.dataString
         // Do work here, based on the contents of dataString
