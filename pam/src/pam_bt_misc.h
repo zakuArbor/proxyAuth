@@ -1,5 +1,5 @@
-#ifndef PAM_BT_MISC
-#define PAM_BT_MISC
+#ifndef PAM_BT_MISC_H
+#define PAM_BT_MISC_H
 
 #define BT_MAC_LEN 17
 #define BT_MAX_CONN 7 //Bluetooth Adapters can only connect up to 7 devices
@@ -34,10 +34,16 @@ int verify_bt_addr(char *address, FILE *log_fp) {
 
     if (strlen(address) <= BT_MAC_LEN) {   
         while (curr && len < strlen(address)) {
-            if((isxdigit(*curr) == 0 &&  (len + 1) % 3 != 0 && *curr != ':' ) || len > BT_MAC_LEN) {
+            int is_div3 = (len + 1) % 3 == 0;
+            
+            if (    len > BT_MAC_LEN ||                                 //exceeds the BT String Len
+                    (isxdigit(*curr) == 0 && !is_div3) ||               //not Alphanumeric when it should be
+                    (isxdigit(*curr) == 0 && is_div3 && *curr != ':')   //not a colon when it should be
+                ) {
                 is_valid = 0;
                 break;
             }
+
             len++;
             curr++;
         }
