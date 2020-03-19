@@ -224,6 +224,8 @@ int main (int argc, char **argv)
     int is_locked = 0; 
     client = -1;
 
+    int state = 1;
+
     while(1) {
         if (client < 0) {
             client = connect_client(s, &rem_addr, &opt);
@@ -240,7 +242,11 @@ int main (int argc, char **argv)
             printf("received [%s]\n", buf);
             start = time(NULL);
             is_locked = 0; 
+            bytes_read = write(client,buf,sizeof(buf));
+            printf("wrote [%s]\n", buf);
     	}
+
+        //
         
         stop = time(NULL);  
         if ((stop - start) > 10 && !is_locked){

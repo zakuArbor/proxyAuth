@@ -46,8 +46,6 @@ class ControlActivity: AppCompatActivity(){
         // connecting to the device
         ConnectToDevice(this).execute()
 
-        //receiveCommand()
-
         test_button.setOnClickListener{ sendCommand("Hello World!")} //for now sending this
         control_led_disconnect.setOnClickListener{ disconnect()}
     }
@@ -62,30 +60,39 @@ class ControlActivity: AppCompatActivity(){
                 e.printStackTrace()
             }
         }
+        receiveCommand()
     }
 
     private fun receiveCommand(){
         var numBytes: Int // bytes returned from read()
-
-        // Keep listening to the InputStream until an exception occurs.
-        while (true) {
-            // Read from the InputStream.
-            numBytes = try {
-                m_bluetoothSocket!!.inputStream.read(mmBuffer)
-            } catch (e: IOException) {
-                Log.d("data", "Input stream was disconnected", e)
-                break
+        try {
+            // Keep listening to the InputStream until an exception occurs.
+            while (true) {
+                // Read from the InputStream.
+                //numBytes =
+                try {
+                    numBytes = m_bluetoothSocket!!.inputStream.read(mmBuffer)
+                    Log.d("data", numBytes.toString())
+                    Log.d("data", mmBuffer.toString(Charsets.UTF_8))
+                    toast(mmBuffer.toString(Charsets.UTF_8))
+                } catch (e: IOException) {
+                    Log.d("data", "Input stream was disconnected", e)
+                    break
+                }
+                // we have the data from the computer in the buffer mmBuffer now, turn it into text here
+                toast("data received")
+                Log.d("data", mmBuffer.toString(Charsets.UTF_8))
             }
-            // Data from the computer in the buffer mmBuffer now, turn it into text here
-            toast("data received")
-            Log.d("data", mmBuffer.toString(Charsets.UTF_8))
+
+        } catch (e: Exception){
+            toast("Failed to read")
         }
     }
 
     private fun disconnect(){
         if (m_bluetoothSocket != null){
             try {
-                //m_bluetoothSocket!!.close()
+                m_isConnected = false
                 m_bluetoothSocket!!.outputStream.close()
                 m_bluetoothSocket!!.inputStream.close()
                 m_bluetoothSocket!!.close()
@@ -93,8 +100,8 @@ class ControlActivity: AppCompatActivity(){
                 e.printStackTrace()
             } finally { // close the socket
                 m_bluetoothSocket = null
-                m_isConnected = false
                 toast("Disconnecting from Server")
+                //m_isConnected = false
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             }
