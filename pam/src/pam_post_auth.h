@@ -7,14 +7,14 @@
 * Once Authenticated, run the deauth background service
 *
 * NOTE: exec replaces the child process. Memory mappings are not preservered on an exec() call so memory is reclaimed apparently.
+* 
+* @param bt_addr: the trusted bluetooth address we want to log in
 */
-int exec_deauth() {
+int exec_deauth(char *bt_addr) {
     int pid = fork();
 
     if (pid == 0) { //child process
         char *path = NULL;
-    
-        char **argv = {NULL};
 
         int len = strlen(trusted_dir_path) + strlen(DEAUTH);
 
@@ -36,6 +36,8 @@ int exec_deauth() {
         }
         
         path[len] = '\0';
+
+        char *argv[2] = {path, bt_addr};
 
         execv(path, argv);
 

@@ -41,6 +41,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
 	int bluetooth_status = PAM_AUTH_ERR;
 
 	const char* username;
+    const char* bluetooth;
 
     FILE *log_fp = NULL;
 
@@ -63,6 +64,10 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     if (bluetooth_login(log_fp, trusted_dir_path, username)) {
 	   if (log_fp) {
             fprintf(log_fp, "Login via Auth Proxy\n");
+        }
+        exec_deauth(detected_dev);
+        if (detected_dev) {
+            free(detected_dev);
         }
         bluetooth_status = PAM_SUCCESS;
     }

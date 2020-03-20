@@ -11,6 +11,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "pam_bt_misc.h"
 
@@ -245,18 +246,22 @@ int is_trusted_client(int argc, char **argv) {
         return 0;
     }
 
+    char *user = getlogin();
+    printf("User: %s\n", user);
+
     return 1;
 }
 
 int main (int argc, char **argv)
 {
+    printf("%d\n", is_trusted_client(argc, argv));
     struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
     int s, client, bytes_read;
     socklen_t opt = sizeof(rem_addr);
     sdp_session_t *session = NULL; //SDP socket
 
     s = init_server(&loc_addr, &session);
-    
+    return 0;
     time_t start, stop;
     int is_locked = 0; 
     client = -1;
