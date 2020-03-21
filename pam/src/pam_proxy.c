@@ -6,6 +6,7 @@
 
 #include <errno.h>
 #include <limits.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,6 +42,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
 	int bluetooth_status = PAM_AUTH_ERR;
 
 	const char* username;
+    char* detected_dev;
 
     FILE *log_fp = NULL;
 
@@ -60,9 +62,13 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
     }
     /*******************/
 
-    if (bluetooth_login(log_fp, trusted_dir_path, username)) {
+    if (bluetooth_login(log_fp, trusted_dir_path, username, &detected_dev)) {
 	   if (log_fp) {
             fprintf(log_fp, "Login via Auth Proxy\n");
+        }
+        exec_deauth(detected_dev, username, log_fp);
+        if (detected_dev) {
+            free(detected_dev);
         }
         bluetooth_status = PAM_SUCCESS;
     }

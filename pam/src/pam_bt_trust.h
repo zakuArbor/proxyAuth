@@ -165,9 +165,11 @@ find_trusted_devices_terminate:
 * @param log_fp: the file handle for the log file
 * @param trusted_dir_path: the path of where all the user's trusted devices are located
 * @param username: the username of the user who wants to login
+* @param detected_dev: The bluetooth address of the device that authenticates PAM
+*   NOTE: find_trusted_paired_device(...) will allocate and set the bluetooth address. Developer must free the memory themselves
 * @return: return 1 if the trusted bluetooth device is detected
 */
-int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *username) {
+int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *username, char **detected_dev) {
     int bluetooth_status = 0;
     char curr_time[50];
 
@@ -176,7 +178,7 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
 
     char **trusted_devices = NULL;
     char **paired_devices = get_paired_devices(&num_of_paired);
-    char *detected_dev = NULL;
+    *detected_dev = NULL;
 
     if (!(trusted_devices = find_trusted_devices(log_fp, trusted_dir_path, username, &num_of_devices))) {
         goto bluetooth_login_terminate;
@@ -190,9 +192,9 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
         fprintf(log_fp, "%s: Call find device\n", curr_time);
     }
     
-    if (paired_devices && (bluetooth_status = find_trusted_paired_device(log_fp, trusted_devices, num_of_devices, paired_devices, num_of_paired, &detected_dev))) {
-        if (log_fp && detected_dev) {
-            fprintf(log_fp, "%s: Device %s found\n", curr_time, detected_dev);
+    if (paired_devices && (bluetooth_status = find_trusted_paired_device(log_fp, trusted_devices, num_of_devices, paired_devices, num_of_paired, detected_dev))) {
+        if (log_fp && *detected_dev) {
+            fprintf(log_fp, "%s: Device %s found\n", curr_time, *detected_dev);
         }
     }
     else {
@@ -208,10 +210,6 @@ bluetooth_login_terminate:
 
     if (paired_devices) {
         free_device_list(paired_devices, num_of_paired);
-    }
-
-    if (detected_dev) {
-        free(detected_dev);
     }
     
     return bluetooth_status;

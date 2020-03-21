@@ -6,13 +6,21 @@
 #include <bluetooth/rfcomm.h>
 #include <bluetooth/sdp.h>
 #include <bluetooth/sdp_lib.h>
+#include <errno.h>
+#include <limits.h>
 #include <sys/select.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <time.h>
+#include <unistd.h>
 
+#include "pam_misc.h"
 #include "pam_bt_misc.h"
+#include "pam_bt_pair.h"
+#include "pam_bt_trust.h"
+
 
 #define SERVICE_NAME "Proxy Auth"
 #define SERVICE_DESC "Continuous Authentication via Bluetooth"
@@ -234,7 +242,9 @@ int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt) {
 * @param argv: array that contains cmdline arguments
 * @return: True iff the cmd argument is a valid bluetooth device
 */
-int is_trusted_client(int argc, char **argv) {
+int is_trusted_client(int argc, char **argv, const char *trusted_dir_path) {
+    int status = 0;
+
     if (argc <= 1) {
         fprintf(stderr, "usage: %s bt_addr\n", argv[0]);
         return 0;
@@ -245,18 +255,64 @@ int is_trusted_client(int argc, char **argv) {
         return 0;
     }
 
-    return 1;
+    int num_of_paired, num_of_devices;
+    char *username = getlogin();
+
+    printf("User: %s\n", username);
+
+    char **paired_devices = get_paired_devices(&num_of_paired);
+    char **trusted_devices;
+
+    if (!(trusted_devices = find_trusted_devices(NULL, trusted_dir_path, username, &num_of_devices))) {
+        goto is_trusted_terminate;
+    }
+
+    //check if device is paired
+    if (!(is_dev_trusted(NULL, argv[1], paired_devices, num_of_paired))) {
+        goto is_trusted_terminate;
+    }
+
+    //check if device is in trusted list
+    if (!is_dev_trusted(NULL, argv[1], trusted_devices, num_of_devices)) {
+        goto is_trusted_terminate;
+    }
+
+    status = 1;
+
+is_trusted_terminate:
+    if (trusted_devices) {
+        free_device_list(trusted_devices, num_of_devices);
+    }
+
+    if (paired_devices) {
+        free_device_list(paired_devices, num_of_paired);
+    }
+
+    return status;
+}
+
+/*
+* Lock the computer
+*/
+void lock() {
+    system("dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock");
 }
 
 int main (int argc, char **argv)
 {
     struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
-    int s, client, bytes_read;
+    int s = -1, client = -1, bytes_read;
     socklen_t opt = sizeof(rem_addr);
     sdp_session_t *session = NULL; //SDP socket
 
+    //check if the device passed is trusted
+    if (!is_trusted_client(argc, argv, trusted_dir_path)) {
+        printf("test lock\n");
+        lock();
+        goto cleanup;
+    }
+
     s = init_server(&loc_addr, &session);
-    
     time_t start, stop;
     int is_locked = 0; 
     client = -1;
@@ -285,7 +341,7 @@ int main (int argc, char **argv)
             is_locked = 1; 
             close(client);
             client = -1;
-            system("dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock");
+            lock();
             break;
         }
     	
@@ -294,9 +350,14 @@ int main (int argc, char **argv)
     	}
     }
 
+cleanup:
     // close connection
-    close(client);
-    close(s);
+    if (client) {
+        close(client);
+    }
+    if (s) {
+        close(s);
+    }
     if (session) {
         sdp_close(session);
     }
