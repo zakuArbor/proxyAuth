@@ -26,10 +26,12 @@ pam_proxy.o: $(SRC)/pam_proxy.c
 	$(CC) -c $< $(CFLAGS) $(PFLAGS) $(G_CFLAGS) -o $@ 
 
 pam_test: $(SRC)/pam_test.c $(LIB_DEP)
+	echo $@
+	if [ -f $@ ];	then rm $@; fi
 	$(CC) -o $@ $< $(CFLAGS) $(PFLAGS) -fsanitize=address $(BLUETOOTH_LIB) $(G_CFLAGS) $(GLIB)
 
 deauth: $(SRC)/deauth.c $(LIB_DEP)
-	$(CC) -o $(DEAUTH_PATH)$@ $< $(CFLAGS) -fsanitize=address $(BLUETOOTH_LIB) $(G_CFLAGS) $(GLIB)
+	$(CC) -o $(DEAUTH_PATH)$@ $< $(CFLAGS) -fsanitize=address $(BLUETOOTH_LIB) $(G_CFLAGS) $(GLIB) 
 
 install: 
 	perl install.pl
