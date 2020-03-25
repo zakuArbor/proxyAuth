@@ -12,7 +12,6 @@
 * Arslan Qamar
     
 * Anurag Bist:
-    * **[Issue 16]** *Worked on issue 16 which is the receive message functionality of the android app*
   * **Worked on Android app's menu toolbar**
   * **Worked on the helper function used for handling messages received from C server**
  
