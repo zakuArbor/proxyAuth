@@ -12,6 +12,8 @@
 * Arslan Qamar
     
 * Anurag Bist
+  ** Worked on Android app's menu toolbar
+  ** Worked on the helper function used for handling messages received from C server
  
 * Sean Coutinho
   
