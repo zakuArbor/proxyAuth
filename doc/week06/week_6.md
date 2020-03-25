@@ -20,7 +20,7 @@
 * Arslan Qamar
     
 * Anurag Bist
- 
+ * **[Issue 16]** Worked on issue 16 which is the receive message functionality of the android app
 * Sean Coutinho
   
 * Areeb Siddiqui:
