@@ -1,6 +1,5 @@
 package com.example.myapplicationtest
 
-import android.app.IntentService
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -14,11 +13,9 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import kotlinx.android.synthetic.main.control_layout.*
 import org.jetbrains.anko.toast
 import java.io.IOException
-import java.io.OutputStream
 import java.util.*
 
 class ControlActivity: AppCompatActivity(){
@@ -167,25 +164,49 @@ class ControlActivity: AppCompatActivity(){
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
+
         return when (item.itemId) {
             R.id.help -> {
-                //val intent = Intent(this, helpActivity::class.java)
-                //startActivity(intent)
+                val intent = Intent(this, HelpActivity::class.java)
+                startActivity(intent)
                 true
             }
             R.id.settings -> {
-                //val intent = Intent(this, settingsActivity::class.java)
-                //startActivity(intent)
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
                 true
             }
-            R.id.devices -> {
-                //val intent = Intent(this, devicesActivity::class.java)
-                //startActivity(intent)
+            R.id.about -> {
+                val intent = Intent(this, AboutActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
+    /*
+    Message handling helper function
+    The numbers can be used based on what we decide they represent
+     */
+    fun handleMessage(input: String){
+
+        val msgLst = input.split("|").toTypedArray()
+
+        when(msgLst[0]){
+            "1" -> {
+
+            }
+            "2" -> {
+
+            }
+            "3" -> {
+
+            }
+        }
+
+
+    }
+
 }
 
 
