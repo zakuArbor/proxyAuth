@@ -15,6 +15,7 @@
     * Remove Bluetooth Pairing
     
 * Daniel Wang: 
+    * Initial Ubertooth One testing - sniffing advertisement packets. 
    
 * Arslan Qamar
    * Worked on closing the android socket (Input/Output stream of the bluetooth socket)and background services

@@ -128,7 +128,7 @@ char **get_paired_devices(int *num_of_paired) {
         g_print("Not able to get connection to system bus\n");
         return NULL;
     }
-    
+
     result = g_dbus_connection_call_sync(
         conn,                                       //connection
         BLUEZ_DBUS_NAME,                            //bus_name

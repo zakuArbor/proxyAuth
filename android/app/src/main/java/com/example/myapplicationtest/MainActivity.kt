@@ -1,6 +1,5 @@
 package com.example.myapplicationtest
 
-
 //import sun.text.normalizer.UTF16.append
 
 import android.app.Activity
@@ -25,13 +24,12 @@ import java.security.MessageDigest
 
 //import com.example.myapplicationtest.R.layout
 
-
 class MainActivity : AppCompatActivity() {
 
     private var m_bluetoothAdapter: BluetoothAdapter? = null // bluetooth adaptor is intially NULL
     private lateinit var m_pairedDevices: Set<BluetoothDevice>
-    //readonly
-    private val REQUEST_ENABLE_BLUETOOTH = 1
+
+    private val REQUEST_ENABLE_BLUETOOTH = 1 //readonly
     private val filename = "rem_devices.txt"
 
     companion object {
@@ -146,9 +144,7 @@ class MainActivity : AppCompatActivity() {
 
             Log.i("path", "CONNECT TO ME OUTSTREAM "+bArray.toString(Charsets.UTF_8))
 
-
             val name: String = device.name
-
 
             val intent = Intent(this, ControlActivity::class.java)
             intent.putExtra(EXTRA_ADDRESS, device.address)
@@ -163,13 +159,13 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_ENABLE_BLUETOOTH){
             if (resultCode == Activity.RESULT_OK){
                 if(m_bluetoothAdapter!!.isEnabled){
-                    toast("Bluetooth has been enabled")
+                    toast("Bluetooth has been Enabled")
                 } else {
-                    toast("Bluetooth has been disabled")
+                    toast("Bluetooth has been Disabled")
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // bluetooth enabling cancelled
-                toast("Bluetooth enabling has been cancelled")
+                toast("Bluetooth Enabling has been Cancelled")
             }
         }
     }
@@ -182,12 +178,30 @@ class MainActivity : AppCompatActivity() {
 }
 
 // subclass for simple background operations
+/**
+ * A constructor is required, and should call the super [android.app.IntentService.IntentService]
+ * constructor with a name for the worker thread.
+ */
 class RSSPullService : IntentService(RSSPullService::class.simpleName) {
-
+    /**
+     * IntentService calls this method from the default worker thread in order
+     * to start the service. When this approach returns, IntentService
+     * may, if needed, interrupt the service.
+     */
     override fun onHandleIntent(workIntent: Intent) {
         // Gets data from the incoming Intent
+        // Normally we would do some work here, For our sample, we just sleep for 10 seconds.
+
         val dataString = workIntent.dataString
         // Do work here, based on the contents of dataString
+
+//        try {
+//            Thread.sleep(10000)  // 10 seconds
+//        } catch (e: InterruptedException) {
+//            // Restore interrupt status.
+//            Thread.currentThread().interrupt()
+//        }
+
     }
 }
 
