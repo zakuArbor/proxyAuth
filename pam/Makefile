@@ -11,6 +11,8 @@ BLUETOOTH_LIB = -lbluetooth
 LDLIBS = -lc
 SRC = src
 LIB_DEP = $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_pair.h $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_trust.h
+# LD_PRELOAD=${LIB_ASAN_PATH} $(PAM_PATH)
+#gcc -print-file-name=libasan.so
 
 all: pam_proxy.so pam_test deauth
 
@@ -35,4 +37,4 @@ install:
 	perl install.pl
 
 clean:
-	rm -f *.o $(PAM_PATH) pam_test $(DEAUTH_PATH)deauth
+	rm -f *.o $(PAM_PATH) pam_test
