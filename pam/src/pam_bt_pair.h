@@ -5,6 +5,11 @@
 #include <glib.h>
 #include <gio/gio.h>
 
+#define BLUEZ_DBUS_NAME                 "org.bluez"
+#define BLUEZ_DBUS_OBJ_PATH             "/"
+#define DBUS_INTERFACE_NAME             "org.freedesktop.DBus.ObjectManager"
+#define DBUS_METHOD_NAME                "GetManagedObjects"
+#define DBUS_METHOD_RETURN_TYPE         "(a{oa{sa{sv}}})"
 
 /*
 * Return Bluetooth address if the device is paired. Else return NULL
@@ -125,17 +130,17 @@ char **get_paired_devices(int *num_of_paired) {
     }
 
     result = g_dbus_connection_call_sync(
-        conn,                                   //connection
-        "org.bluez",                            //bus_name
-        "/",                                    //object_path
-        "org.freedesktop.DBus.ObjectManager",   //interface_name
-        "GetManagedObjects",                    //method_name
-        NULL,                                   //parameters
-        G_VARIANT_TYPE("(a{oa{sa{sv}}})"),      //return type
-        G_DBUS_CALL_FLAGS_NONE,                 //flag
-        1000,                                   //timeout_msec
-        NULL,                                   //cancel error
-        NULL                                    //error if parameter is not compatible with D-Bus protocol
+        conn,                                       //connection
+        BLUEZ_DBUS_NAME,                            //bus_name
+        BLUEZ_DBUS_OBJ_PATH,                        //object_path
+        DBUS_INTERFACE_NAME,                        //interface_name
+        DBUS_METHOD_NAME,                           //method_name
+        NULL,                                       //parameters
+        G_VARIANT_TYPE(DBUS_METHOD_RETURN_TYPE),    //return type
+        G_DBUS_CALL_FLAGS_NONE,                     //flag
+        1000,                                       //timeout_msec
+        NULL,                                       //cancel error
+        NULL                                        //error if parameter is not compatible with D-Bus protocol
     );
 
     paired_devices = process_dbus_bt_list(result, num_of_paired);
