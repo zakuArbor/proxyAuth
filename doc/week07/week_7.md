@@ -6,6 +6,8 @@
 
 ## Participants Contribution:
 * Ju Hong Kim:
+    * **Issue #29:** Allow connection to deauthentication server on trusted device only
+    * **Issue #32:** Terminate Deauthentication server if the user manually locks their system
   
 * Daniel Wang: 
    
