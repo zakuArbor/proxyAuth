@@ -27,6 +27,12 @@
 #define SERVICE_DESC "Continuous Authentication via Bluetooth"
 #define SERVICE_PROV "ProxyAuth"
 
+struct server_data_t {
+    int server;
+    int *client;
+    sdp_session_t *session;
+};
+
 /*
 * Special Thanks to: Ryan Scott for providing how to register service and Albert Huang
 */
@@ -37,7 +43,7 @@ int sdp_close( sdp_session_t *session );
 
 int sdp_record_register(sdp_session_t *sess, sdp_record_t *rec, uint8_t flags);
 
-void terminate_server(int client, int server, sdp_session_t *session) {
+void terminate_server(int server, int client, sdp_session_t *session) {
     if (client) {
         close(client);
     }
@@ -227,37 +233,26 @@ int init_server(struct sockaddr_rc *loc_addr, sdp_session_t **session) {
 }
 
 /*
-* Connect a new client
+* Lock the computer, cleanup memory and open fd, and terminate program
 *
-* @param s: server's socket
-* @param rem_addr: a pointer to sockaddr structure that will store the address of the client socket
-* @param opt: the size of rem_addr
-* @return: The client's socket
+* @param server_data: a struct that contains fd that needs to be closed
 */
-int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt) {
-    // accept one connection
-    char buf[1024] = { 0 };
-
-    int client = accept(s, (struct sockaddr *)rem_addr, opt);
-    fcntl(client, F_SETFL, O_NONBLOCK); //set FD to nonblocking 
-
-    //bdaddr_t stores information about the bluetooth device address.
-    ba2str(&(rem_addr->rc_bdaddr), buf); //converts the bluetooth data structure to string
-    fprintf(stderr, "accepted connection from %s\n", buf);
-
-    return client;
+void lock(struct server_data_t *server_data) {
+    system("dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock");
+    if (server_data) {
+        terminate_server(server_data->server, *(server_data->client), server_data->session);
+        exit(0);
+    }
 }
 
 /*
-* Return 1 iff the given bluetooth address is valid
+* Return 1 iff the given bluetooth address in the argument is valid
 *
 * @param argc: number of arguments (always >= 1 due to program name stored in argv[0])
 * @param argv: array that contains cmdline arguments
-* @return: True iff the cmd argument is a valid bluetooth device
+* @return: True iff the cmd argument is a valid bluetooth address
 */
-int is_trusted_client(int argc, char **argv, const char *trusted_dir_path) {
-    int status = 0;
-
+int check_arg(int argc, char **argv) {
     if (argc <= 1) {
         fprintf(stderr, "usage: %s bt_addr\n", argv[0]);
         return 0;
@@ -267,6 +262,17 @@ int is_trusted_client(int argc, char **argv, const char *trusted_dir_path) {
         fprintf(stderr, "%s: %s is not a valid bluetooth address\n", argv[0], argv[1]);
         return 0;
     }
+    return 1;
+}
+
+/*
+* Return 1 iff the given bluetooth address is trusted and paired
+*
+* @param bt_addr: the address of the bluetooth to check
+* @return: True iff given bluetooth address is a trusted and pired device
+*/
+int is_trusted_client(char *bt_addr, const char *trusted_dir_path) {
+    int status = 0;
 
     int num_of_paired, num_of_devices;
     char *username = getlogin();
@@ -281,12 +287,12 @@ int is_trusted_client(int argc, char **argv, const char *trusted_dir_path) {
     }
 
     //check if device is paired
-    if (!(is_dev_trusted(NULL, argv[1], paired_devices, num_of_paired))) {
+    if (!(is_dev_trusted(NULL, bt_addr, paired_devices, num_of_paired))) {
         goto is_trusted_terminate;
     }
 
     //check if device is in trusted list
-    if (!is_dev_trusted(NULL, argv[1], trusted_devices, num_of_devices)) {
+    if (!is_dev_trusted(NULL, bt_addr, trusted_devices, num_of_devices)) {
         goto is_trusted_terminate;
     }
 
@@ -305,10 +311,33 @@ is_trusted_terminate:
 }
 
 /*
-* Lock the computer
+* Connect a new client. If client is not from a trusted device nor authorized then lock the system.
+*
+* @param s: server's socket
+* @param rem_addr: a pointer to sockaddr structure that will store the address of the client socket
+* @param opt: the size of rem_addr
+* @param authorized_dev: the address of the trusted device
+* @param server_data: a struct that contains fd that needs to be closed before termination
+* @return: The client's socket
 */
-void lock() {
-    system("dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock");
+int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt, char *authorized_dev, struct server_data_t *server_data) {
+    // accept one connection
+    char buf[1024] = { 0 };
+    printf("connection attempt");
+    int client = accept(s, (struct sockaddr *)rem_addr, opt);
+    fcntl(client, F_SETFL, O_NONBLOCK); //set FD to nonblocking 
+
+    //bdaddr_t stores information about the bluetooth device address.
+    ba2str(&(rem_addr->rc_bdaddr), buf); //converts the bluetooth data structure to string
+
+    fprintf(stderr, "accepted connection from %s\n", buf);
+
+    if (!is_trusted_client(buf, trusted_dir_path) || strcmp(buf, authorized_dev) != 0) {
+        printf("test lock\n");
+        lock(server_data);
+    }
+
+    return client;
 }
 
 int main (int argc, char **argv)
@@ -318,23 +347,27 @@ int main (int argc, char **argv)
     socklen_t opt = sizeof(rem_addr);
     sdp_session_t *session = NULL; //SDP socket
 
+    if (!check_arg(argc, argv)) {
+        lock(NULL);
+    }
     //check if the device passed is trusted
-    if (!is_trusted_client(argc, argv, trusted_dir_path)) {
-        printf("test lock\n");
-        lock();
-        goto cleanup;
+    if (!is_trusted_client(argv[1], trusted_dir_path)) {
+        lock(NULL);
     }
 
     server = init_server(&loc_addr, &session);
+
+    struct server_data_t server_data = {server, &client, session};
+
+
     time_t start, stop;
     int is_locked = 0; 
-    client = -1;
 
     listen_lock_status(server, &client, session);
 
     while(1) {
         if (client < 0) {
-            client = connect_client(server, &rem_addr, &opt);
+            client = connect_client(server, &rem_addr, &opt, argv[1], &server_data);
             start = time(NULL);
             is_locked = 0; 
         }
@@ -353,10 +386,8 @@ int main (int argc, char **argv)
         stop = time(NULL);  
         if ((stop - start) > 10 && !is_locked){
             //exec no response being read lock user out
-            is_locked = 1; 
-            close(client);
-            client = -1;
-            lock();
+            is_locked = 1;
+            lock(&server_data);
             break;
         }
     	
@@ -365,16 +396,5 @@ int main (int argc, char **argv)
     	}
     }
 
-cleanup:
-    // close connection
-    if (client) {
-        close(client);
-    }
-    if (server) {
-        close(server);
-    }
-    if (session) {
-        sdp_close(session);
-    }
     return 0;
 }

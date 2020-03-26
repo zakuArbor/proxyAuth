@@ -25,7 +25,7 @@ static void on_signal (
                         gpointer user_data
                     ); 
 
-void terminate_server(int client, int server, sdp_session_t *session);
+void terminate_server(int server, int client, sdp_session_t *session);
 
 void terminate(struct dbus_obj *data_obj) {
     if (data_obj->proxy) {
