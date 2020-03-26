@@ -6,14 +6,22 @@ PAMxAndroid via Bluetooth proximity based login
 * GDM (GNOME Display Manager)
 * gcc compiler
 
-**Dependencies:**
+**SETUP:**
 Instructions are for Debian based systems that have GNOME.
-1. Need to install the PAM libraries
-`sudo apt-get install libpam0g-dev`
-`sudo apt-get install libglib2.0-dev`
 
-2. Install `bluez`
+1. Need to install all the dependencies for PAM and the deauthentication server:
 ```
+cd pam
+sudo make install
+```
+
+It'll install various dependencies such as:
+```
+#PAM libaries
+sudo apt-get install libpam0g-dev
+sudo apt-get install libglib2.0-dev
+
+#Install bluez
 sudo apt install bluez
 sudo apt-get install libbluetooth-dev
 ```
@@ -25,10 +33,11 @@ sudo apt-get install libbluetooth-dev
 `git clone https://github.com/Sxx125/proxyAuth.git`
 
 5. Compile:
-Assuming you are in the root of the project (i.e. `proxyAuth/`)
-`cd pam`
-`make`
- 
+Assuming you are in the pam directory of the project (i.e. `$(INSTALLATION FOLDER)/proxyAuth/pam`)
+```
+sudo make
+```
+
 6. Change PAM GDM Password Configuration:
 ```
 sudo vi /etc/pam.d/gdm-password
@@ -45,7 +54,6 @@ auth required pam_warn.so
     * This is where all the user's MAC Addresses are stored
 2. Create a file that lists the user's trusted bluetooth devices: `echo <bluetooth_address> >> /etc/proxy_auth/$USER`
 
-
 ## Running Bluetooth Server
 
 **Requirements:**
@@ -56,15 +64,17 @@ auth required pam_warn.so
 
 2. Change `ExecStart=/usr/lib/bluetooth/bluetoothd` to `ExecStart=/usr/lib/bluetooth/bluetoothd --compat`
 
+3. Add the following line to the file: `ExecStartPost=/bin/chmod 777 /var/run/sdp`
+
+The permissions of /var/run/sdp changes on each reboot which is why we add the following line to update the permission each time we boot up.
+
+This is to avoid segmentation fault when running sdp tools. According to the link above, sdptool is broken in Bluez 5. 
+
 3. Restart bluetooth: 
 ```
 sudo systemctl daemon-reload
 sudo systemctl restart bluetooth
 ```
-
-4. Change the permission of `/var/run/sdp`: `sudo chmod 777 /var/run/sdp`
-
-This is to avoid segmentation fault when running sdp tools. According to the link above, sdptool is broken in Bluez 5
 
 **Running:**
 * Compile the server: `gcc -o server rfcomm-server.c -lbluetooth`
