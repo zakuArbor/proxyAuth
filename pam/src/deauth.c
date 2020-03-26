@@ -277,8 +277,6 @@ int is_trusted_client(char *bt_addr, const char *trusted_dir_path) {
     int num_of_paired, num_of_devices;
     char *username = getlogin();
 
-    printf("User: %s\n", username);
-
     char **paired_devices = get_paired_devices(&num_of_paired);
     char **trusted_devices;
 
@@ -323,7 +321,6 @@ is_trusted_terminate:
 int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt, char *authorized_dev, struct server_data_t *server_data) {
     // accept one connection
     char buf[1024] = { 0 };
-    printf("connection attempt");
     int client = accept(s, (struct sockaddr *)rem_addr, opt);
     fcntl(client, F_SETFL, O_NONBLOCK); //set FD to nonblocking 
 
@@ -333,7 +330,7 @@ int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt, char *au
     fprintf(stderr, "accepted connection from %s\n", buf);
 
     if (!is_trusted_client(buf, trusted_dir_path) || strcmp(buf, authorized_dev) != 0) {
-        printf("test lock\n");
+        printf("%s is not trusted or not authorized to deauthenticate the system\n", buf);
         lock(server_data);
     }
 
@@ -359,11 +356,11 @@ int main (int argc, char **argv)
 
     struct server_data_t server_data = {server, &client, session};
 
-
     time_t start, stop;
     int is_locked = 0; 
 
-    listen_lock_status(server, &client, session);
+    //listen_lock_status(server, &client, session);
+    client = -1;
 
     while(1) {
         if (client < 0) {

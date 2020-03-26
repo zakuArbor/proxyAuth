@@ -80,7 +80,7 @@ void listen_lock_status(int server, int *client, sdp_session_t *session) {
 
     GError *error = NULL;
 
-    data_obj.loop = g_main_loop_new(NULL, FALSE);
+    //data_obj.loop = g_main_loop_new(NULL, FALSE);
 
     data_obj.proxy = g_dbus_proxy_new_for_bus_sync(
         G_BUS_TYPE_SESSION,                     //GBus Type
@@ -100,6 +100,6 @@ void listen_lock_status(int server, int *client, sdp_session_t *session) {
     }
 
     data_obj.handler_id = g_signal_connect(data_obj.proxy, "g-signal", G_CALLBACK(on_signal), &data_obj);
-    
-    g_main_loop_run(data_obj.loop);
+    //g_main_iteration(FALSE);
+    //g_main_loop_run(data_obj.loop);
 }
