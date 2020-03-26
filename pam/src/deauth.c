@@ -20,7 +20,6 @@
 #include "pam_bt_misc.h"
 #include "pam_bt_pair.h"
 #include "pam_bt_trust.h"
-#include "proxy_dbus.h"
 
 
 #define SERVICE_NAME "Proxy Auth"
@@ -36,18 +35,6 @@ sdp_session_t *sdp_connect( const bdaddr_t *src, const bdaddr_t *dst, uint32_t f
 int sdp_close( sdp_session_t *session );
 
 int sdp_record_register(sdp_session_t *sess, sdp_record_t *rec, uint8_t flags);
-
-void terminate_server(int client, int server, sdp_session_t *session) {
-    if (client) {
-        close(client);
-    }
-    if (server) {
-        close(server);
-    }
-    if (session) {
-        sdp_close(session);
-    }
-}
 
 /*
 * Set the general service ID and service class
@@ -314,7 +301,7 @@ void lock() {
 int main (int argc, char **argv)
 {
     struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
-    int server = -1, client = -1, bytes_read;
+    int s = -1, client = -1, bytes_read;
     socklen_t opt = sizeof(rem_addr);
     sdp_session_t *session = NULL; //SDP socket
 
@@ -325,16 +312,14 @@ int main (int argc, char **argv)
         goto cleanup;
     }
 
-    server = init_server(&loc_addr, &session);
+    s = init_server(&loc_addr, &session);
     time_t start, stop;
     int is_locked = 0; 
     client = -1;
 
-    listen_lock_status(server, &client, session);
-
     while(1) {
         if (client < 0) {
-            client = connect_client(server, &rem_addr, &opt);
+            client = connect_client(s, &rem_addr, &opt);
             start = time(NULL);
             is_locked = 0; 
         }
@@ -370,8 +355,8 @@ cleanup:
     if (client) {
         close(client);
     }
-    if (server) {
-        close(server);
+    if (s) {
+        close(s);
     }
     if (session) {
         sdp_close(session);
