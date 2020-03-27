@@ -36,6 +36,7 @@
    * Finish implementing bandwidth/latency check on the server side for pam and authentication module
  **Security Concerns:**
    * Need to find an MiTM tool to attack our service and test security 
+   * Implement the AES256 with GCM 
     
  
 ## To Improve in the Next Sprint
