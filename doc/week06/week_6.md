@@ -16,7 +16,7 @@
     * **[Issue 22]** *Execute Deauthentication server once user logs on*
     * **[Issue 27]** rfcomm-server: Memory Leaks
 * Daniel Wang: 
-   
+    * Testing MiTM attack tool [Gattacker](https://github.com/securing/gattacker)
 * Arslan Qamar
     
 * Anurag Bist:
