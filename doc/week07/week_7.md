@@ -16,7 +16,7 @@
    
 * Arslan Qamar
     * **Issue #15:** Worked on security protocol ECDH + authentic encryption using AES 256 GCM partially. 
-    * Worked on different UberTooth mode including repeater 
+    * Worked on different UberTooth mode including repeater, confirming UberTooth repaater mode is only for range test according to my testing, research and discussion with Daniel
     * **Issue #8:** Testing and possible more implementation is still required for Background services
     
     
