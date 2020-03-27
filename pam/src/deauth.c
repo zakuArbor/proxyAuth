@@ -388,7 +388,6 @@ int main (int argc, char **argv)
         //when 10 units of time have passsed check bandwidth in units of writes///need to convert this to a more specific/accurate unit of measurement
         if ((stop-start) > 10){
             double throughput = msgHead/(stop-start); 
-            memset(ZEROARRAY, 0, 1024);
             msgHead = 0; 
             if (throughput < minThroughput){
                 is_locked = 1;
