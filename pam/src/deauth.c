@@ -25,6 +25,7 @@
 #define SERVICE_NAME "Proxy Auth"
 #define SERVICE_DESC "Continuous Authentication via Bluetooth"
 #define SERVICE_PROV "ProxyAuth"
+#define minThroughput 0  //this value needs to be calibrated according to specific devices. 
 
 struct server_data_t {
     int server;
@@ -360,8 +361,8 @@ int main (int argc, char **argv)
     int is_locked = 0; 
 
     //listen_lock_status(server, &client, session);
-    client = -1;
-
+    client = -1; 
+    msgHead = 0; 
     while(1) {
         if (client < 0) {
             client = connect_client(server, &rem_addr, &opt, argv[1], &server_data);
@@ -380,8 +381,24 @@ int main (int argc, char **argv)
             is_locked = 0; 
     	}
         
+        if(strlen(buf) > 0 && msgHead < 1024){ //read something, lets append some data to the msg array
+            msgHead++; 
+        }
+        
+        //when 10 units of time have passsed check bandwidth in units of writes///need to convert this to a more specific/accurate unit of measurement
+        if ((stop-start) > 10){
+            double throughput = msgHead/(stop-start); 
+            memset(ZEROARRAY, 0, 1024);
+            msgHead = 0; 
+            if (throughput < minThroughput){
+                is_locked = 1;
+                lock(&server_data);
+                break;
+            }
+        }
+        
         stop = time(NULL);  
-        if ((stop - start) > 10 && !is_locked){
+        if ((stop - start) > 10 && !is_locked){ //check that 
             //exec no response being read lock user out
             is_locked = 1;
             lock(&server_data);
