@@ -21,8 +21,8 @@
     
     
 * Anurag Bist:
-  * **Worked on Android app's menu toolbar**
-  * **Worked on the helper function used for handling messages received from C server**
+  * Worked on Android app's menu toolbar
+  * Worked on the helper function used for handling messages received from C server
  
 * Sean Coutinho
   
@@ -30,6 +30,7 @@
 
 ## Goals for Next Sprint (Will be subject to change)
 **Android:**
+   * Implement the authentication with the C server
     
  **PAM:**
    * Finish implementing bandwidth/latency check on the server side for pam and authentication module
