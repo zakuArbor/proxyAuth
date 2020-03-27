@@ -10,6 +10,8 @@
     * **Issue #32:** Terminate Deauthentication server if the user manually locks their system
   
 * Daniel Wang: 
+    * Confirmed Ubertooth repeater mode is limited to only range test between 2 Ubertooth Devices
+    * Working on implementing bandwidth and latency checks in the PAM module and authentication service  
    
 * Arslan Qamar
     
