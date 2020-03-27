@@ -26,11 +26,20 @@
 * Areeb Siddiqui:
 
 ## Goals for Next Sprint (Will be subject to change)
+
 **Android:**
+* Android app's menu toolbar
+* Helper function used for handling messages received from C server
+* Testing and possible more implementation is still required for Background services
     
  **PAM:**
-     
+* Issue #29: Allow connection to deauthentication server on trusted device only
+* Issue #32: Terminate Deauthentication server if the user manually locks their system
+* Bandwidth and latency checks in the PAM module and authentication service
+    
  **Security Concerns:**
+ * Security protocol ECDH + authentic encryption using AES 256 GCM partially.
+ * Different UberTooth mode including repeater needs to be tested including testing MiTM attack tool [Gattacker]
  
 ## To Improve in the Next Sprint
  
