@@ -1,6 +1,5 @@
 package com.example.myapplicationtest
 
-import android.app.IntentService
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -10,12 +9,13 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import kotlinx.android.synthetic.main.control_layout.*
 import org.jetbrains.anko.toast
 import java.io.IOException
-import java.io.OutputStream
 import java.util.*
 
 class ControlActivity: AppCompatActivity(){
@@ -155,6 +155,58 @@ class ControlActivity: AppCompatActivity(){
             m_progress.dismiss()
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.mainmenu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+
+        return when (item.itemId) {
+            R.id.help -> {
+                val intent = Intent(this, HelpActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.settings -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.about -> {
+                val intent = Intent(this, AboutActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+    /*
+    Message handling helper function
+    The numbers can be used based on what we decide they represent
+     */
+    fun handleMessage(input: String){
+
+        val msg = input.split("|").toTypedArray()
+
+        when(msg[0]){
+            "1" -> {
+
+            }
+            "2" -> {
+
+            }
+            "3" -> {
+
+            }
+        }
+
+
+    }
+
 }
 
 

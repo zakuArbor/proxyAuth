@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application Test</string>
+    <string name="app_name">ProxAuth</string>
     <string name="button">Button</string>
     <string name="text_change">Some Text</string>
     <string name="text_other">Some Other Text</string>
@@ -11,6 +11,10 @@
     <string name="Devices">Devices</string>
     <string name="connectedDevice">Connected Device</string>
     <string name="deviceAddress">Device Address</string>
+    <string name="settings">Settings</string>
+    <string name="devices">Devices</string>
+    <string name="help">Help</string>
+    <string name="about">About Us</string>
 
     <string-array name="Colors">
         <item name="color">Black</item>

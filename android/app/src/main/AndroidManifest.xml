@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplicationtest">
-
     <!-- added the bluetooth permissions in the application manifest file -->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
 
@@ -17,23 +14,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:screenOrientation="portrait">
+        <activity android:name=".AboutActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".HelpActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-
-        <!-- Because android:exported is set to "false", the service is only available to this app.  -->
+        </activity> <!-- Because android:exported is set to "false", the service is only available to this app. -->
         <service
             android:name=".RSSPullService"
-            android:exported="false"/>
+            android:exported="false" />
 
-
-        <activity android:name=".ControlActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ControlActivity"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -48,10 +47,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
 
 </manifest>
-
-
-
