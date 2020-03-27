@@ -190,9 +190,9 @@ class ControlActivity: AppCompatActivity(){
      */
     fun handleMessage(input: String){
 
-        val msgLst = input.split("|").toTypedArray()
+        val msg = input.split("|").toTypedArray()
 
-        when(msgLst[0]){
+        when(msg[0]){
             "1" -> {
 
             }
