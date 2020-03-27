@@ -15,6 +15,10 @@
     * Will work to try and find an appropriate MiTM test in the following week 
    
 * Arslan Qamar
+    * **Issue #15:** Worked on security protocol ECDH + authentic encryption using AES 256 GCM partially. 
+    * Worked on different UberTooth mode including repeater 
+    * **Issue #8:** Testing and possible more implementation is still required for Background services
+    
     
 * Anurag Bist:
   * **Worked on Android app's menu toolbar**
