@@ -12,6 +12,7 @@
 * Daniel Wang: 
     * Confirmed Ubertooth repeater mode is limited to only range test between 2 Ubertooth Devices
     * Working on implementing bandwidth and latency checks in the PAM module and authentication service  
+    * Will work to try and find an appropriate MiTM test in the following week 
    
 * Arslan Qamar
     
