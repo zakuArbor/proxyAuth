@@ -20,11 +20,13 @@
 #include "pam_bt_misc.h"
 #include "pam_bt_pair.h"
 #include "pam_bt_trust.h"
+#include "proxy_dbus.h"
 
 
 #define SERVICE_NAME "Proxy Auth"
 #define SERVICE_DESC "Continuous Authentication via Bluetooth"
 #define SERVICE_PROV "ProxyAuth"
+#define minThroughput 0  //this value needs to be calibrated according to specific devices. 
 
 /*
 * Special Thanks to: Ryan Scott for providing how to register service and Albert Huang
@@ -332,7 +334,7 @@ int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt, char *au
 int main (int argc, char **argv)
 {
     struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
-    int server = -1, client = -1, bytes_read;
+    int server = -1, client = -1, bytes_read, msgHead = 0;
     socklen_t opt = sizeof(rem_addr);
     sdp_session_t *session = NULL; //SDP socket
 
@@ -351,8 +353,7 @@ int main (int argc, char **argv)
 
     time_t start, stop;
     int is_locked = 0; 
-
-    client = -1;
+ 
     struct dbus_obj *data_obj = set_lock_listener(&server_data);
 
     if (!data_obj) {
@@ -377,8 +378,23 @@ int main (int argc, char **argv)
             is_locked = 0; 
     	}
         
+        if(strlen(buf) > 0 && msgHead < 1024){ //read something, lets append some data to the msg array
+            msgHead++; 
+        }
+        
+        //when 10 units of time have passsed check bandwidth in units of writes///need to convert this to a more specific/accurate unit of measurement
+        if ((stop-start) > 10){
+            double throughput = msgHead/(stop-start); 
+            msgHead = 0; 
+            if (throughput < minThroughput){
+                is_locked = 1;
+                lock(data_obj);
+                break;
+            }
+        }
+        
         stop = time(NULL);  
-        if ((stop - start) > 10 && !is_locked){
+        if ((stop - start) > 10 && !is_locked){ //check that 
             //exec no response being read lock user out
             is_locked = 1;
             lock(data_obj);
