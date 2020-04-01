@@ -129,7 +129,6 @@ struct dbus_obj *set_lock_listener(struct server_data_t *server) {
 }
 
 void check_lock_status(GMainContext *context) {
-    printf("check status\n");
     for (int i = 0; i < 15; i++) {
         g_main_context_iteration(context, FALSE);
     }
