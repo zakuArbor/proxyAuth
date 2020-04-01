@@ -20,7 +20,6 @@
 #include "pam_bt_misc.h"
 #include "pam_bt_pair.h"
 #include "pam_bt_trust.h"
-#include "proxy_dbus.h"
 
 
 #define SERVICE_NAME "Proxy Auth"
@@ -344,6 +343,7 @@ int main (int argc, char **argv)
     if (!is_trusted_client(argv[1], trusted_dir_path)) {
         lock(NULL);
     }
+
 
     server = init_server(&loc_addr, &session);
 
