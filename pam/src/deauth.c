@@ -334,7 +334,7 @@ int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt, char *au
 int main (int argc, char **argv)
 {
     struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
-    int server = -1, client = -1, bytes_read, msgHead = 0;
+    int server = -1, client = -1, bytes_read, num_bytes_read = 0;
     socklen_t opt = sizeof(rem_addr);
     sdp_session_t *session = NULL; //SDP socket
 
@@ -378,14 +378,14 @@ int main (int argc, char **argv)
             is_locked = 0; 
     	}
         
-        if(strlen(buf) > 0 && msgHead < 1024){ //read something, lets append some data to the msg array
-            msgHead++; 
+        if(bytes_read > 0 && num_bytes_read < INT_MAX){ //read something, lets append some data to the msg array
+            num_bytes_read++; 
         }
         
-        //when 10 units of time have passsed check bandwidth in units of writes///need to convert this to a more specific/accurate unit of measurement
+        //when 10 units of time have passsed check throughput in bytes, and see if meeting expected minThroughput
         if ((stop-start) > 10){
-            double throughput = msgHead/(stop-start); 
-            msgHead = 0; 
+            double throughput = num_bytes_read/(stop-start); 
+            num_bytes_read = 0; 
             if (throughput < minThroughput){
                 is_locked = 1;
                 lock(data_obj);
