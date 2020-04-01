@@ -27,12 +27,6 @@
 #define SERVICE_DESC "Continuous Authentication via Bluetooth"
 #define SERVICE_PROV "ProxyAuth"
 
-struct server_data_t {
-    int server;
-    int *client;
-    sdp_session_t *session;
-};
-
 /*
 * Special Thanks to: Ryan Scott for providing how to register service and Albert Huang
 */
@@ -188,7 +182,6 @@ sdp_session_t *register_service(uint8_t rfcomm_channel) {
     *   (Bluez implementation of SDP server which is a daemon) what to advertise. This is done through
     *   the pipe `/var/run/sdp`
     */
-
     session = sdp_connect(BDADDR_ANY, BDADDR_LOCAL, SDP_RETRY_IF_BUSY);
     sdp_record_register(session, record, 0);
 
@@ -235,12 +228,12 @@ int init_server(struct sockaddr_rc *loc_addr, sdp_session_t **session) {
 /*
 * Lock the computer, cleanup memory and open fd, and terminate program
 *
-* @param server_data: a struct that contains fd that needs to be closed
+* @param server_data: a struct that contains fd that needs to be closed and all the dbus references needed
 */
-void lock(struct server_data_t *server_data) {
+void lock(struct dbus_obj *data_obj) {
     system("dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock");
-    if (server_data) {
-        terminate_server(server_data->server, *(server_data->client), server_data->session);
+    if (data_obj) {
+        terminate(data_obj);
         exit(0);
     }
 }
@@ -318,7 +311,7 @@ is_trusted_terminate:
 * @param server_data: a struct that contains fd that needs to be closed before termination
 * @return: The client's socket
 */
-int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt, char *authorized_dev, struct server_data_t *server_data) {
+int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt, char *authorized_dev, struct dbus_obj *data_obj) {
     // accept one connection
     char buf[1024] = { 0 };
     int client = accept(s, (struct sockaddr *)rem_addr, opt);
@@ -331,7 +324,7 @@ int connect_client(int s, struct sockaddr_rc *rem_addr, socklen_t *opt, char *au
 
     if (!is_trusted_client(buf, trusted_dir_path) || strcmp(buf, authorized_dev) != 0) {
         printf("%s is not trusted or not authorized to deauthenticate the system\n", buf);
-        lock(server_data);
+        lock(data_obj);
     }
 
     return client;
@@ -359,12 +352,16 @@ int main (int argc, char **argv)
     time_t start, stop;
     int is_locked = 0; 
 
-    //listen_lock_status(server, &client, session);
     client = -1;
+    struct dbus_obj *data_obj = set_lock_listener(&server_data);
 
+    if (!data_obj) {
+        terminate_server(server_data.server, *(server_data.client), server_data.session);
+    }
+    
     while(1) {
         if (client < 0) {
-            client = connect_client(server, &rem_addr, &opt, argv[1], &server_data);
+            client = connect_client(server, &rem_addr, &opt, argv[1], data_obj);
             start = time(NULL);
             is_locked = 0; 
         }
@@ -384,14 +381,17 @@ int main (int argc, char **argv)
         if ((stop - start) > 10 && !is_locked){
             //exec no response being read lock user out
             is_locked = 1;
-            lock(&server_data);
+            lock(data_obj);
             break;
         }
     	
     	if (bytes_read > 0 && write(client, buf, strlen(buf) < 0)) {
     	    perror("Error writing to client");	
     	}
+        check_lock_status(data_obj->context);
     }
+    //should never come here unless the program is killed or the loop breaks
+    terminate(data_obj);
 
     return 0;
 }
