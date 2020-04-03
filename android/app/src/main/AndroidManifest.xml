@@ -34,6 +34,10 @@
             android:name=".ControlActivity"
             android:screenOrientation="portrait" />
 
+        <service
+            android:name=".BluetoothInteraction"
+            android:exported="false"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.domain.fileprovider"

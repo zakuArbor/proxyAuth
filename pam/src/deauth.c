@@ -404,6 +404,8 @@ int main (int argc, char **argv)
     	if (bytes_read > 0 && write(client, buf, strlen(buf) < 0)) {
     	    perror("Error writing to client");	
     	}
+        char *msg = "hello";
+        write(client, msg, strlen(msg));
         check_lock_status(data_obj->context);
     }
     //should never come here unless the program is killed or the loop breaks
