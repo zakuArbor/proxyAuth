@@ -26,7 +26,7 @@
 #define SERVICE_NAME "Proxy Auth"
 #define SERVICE_DESC "Continuous Authentication via Bluetooth"
 #define SERVICE_PROV "ProxyAuth"
-#define minThroughput 0  //this value needs to be calibrated according to specific devices. 
+#define minThroughput 3000  //Min Throughput varies depending on devices and work scenarios. Calibrate as needed. 
 
 /*
 * Special Thanks to: Ryan Scott for providing how to register service and Albert Huang
@@ -352,7 +352,7 @@ int main (int argc, char **argv)
     struct server_data_t server_data = {server, &client, session};
 
     time_t start, stop;
-    int is_locked = 0; 
+
  
     struct dbus_obj *data_obj = set_lock_listener(&server_data);
 
@@ -364,7 +364,6 @@ int main (int argc, char **argv)
         if (client < 0) {
             client = connect_client(server, &rem_addr, &opt, argv[1], data_obj);
             start = time(NULL);
-            is_locked = 0; 
         }
 
     	char buf[1024];
@@ -374,32 +373,23 @@ int main (int argc, char **argv)
     	bytes_read = read(client, buf, sizeof(buf));
     	if(bytes_read > 0) {
             printf("received [%s]\n", buf);
-            start = time(NULL);
-            is_locked = 0; 
     	}
         
         if(bytes_read > 0 && num_bytes_read < INT_MAX){ //read something, lets append some data to the msg array
-            num_bytes_read++; 
+            num_bytes_read += bytes_read; 
         }
         
-        //when 10 units of time have passsed check throughput in bytes, and see if meeting expected minThroughput
-        if ((stop-start) > 10){
+        //when 5 seconds have passsed check throughput in bytes, and see if meeting expected minThroughput
+        if ((stop-start) > 5){
             double throughput = num_bytes_read/(stop-start); 
             num_bytes_read = 0; 
             if (throughput < minThroughput){
-                is_locked = 1;
                 lock(data_obj);
                 break;
             }
         }
         
         stop = time(NULL);  
-        if ((stop - start) > 10 && !is_locked){ //check that 
-            //exec no response being read lock user out
-            is_locked = 1;
-            lock(data_obj);
-            break;
-        }
     	
     	if (bytes_read > 0 && write(client, buf, strlen(buf) < 0)) {
     	    perror("Error writing to client");	
