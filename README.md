@@ -76,6 +76,23 @@ sudo systemctl daemon-reload
 sudo systemctl restart bluetooth
 ```
 
+**Note:**
+If you are still encountering issues, it may be due to the fact that your bluetooth service is looking at another configuration file:
+```
+sudo systemctl status bluetooth
+● bluetooth.service - Bluetooth service
+   Loaded: loaded (/lib/systemd/system/bluetooth.service; enabled; vendor preset
+   Active: active (running) since Wed 2020-04-01 00:34:23 EDT; 7s ago
+     Docs: man:bluetoothd(8)
+ Main PID: 8903 (bluetoothd)
+   Status: "Running"
+    Tasks: 1 (limit: 4915)
+   Memory: 1.1M
+   CGroup: /system.slice/bluetooth.service
+           └─8903 /usr/lib/bluetooth/bluetoothd
+```
+As you can see, you will need to edit `/lib/systemd/system/bluetooth.service` instead.
+
 **Running:**
 * Compile the server: `gcc -o server rfcomm-server.c -lbluetooth`
 
