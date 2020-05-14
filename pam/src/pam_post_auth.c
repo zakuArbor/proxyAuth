@@ -9,7 +9,7 @@
 * @param bt_addr: the trusted bluetooth address we want to log in
 * @param username: the user we want to run the program as (i.e. should be the username of the user who wishes to login)
 */
-int exec_deauth(char *bt_addr, const char *username, FILE *log_fp) {
+int exec_deauth(char *bt_addr, const char *username, FILE *log_fp, const char *trusted_dir_path) {
     int pid = fork();
 
     if (pid == 0) { //child process

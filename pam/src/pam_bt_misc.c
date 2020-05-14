@@ -1,5 +1,7 @@
 #include "pam_bt_misc.h"
 
+const char *trusted_dir_path = "/etc/proxy_auth/";
+
 /*
 * Return 1 iff the address is a valid Bluetooth Address
 *

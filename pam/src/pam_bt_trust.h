@@ -2,9 +2,12 @@
 #define PAM_BT_TRUST
 
 #include <stdio.h>
+#include <string.h>
 #include "pam_misc.h"
 #include "pam_bt_misc.h"
 #include "pam_bt_pair.h"
+
+extern const char *trusted_dir_path;
 
 /*
 * Return 1 iff a trusted device for the user is connected

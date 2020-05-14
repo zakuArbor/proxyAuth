@@ -10,8 +10,6 @@
 #define BT_MAX_CONN 7 //Bluetooth Adapters can only connect up to 7 devices
 #define LOG 1
 
-const char *trusted_dir_path = "/etc/proxy_auth/";
-
 /*
 * Return 1 iff the address is a valid Bluetooth Address
 *
