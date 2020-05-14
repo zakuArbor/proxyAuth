@@ -382,8 +382,9 @@ int main (int argc, char **argv)
         //when 5 seconds have passsed check throughput in bytes, and see if meeting expected minThroughput
         if ((stop-start) > 5){
             double throughput = num_bytes_read/(stop-start); 
-            num_bytes_read = 0; 
+            num_bytes_read = 0;
             if (throughput < minThroughput){
+                printf("Failed minimum throughput of %d. Received: %f\n", minThroughput, throughput);
                 lock(data_obj);
                 break;
             }
