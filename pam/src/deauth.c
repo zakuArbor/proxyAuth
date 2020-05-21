@@ -26,7 +26,7 @@
 #define SERVICE_NAME "Proxy Auth"
 #define SERVICE_DESC "Continuous Authentication via Bluetooth"
 #define SERVICE_PROV "ProxyAuth"
-#define minThroughput 3000  //Min Throughput varies depending on devices and work scenarios. Calibrate as needed. 
+#define minThroughput 100  //Min Throughput varies depending on devices and work scenarios. Calibrate as needed. 
 
 /*
 * Special Thanks to: Ryan Scott for providing how to register service and Albert Huang
@@ -379,10 +379,11 @@ int main (int argc, char **argv)
             num_bytes_read += bytes_read; 
         }
         
-        //when 5 seconds have passsed check throughput in bytes, and see if meeting expected minThroughput
-        if ((stop-start) > 5){
+        //when 10 seconds have passsed check throughput in bytes, and see if meeting expected minThroughput
+        if ((stop-start) > 10){
             double throughput = num_bytes_read/(stop-start); 
             num_bytes_read = 0;
+            start = time(NULL);
             if (throughput < minThroughput){
                 printf("Failed minimum throughput of %d. Received: %f\n", minThroughput, throughput);
                 lock(data_obj);
