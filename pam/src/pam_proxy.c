@@ -66,7 +66,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
 	   if (log_fp) {
             fprintf(log_fp, "Login via Auth Proxy\n");
         }
-        exec_deauth(detected_dev, username, log_fp);
+        exec_deauth(detected_dev, username, log_fp, trusted_dir_path);
         if (detected_dev) {
             free(detected_dev);
         }

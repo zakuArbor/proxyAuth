@@ -4,37 +4,48 @@ PFLAGS += -fPIC -fno-stack-protector
 LDFLAGS = -x --shared
 GLIB = `pkg-config --libs glib-2.0 gio-2.0`
 G_CFLAGS = `pkg-config --cflags glib-2.0 gio-2.0`
-LINUX_PAM_PATH = /lib/security/
-DEAUTH_PATH = /etc/proxy_auth/
+LINUX_PAM_PATH = /lib/security
+DEAUTH_PATH = /etc/proxy_auth
 PAM_PATH = $(LINUX_PAM_PATH)/pam_proxy.so
 BLUETOOTH_LIB = -lbluetooth
-LDLIBS = -lc
+LDLIBS = -lpam -lc
 SRC = src
-LIB_DEP = $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_pair.h $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_trust.h
-# LD_PRELOAD=${LIB_ASAN_PATH} $(PAM_PATH)
+LIB_OBJ = pam_misc.o pam_bt_misc.o pam_bt_pair.o pam_bt_trust.o pam_post_auth.o
 #gcc -print-file-name=libasan.so
 
 all: pam_proxy.so pam_test deauth
+pam_misc.o: $(SRC)/pam_misc.h
+pam_bt_misc.o: $(SRC)/pam_bt_misc.h
+pam_bt_pair.o: $(SRC)/pam_bt_pair.h
+pam_bt_trust.o: $(SRC)/pam_bt_trust.h $(SRC)/pam_misc.h $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_pair.h
+pam_post_auth.o: $(SRC)/pam_post_auth.h $(SRC)/pam_bt_misc.h
+proxy_dbus.o: $(SRC)/proxy_dbus.h $(SRC)/pam_bt_trust.h $(SRC)/pam_misc.h $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_pair.h
+
 
 pam: pam_proxy.so
 
-pam_proxy.so: pam_proxy.o $(LIB_DEP)
-	sudo ld $(LDFLAGS) -o $(LINUX_PAM_PATH)$@ $< $(BLUETOOTH_LIB) $(LDLIBS) $(GLIB)
+pam_proxy.so: pam_proxy.o $(LIB_OBJ)
+	sudo ld $(LDFLAGS) -o $(LINUX_PAM_PATH)/$@ $^ $(BLUETOOTH_LIB) $(LDLIBS) $(GLIB)
 	rm $<
 
 pam_proxy.o: $(SRC)/pam_proxy.c
-	$(CC) -c $< $(CFLAGS) $(PFLAGS) $(G_CFLAGS) -o $@ 
+	$(CC) -c $< $(CFLAGS) $(PFLAGS) $(G_CFLAGS) -o $@
 
-pam_test: $(SRC)/pam_test.c $(LIB_DEP)
-	echo $@
-	if [ -f $@ ];	then rm $@; fi
-	$(CC) -o $@ $< $(CFLAGS) $(PFLAGS) -fsanitize=address $(BLUETOOTH_LIB) $(G_CFLAGS) $(GLIB)
+pam_test: pam_test.o $(LIB_OBJ)
+	if [ -f $@ ];	then rm -f $@; fi
+	$(CC) $^ -o $@ $(CFLAGS) $(PFLAGS) $(BLUETOOTH_LIB) -fsanitize=address $(G_CFLAGS) $(GLIB)
 
-deauth: $(SRC)/deauth.c $(LIB_DEP)
-	$(CC) -o $(DEAUTH_PATH)$@ $< $(CFLAGS) -fsanitize=address $(BLUETOOTH_LIB) $(G_CFLAGS) $(GLIB) 
+deauth: deauth.o $(LIB_OBJ) proxy_dbus.o
+	$(CC) $^ -o $(DEAUTH_PATH)/$@ $(CFLAGS) $(BLUETOOTH_LIB) -fsanitize=address $(G_CFLAGS) $(GLIB) 
+
+proxy_dbus.o: $(SRC)/proxy_dbus.c
+	$(CC) $(CFLAGS) -c $< -o $@ $(BLUETOOTH_LIB) $(G_CFLAGS) $(GLIB)
+
+%.o: $(SRC)/%.c
+	$(CC) $(CFLAGS) -fPIC -c $< -o $@ $(G_CFLAGS) $(GLIB)
 
 install: 
 	perl install.pl
 
 clean:
-	rm -f *.o $(PAM_PATH) pam_test
+	rm -f *.o $(PAM_PATH) pam_test $(DEAUTH_PATH)/$@

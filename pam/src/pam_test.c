@@ -31,7 +31,6 @@
 
 int main(int argc, char **argv)
 {
-    const char *trusted_dir_path = "/etc/proxy_auth/";
     const char *username = "zaku";
     char *detected_dev;
 
@@ -45,7 +44,7 @@ int main(int argc, char **argv)
     printf("start bluetooth_login\n");
     if (bluetooth_login(log_fp, trusted_dir_path, username, &detected_dev)) {
        printf("Welcome %s. Login via Auth Proxy.\n", username);
-       exec_deauth(detected_dev, username, log_fp);
+       exec_deauth(detected_dev, username, log_fp, trusted_dir_path);
     }
     else {
         printf("Failed");
@@ -54,4 +53,5 @@ int main(int argc, char **argv)
     if (log_fp) {
         fclose(log_fp);
     }
+    free(detected_dev);
 }
