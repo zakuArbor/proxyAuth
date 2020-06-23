@@ -364,6 +364,7 @@ int main (int argc, char **argv)
         if (client < 0) {
             client = connect_client(server, &rem_addr, &opt, argv[1], data_obj);
             start = time(NULL);
+            stop = start;
         }
 
     	char buf[1024];
@@ -371,17 +372,15 @@ int main (int argc, char **argv)
 
     	// read data from the client
     	bytes_read = read(client, buf, sizeof(buf));
-    	if(bytes_read > 0) {
-            printf("received [%s]\n", buf);
-    	}
         
         if(bytes_read > 0 && num_bytes_read < INT_MAX){ //read something, lets append some data to the msg array
             num_bytes_read += bytes_read; 
         }
         
-        //when 10 seconds have passsed check throughput in bytes, and see if meeting expected minThroughput
-        if ((stop-start) > 10){
+        //when 5 seconds have passsed check throughput in bytes, and see if meeting expected minThroughput
+        if ((stop-start) > 5){
             double throughput = num_bytes_read/(stop-start); 
+            
             num_bytes_read = 0;
             start = time(NULL);
             if (throughput < minThroughput){
