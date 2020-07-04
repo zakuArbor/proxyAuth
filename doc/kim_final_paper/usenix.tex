@@ -22,6 +22,7 @@
 \documentclass[letterpaper,twocolumn,10pt]{article}
 \usepackage{usenix,epsfig,endnotes}
 \usepackage{setspace} 
+
 \usepackage[utf8]{inputenc}
 \usepackage[official]{eurosym}
 \usepackage{enumitem}
@@ -221,9 +222,9 @@ As stated earlier, there is no effective way to counter-measure against the devi
 
 \subsection{Background}
 
-It is not rare to see workers at a workplace leave their computers on as they take a break. This is a grave concern since the computer is left at a vulnerable position where the loss and tampering of data can occur. Furthermore, the use of stolen or weak passwords is very common. There are many incidents of security breaches in the past decade or two simply due to the use of common passwords. According to the 2017 Verizon Data Breach Investigation Report, "81\% of hacking related breaches leveraged either stolen and/or weak passwords"[1]. This opens up the question of whether or not users have simply given up on security and opted to create and reuse simple passwords for every application they use. As we all know, security breaches cost companies a loss of a lot of resources and reputation.
+It is not rare to see workers at a workplace leave their computers on as they take a break. This is a grave concern since the computer is left at a vulnerable position where the loss and tampering of data can occur. Furthermore, the use of stolen or weak passwords is very common. There are many incidents of security breaches in the past decade or two simply due to the use of common passwords. According to the 2017 Verizon Data Breach Investigation Report, "81\% of hacking related breaches leveraged either stolen and/or weak passwords"~\cite{verizon_breach}. This opens up the question of whether or not users have simply given up on security and opted to create and reuse simple passwords for every application they use. As we all know, security breaches cost companies a loss of a lot of resources and reputation.
 
-Passwords are often referred to as the weakest link in security. The use of unique and strong passwords require users to be creative and often lead to forgotten password. In a survey conducted by Forrester, several large organizations allocate over \euro{700 000} annually just for password-related support costs[2]. Passwords are just a pain for both client and security professionals. It is not rare to have employees resetting their password for their work accounts. One survey found 57\% of respondents have to reset their work account which affects productivity[3]. Even if a strong and memorable password were to be chosen, the password is still at risk of being phished. Phising is a common and growing method of attack where about 33\% of breaches were conducted by Social Engineering in 2019 [4]. Another issue with passwords is that they are not resilient to physical observation meaning anyone can watch over the person typing in the password. Due to all of these factors, passwords lack both usability and security benefits that a good authentication method should provide.
+Passwords are often referred to as the weakest link in security. The use of unique and strong passwords require users to be creative and often lead to forgotten password. In a survey conducted by Forrester, several large organizations allocate over \euro{700 000} annually just for password-related support costs~\cite{password_cost}. Passwords are just a pain for both client and security professionals. It is not rare to have employees resetting their password for their work accounts. One survey found 57\% of respondents have to reset their work account which affects productivity[3]. Even if a strong and memorable password were to be chosen, the password is still at risk of being phished. Phising is a common and growing method of attack where about 33\% of breaches were conducted by Social Engineering in 2019 [4]. Another issue with passwords is that they are not resilient to physical observation meaning anyone can watch over the person typing in the password. Due to all of these factors, passwords lack both usability and security benefits that a good authentication method should provide.
 
 It is clear that password-based authentication is not the way IT products and services should adopt. One of the earliest works to make passwords more secure is the use of password managers. Password managers allow users to create strong and complicated passwords that are not easily crackable and have their password managers to remember them. Some examples of password managers are the browsers' built-in encrypted password managers, Dashlane, and LastPass. Password managers are very simple, convenient and scalable to remember passwords for every service one subscribes to. However, password managers are only secure if the master password to the password manager is both secure and memorable. Password managers do not get rid of the entire issue with passwords. This could lead to a big compromise with the attacker knowing all the users' passwords if the master password was to be stolen.
 
@@ -920,180 +921,6 @@ The project has a lot of room for improvements. The project did not even complet
 \hrulefill
 
 \section{References}
-
-{\small
-\begin{lstlisting}
-[1] Verizon, "2017 Data Breach Investigations Report," (*@\textit{Verizon}@*), 2017. [Online].Available: https://www.ictsecuritymagazine.com/wp-content/uploads/2017-Data-Breach-Investigations-Report.pdf 
-    [Accessed March 30, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[2] S. Palfy, "How Much do Passwords Cost your Business?," (*@\textit{infosecurity}@*), June 14, 2018. 
-    [Online], Available: https://www.infosecu
-    rity-magazine.com [Accessed March 30, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[3] HYPR, "New Password Study by HYPR Finds 78% of People Had to Reset a Password They Forgot in Past 90 Days", (*@\textit{HYPR}@*), Dec 10, 2019. [Online], Available: https://www.hypr.com/hypr-password-study-findings/ 
-    [Accessed March 29, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[4] Verizon, "2019 Data Breach Investigations Report," (*@\textit{Verizon}@*), 2019. [Online], Available: https://enterprise.verizon.com/resources/executivebriefs/2019-dbir-executive-brief.pdf [Accessed March 30, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[5] Microsoft, "Password-less protection: Reduce your risk exposure with password alternatives," (*@\textit{Microsoft}@*), 2018. [Online], Available: https://query.prod.cms.rt.microsoft.com/cms/api/am/binary/RE2KEup [Accessed March 29, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[6] A. Huang, "An Introduction to Bluetooth Programming: About this booklet," 2008. [Online]. Available: https://people.csail.mit.edu/albert/bluez-intro/ [Accessed Jan. 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[7] J. Bonneau, C. Herley, P. Van. Oorschot and F. Stajano, "The Quest to Replace Passwords: A Framework for Comparative Evaluation of Web Authentication Schemes," 2012 IEEE Symposium on Security and Privacy, San Francisco, CA, 2012, pp. 553-567.
-\end{lstlisting}
-}
-
-{\small
-\lstset{emph={Computer Security and the Internet: Tools and Jewels}, emphstyle=\itshape}
-\begin{lstlisting}
-[8] Van Oorschot, (*@\textit{"Computer Security and the Internet: Tools and Jewels"}@*),
-     Springer, 2019. [E-book]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[9] L. Silver, "Smartphone Ownership Is Growing Rapidly Around the World, but Not Always Equally," (*@\textit{"PEW Research Center"}@*), Feb. 5, 2019. [Online], Available: https://www.pewresearch.org/ [Accessed March 31, 2019]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[10] Statcounter Global Stats, "Mobile Operating System Market Share Worldwide," (*@\textit{Statcounter Global Stats}@*) March 2020. [Online], Available: https://gs.statcounter.com/os-market-share/mobile/worldwide [Accessed April 05, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[11] A. Merayyan, "Proximity Authentication," (*@\textit{SANS Institute}@*), July 16, 2001. [online document], Available: https://www.sans.org/reading-room/whitepapers/authentication/proximity-authentication-102 [Accessed April 05, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[12] Ensure Technologies, "XYLOC Solutions Overview," (*@\textit{Ensure Technologies}@*), 2009. [online document], Available: https://www.ensuretech.com/wp-content/uploads/2011/08/xyloc-overview-brochure.pdf [Accessed Apirl 5, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[13] Apple, "How to unlock your Mac with your Apple Watch," (*@\textit{Apple}@*), Oct. 21, 2019. [Online], Available: https://support.apple.com/en-ca/HT206995 [Accessed 05, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[14] Apple, "Use Continuity to connect your Mac, iPhone, iPad, iPod touch, and Apple Watch," (*@\textit{Apple}@*), April 31, 2020. [Online], Available: https://support.apple.com/en-ca/HT204681 [Accessed April 5, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[15] Near Lock, "A new way to lock your Mac. Just walk away.", (*@\textit{Near Lock}@*). [Online], Available: https://nearlock.me/press [Accessed Apirl 05, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[16] D. Damopoulos, G. Kambourakis, "Hands-Free one-Time and continuous authentication using glass wearable devices," (*@\textit{Journal of Information Security and Applications}@*), vol. 46, p.138-150, June 2019 [Online]. Available: https://arxiv.org/pdf/1810.02496.pdf [Accessed Feb. 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[17] S. Mare, A. M. Markham, C. Cornelius, R. Peterson and D. Kotz, "ZEBRA: Zero-Effort Bilateral Recurring Authentication," (*@\textit{2014 IEEE Symposium on Security and Privacy}@*), San Jose, CA, 2014, pp. 705-720.
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[18] K. R, M. JP, C. A, and et al, "Role of computerized physician order entry systems in facilitating medication errors," (*@\textit{JAMA}@*), vol. 293, no. 10,pp. 1197-1203, 2005
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[19] A. Morgan, T. Kukuk, "The Linux-PAM Module Writers' Guide," (*@\textit{Linux PAM}@*), Aug. 2010. [Online], Available: http://www.linux-pam.org/Linux-PAM-html/mwg-introduction-description.html [Accessed Feb 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[20] M. Patkar, "5 Common Bluetooth Myths You Can Safely Ignore Now," (*@\textit{Make Use Of}@*), Dec. 25, 2018. [Online], Available: https://www.makeuseof.com/tag/5-myths-bluetooth-can-safely-ignore-now/ [Accessed May 06, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[21] I. Golatowski, Class Lecture, Topic: "Service DIscovery Protocol (SDP)" Faculty of Computer Science and Eletricial Engineering, University of Rostock, Germany, 2002. [online document], Available: https://www.amd.e-technik.uni-rostock.de/ma/gol/lectures/wirlec/bluetooth_info/sdp.html
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[22] Jimblom, "Bluetooth Basics," (*@\textit{Sparkfun}@*), Aug. 26, 2013. [Online], Available: https://learn.sparkfun.com/tutorials/bluetooth-basics/all [Accessed: April 06 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[23] C. Schwingenschlohl, A. Heigl, "Development of a Service Discovery Architecture for the Bluetooth Radio System," (*@\textit{Institute of Communication Networks, Technische Universität München}@*), 2000. [online document], Available: http://dl.ifip.org/db/conf/ifip6-6/eunice2000/paper5-2.pdf
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[24] (*@\textit{Bluetooth Specification}@*), Bluetooth Standard 1B, 1999 
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[25] A. Huang, L. Rudolph, (*@\textit{Bluetooth Essentials for Programmers}@*). Cambridge:  Cambridge University Press, 2007.
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[26] S.Gueron, "AES-GCM for Efficient Authenticated Encryption - Ending the Reign of HMAC-SHA-1?", Standford University, 2013.
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[27] Security Boulevard, "What We Need To Know About Bluetooth Security," (*@\textit{Security Boulevard}@*), Nov. 7, 2019. [Online]: Available: https://securityboulevard.com/2019/11/what-we-need-to-know-about-bluetooth-security/ [Accessed April 5, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[28] Wikipedia, "Bluetooth," (*@\textit{Wikipedia}@*). [Online], Available: https://en.wikipedia.org/wiki/Bluetooth [Accessed April 5, 2020]
-\end{lstlisting}
-}
 
 {\footnotesize \bibliographystyle{acm}
 \bibliography{sample}}
