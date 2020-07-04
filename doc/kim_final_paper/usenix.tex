@@ -22,6 +22,7 @@
 \documentclass[letterpaper,twocolumn,10pt]{article}
 \usepackage{usenix,epsfig,endnotes}
 \usepackage{setspace} 
+
 \usepackage[utf8]{inputenc}
 \usepackage[official]{eurosym}
 \usepackage{enumitem}
@@ -221,30 +222,30 @@ As stated earlier, there is no effective way to counter-measure against the devi
 
 \subsection{Background}
 
-It is not rare to see workers at a workplace leave their computers on as they take a break. This is a grave concern since the computer is left at a vulnerable position where the loss and tampering of data can occur. Furthermore, the use of stolen or weak passwords is very common. There are many incidents of security breaches in the past decade or two simply due to the use of common passwords. According to the 2017 Verizon Data Breach Investigation Report, "81\% of hacking related breaches leveraged either stolen and/or weak passwords"[1]. This opens up the question of whether or not users have simply given up on security and opted to create and reuse simple passwords for every application they use. As we all know, security breaches cost companies a loss of a lot of resources and reputation.
+It is not rare to see workers at a workplace leave their computers on as they take a break. This is a grave concern since the computer is left at a vulnerable position where the loss and tampering of data can occur. Furthermore, the use of stolen or weak passwords is very common. There are many incidents of security breaches in the past decade or two simply due to the use of common passwords. According to the 2017 Verizon Data Breach Investigation Report, "81\% of hacking related breaches leveraged either stolen and/or weak passwords"\nocite{*}~\cite{verizon_breach}. This opens up the question of whether or not users have simply given up on security and opted to create and reuse simple passwords for every application they use. As we all know, security breaches cost companies a loss of a lot of resources and reputation.
 
-Passwords are often referred to as the weakest link in security. The use of unique and strong passwords require users to be creative and often lead to forgotten password. In a survey conducted by Forrester, several large organizations allocate over \euro{700 000} annually just for password-related support costs[2]. Passwords are just a pain for both client and security professionals. It is not rare to have employees resetting their password for their work accounts. One survey found 57\% of respondents have to reset their work account which affects productivity[3]. Even if a strong and memorable password were to be chosen, the password is still at risk of being phished. Phising is a common and growing method of attack where about 33\% of breaches were conducted by Social Engineering in 2019 [4]. Another issue with passwords is that they are not resilient to physical observation meaning anyone can watch over the person typing in the password. Due to all of these factors, passwords lack both usability and security benefits that a good authentication method should provide.
+Passwords are often referred to as the weakest link in security. The use of unique and strong passwords require users to be creative and often lead to forgotten password. In a survey conducted by Forrester, several large organizations allocate over \euro{700 000} annually just for password-related support costs~\cite{password_cost}. Passwords are just a pain for both client and security professionals. It is not rare to have employees resetting their password for their work accounts. One survey found 57\% of respondents have to reset their work account which affects productivity~\cite{password_reset}. Even if a strong and memorable password were to be chosen, the password is still at risk of being phished. Phising is a common and growing method of attack where about 33\% of breaches were conducted by Social Engineering in 2019~\cite{verizon_breach2}. Another issue with passwords is that they are not resilient to physical observation meaning anyone can watch over the person typing in the password. Due to all of these factors, passwords lack both usability and security benefits that a good authentication method should provide.
 
 It is clear that password-based authentication is not the way IT products and services should adopt. One of the earliest works to make passwords more secure is the use of password managers. Password managers allow users to create strong and complicated passwords that are not easily crackable and have their password managers to remember them. Some examples of password managers are the browsers' built-in encrypted password managers, Dashlane, and LastPass. Password managers are very simple, convenient and scalable to remember passwords for every service one subscribes to. However, password managers are only secure if the master password to the password manager is both secure and memorable. Password managers do not get rid of the entire issue with passwords. This could lead to a big compromise with the attacker knowing all the users' passwords if the master password was to be stolen.
 
-There are three main categories of methods in user authentication[8]. Authenticate based on what you know, what you have, and what you are. There is another category which is where you are which will be explained in detail later.
+There are three main categories of methods in user authentication~\cite{book_security}. Authenticate based on what you know, what you have, and what you are. There is another category which is where you are which will be explained in detail later.
 
-An example of authenticating users with what you have is Hardware tokens. Hardware tokens such as RSA SecurID aims to replace passwords by having the device cryptographically generate a strong 6-digit code every 60 seconds instead of using a statically user-created password [7]. For the token to work with the authentication module, the device and the module must know the secret "seed" that is unique to the device. This allows the system to authenticate the user based on what they have and to fix the issue with the poor security of passwords due to human cognitive factors. However, some form of password still needs to be written to authenticate the user and acquiring hardware tokens requires the user to buy one.
+An example of authenticating users with what you have is Hardware tokens. Hardware tokens such as RSA SecurID aims to replace passwords by having the device cryptographically generate a strong 6-digit code every 60 seconds instead of using a statically user-created password~\cite{ieee_replace_passwords}. For the token to work with the authentication module, the device and the module must know the secret "seed" that is unique to the device. This allows the system to authenticate the user based on what they have and to fix the issue with the poor security of passwords due to human cognitive factors. However, some form of password still needs to be written to authenticate the user and acquiring hardware tokens requires the user to buy one.
 
-There has been a lot of movements within the industry to adopt passwordless authentication or multi-factor authentication. It is not uncommon to see many web services to ask users to enter a randomly generated pin code sent to their email or phone on top of their passwords. There also have been moves by many organizations such as Microsoft and Apple to adopt biometric authentication such as fingerprint and iris scanner as an alternative to passwords. Biometric authentication authenticates based on what you are and establishes your identity with your biometric features. Multi-factor authentication has been found to reduce your odds of being compromised by up to 99.9\% according to Microsoft 2018 Security Research [5]. There are many forms and implementation of Multi-factor authentication such as a pin to enter after entering a password, biometrics, SMS, smart cards, and hardware authentication devices such as Yubikeys or tokens. However, the issue with all of these implementations is that they require additional hardware or lacks the user experience. We know from passwords that users simply prefer convenience over security so it is crucial for security professionals to create products that take usability into consideration. 
+There has been a lot of movements within the industry to adopt passwordless authentication or multi-factor authentication. It is not uncommon to see many web services to ask users to enter a randomly generated pin code sent to their email or phone on top of their passwords. There also have been moves by many organizations such as Microsoft and Apple to adopt biometric authentication such as fingerprint and iris scanner as an alternative to passwords. Biometric authentication authenticates based on what you are and establishes your identity with your biometric features. Multi-factor authentication has been found to reduce your odds of being compromised by up to 99.9\% according to Microsoft 2018 Security Research~\cite{microsoft}. There are many forms and implementation of Multi-factor authentication such as a pin to enter after entering a password, biometrics, SMS, smart cards, and hardware authentication devices such as Yubikeys or tokens. However, the issue with all of these implementations is that they require additional hardware or lacks the user experience. We know from passwords that users simply prefer convenience over security so it is crucial for security professionals to create products that take usability into consideration. 
 
-It is imperative for authentication methods to balance between usability, deployability, and security as proposed in the paper \emph{The Quest to Replace Passwords}. The paper does a great job of proposing a comparative evaluation of different authentication schemes. In their paper, negligible cost is one criterion of deployability that authentication should strive to achieve. Hardware and biometrics authentication such as iris scanner, facial recognition, Yubikey, and fingerprints require the user to invest money to acquire these capabilities. The project we propose ensures no additional cost to the user to gain passwordless authentication. Although ProxyAuth requires users to have an Android Phone and for the PC to have Bluetooth capabilities, we consider this to be a negligible cost to the user. The reason we believe the cost to be negligible is the fact that there are over 5 billion mobile device owners in 2019[9] with about 74\% of the market using Android in December 2019[10]. Iris scanners and fingerprint scanners are not widely adopted in the PC market hence requires additional costs to the users. Furthermore, hardware authenticators such as a Yubikey, which is gaining wide industry adoption, is not convenient to carry around since it is not an object the average consumer carries daily. ProxyAuth proposes users to not carry anything additional than what they normally carry. ProxyAuth provides the "quasi-physically-effortless" usability benefit because the average user carries around their phone daily and so would not be an additional burden. ProxyAuth authenticates users based on what they have and where they are. To authenticate a PC, the user must have their phones with them at all times and be located within the Bluetooth proximity of their device to authenticate. There will be no way to social engineer the user to steal the pin code or a one-time password (OTP) to access the machine. This is an issue with multi-factor authentication because all the attackers need is the password and OTP or pin code which can be all stolen using social engineering. 
+It is imperative for authentication methods to balance between usability, deployability, and security as proposed in the paper \emph{The Quest to Replace Passwords}. The paper does a great job of proposing a comparative evaluation of different authentication schemes. In their paper, negligible cost is one criterion of deployability that authentication should strive to achieve. Hardware and biometrics authentication such as iris scanner, facial recognition, Yubikey, and fingerprints require the user to invest money to acquire these capabilities. The project we propose ensures no additional cost to the user to gain passwordless authentication. Although ProxyAuth requires users to have an Android Phone and for the PC to have Bluetooth capabilities, we consider this to be a negligible cost to the user. The reason we believe the cost to be negligible is the fact that there are over 5 billion mobile device owners in 2019~\cite{smartphone_ownership} with about 74\% of the market using Android in December 2019~\cite{stats_mobileos_marketshare}. Iris scanners and fingerprint scanners are not widely adopted in the PC market hence requires additional costs to the users. Furthermore, hardware authenticators such as a Yubikey, which is gaining wide industry adoption, is not convenient to carry around since it is not an object the average consumer carries daily. ProxyAuth proposes users to not carry anything additional than what they normally carry. ProxyAuth provides the "quasi-physically-effortless" usability benefit because the average user carries around their phone daily and so would not be an additional burden. ProxyAuth authenticates users based on what they have and where they are. To authenticate a PC, the user must have their phones with them at all times and be located within the Bluetooth proximity of their device to authenticate. There will be no way to social engineer the user to steal the pin code or a one-time password (OTP) to access the machine. This is an issue with multi-factor authentication because all the attackers need is the password and OTP or pin code which can be all stolen using social engineering. 
 
-We are also trying to offer ProxyAuth as an authentication method that can work side by side with other forms of authentication as well such as password-based authentication, biometrics or other zero-effort authentication. Coupling ProxyAuth with your mobile phone's biometrics and a password to enter to your PC covers all four major methods of authentication: what you know (password), what you have (mobile phone), what you are (fingerprint), and where you are (Bluetooth proximity check) with little to no cost. However, this is not the major focus of the project but is a possible feature to implement in the future. A proximity-based authentication provides ease of use and passwordless authentication. Proximity-based authentication provides all the benefits of passwordless authentication with auto-login and auto-lock features. These features can be extremely useful to those who may need to quickly check the PC for information such as those working in the hospital or the field for surveying. A study in 2005 has found that it is not uncommon for physicians to enter data into the wrong patient's record due to accessing another user's session without knowing[18]. Physicians share the same terminal so when a terminal is found to be unattended, it is not rare for another physician to access the terminal to update a patient's record and forget to log out.
+We are also trying to offer ProxyAuth as an authentication method that can work side by side with other forms of authentication as well such as password-based authentication, biometrics or other zero-effort authentication. Coupling ProxyAuth with your mobile phone's biometrics and a password to enter to your PC covers all four major methods of authentication: what you know (password), what you have (mobile phone), what you are (fingerprint), and where you are (Bluetooth proximity check) with little to no cost. However, this is not the major focus of the project but is a possible feature to implement in the future. A proximity-based authentication provides ease of use and passwordless authentication. Proximity-based authentication provides all the benefits of passwordless authentication with auto-login and auto-lock features. These features can be extremely useful to those who may need to quickly check the PC for information such as those working in the hospital or the field for surveying. A study in 2005 has found that it is not uncommon for physicians to enter data into the wrong patient's record due to accessing another user's session without knowing~\cite{paper_medical}. Physicians share the same terminal so when a terminal is found to be unattended, it is not rare for another physician to access the terminal to update a patient's record and forget to log out.
 
 \subsection{Related Works} 
-There are a lot of works with creating continuous authentication in the industry. One of the earliest works with continuous authentication is the XYLOC products by Ensure Technologies which uses active RF proximity to detect user's proximity to lock or unlock their machine[12]. Ensure Technologies has been working on proximity-based authentication for an extremely long time introducing XyLoc Secure login for Windows 95. The company requires users to attach a USB device called a lock which will communicate with the key, an authenticator, (which is in the form of a badge or a key chain) that the user will carry around. Just like any proximity-based authentication, the system will lock if the key is a certain configurable distance away from the machine by calculating the strength of the signal between the key and lock. However, the difference between XYLOC and ProxyAuth is how it determines the distance. XYZLOC products require a radio transceiver, the lock, that is attached to the machine that can communicate with the key in 300, 800, or 900MHz radio frequency bands rather than using well-established communication technologies such as Bluetooth which uses 2.4GHz frequency[12]. 2.4GHz and Spread Spectrum technology provides more channels and makes use of more secure communication technologies[11]. ProxyAuth does not require any specialized frequency reader since it relies on built-in Bluetooth adapters and its underlying technology to communicate with the authenticator. Using Bluetooth instead of other radio frequency bands allows us to not worry about dealing with frequency hopping to switch channels to avoid interference from other devices[11]. In addition, the use of an attached USB device clutters one's workspace and is inconvenient to carry around. Traditionally, employees will have their own working area such as a cubicle, where the employee spends most of their time working in their cube. However, with the improving mobile network technology and increasing adoption of laptops, companies are increasing the use of mobile workspace, also referred to as shared workspaces. Carrying additional peripherals to make use of proximity-based authentication is inconvenient. Coupled with the requirement of users to carry around a keycard or a keychain as an authenticator is not a convenient solution at all. ProxyAuth utilizes what existing technologies exist and what users often carry which is a mobile device.
+There are a lot of works with creating continuous authentication in the industry. One of the earliest works with continuous authentication is the XYLOC products by Ensure Technologies which uses active RF proximity to detect user's proximity to lock or unlock their machine~\cite{broch_ensure_tech}. Ensure Technologies has been working on proximity-based authentication for an extremely long time introducing XyLoc Secure login for Windows 95. The company requires users to attach a USB device called a lock which will communicate with the key, an authenticator, (which is in the form of a badge or a key chain) that the user will carry around. Just like any proximity-based authentication, the system will lock if the key is a certain configurable distance away from the machine by calculating the strength of the signal between the key and lock. However, the difference between XYLOC and ProxyAuth is how it determines the distance. XYZLOC products require a radio transceiver, the lock, that is attached to the machine that can communicate with the key in 300, 800, or 900MHz radio frequency bands rather than using well-established communication technologies such as Bluetooth which uses 2.4GHz frequency~\cite{broch_ensure_tech}. 2.4GHz and Spread Spectrum technology provides more channels and makes use of more secure communication technologies~\cite{paper_proximity_auth}. ProxyAuth does not require any specialized frequency reader since it relies on built-in Bluetooth adapters and its underlying technology to communicate with the authenticator. Using Bluetooth instead of other radio frequency bands allows us to not worry about dealing with frequency hopping to switch channels to avoid interference from other devices~\cite{paper_proximity_auth}. In addition, the use of an attached USB device clutters one's workspace and is inconvenient to carry around. Traditionally, employees will have their own working area such as a cubicle, where the employee spends most of their time working in their cube. However, with the improving mobile network technology and increasing adoption of laptops, companies are increasing the use of mobile workspace, also referred to as shared workspaces. Carrying additional peripherals to make use of proximity-based authentication is inconvenient. Coupled with the requirement of users to carry around a keycard or a keychain as an authenticator is not a convenient solution at all. ProxyAuth utilizes what existing technologies exist and what users often carry which is a mobile device.
 
-With the increasing interest in smart wearable technologies, there has been work to have wearable devices used for proximity-based authentication. For instance, in WatchOS 3 release, Apple Watch introduced a new feature that unlocks a user's Mac when they are close to their Macbook[13]. However, there does not seem to be any feature within the Apple Watch nor any of their 'Continuity' features that give users an auto-unlock feature when they are not within proximity of their Mac and the auto-lock feature is only offered to Apple Watch users[14]. This may explain why there are $3^{rd}$ party products such as Near Lock Me that provides this feature. Near Lock Me is similar to Apple's unlock feature but the authentication device is the iPhone instead of the Apple Watch and also has the auto-lock feature that ProxyAuth provides[15]. As usual, these features are only offered within the Apple ecosystem and is hardly affordable for the average consumer. Near Lock Me is the closest product that offers the same features as ProxyAuth with the exception that ProxyAuth targets Linux and Android users while Near Lock Me targets the Apple ecosystem. Similar to ProxyAuth, Near Lock Me uses the iPhone as an authenticator. To authenticate the PC, it requires the phone and the PC to be paired and approximates distances using Bluetooth just like ProxyAuth does.
+With the increasing interest in smart wearable technologies, there has been work to have wearable devices used for proximity-based authentication. For instance, in WatchOS 3 release, Apple Watch introduced a new feature that unlocks a user's Mac when they are close to their Macbook~\cite{apple_unlock}. However, there does not seem to be any feature within the Apple Watch nor any of their 'Continuity' features that give users an auto-unlock feature when they are not within proximity of their Mac and the auto-lock feature is only offered to Apple Watch users~\cite{apple_continuity}. This may explain why there are $3^{rd}$ party products such as Near Lock Me that provides this feature. Near Lock Me is similar to Apple's unlock feature but the authentication device is the iPhone instead of the Apple Watch and also has the auto-lock feature that ProxyAuth provides~\cite{near_lock}. As usual, these features are only offered within the Apple ecosystem and is hardly affordable for the average consumer. Near Lock Me is the closest product that offers the same features as ProxyAuth with the exception that ProxyAuth targets Linux and Android users while Near Lock Me targets the Apple ecosystem. Similar to ProxyAuth, Near Lock Me uses the iPhone as an authenticator. To authenticate the PC, it requires the phone and the PC to be paired and approximates distances using Bluetooth just like ProxyAuth does.
 
-Another related project to ProxyAuth is ZEBRA. ZEBRA is a zero-effort bilateral recurring authentication [17]. The issue ZEBRA is trying to tackle is the prevalent behavior of users leaving their computer terminal unlocked. To authenticate, ZEBRA requires users to wear a bracelet that has a built-in accelerometer, gyroscope, and radio on their dominant wrist which would act as an authenticator. Unlike other related works mentioned that will be mentioned in this paper, ZEBRA takes this approach in a very unique way. ZEBRA compares the wrist movement from the bracelet to the user's input via a keyboard or a mouse to determine the identity of the user. Using the data gathered from the watch such as accelerometer and gyroscope data, the researchers try to correlate it with the input event which seems a very difficult project to implement. The reason why the team did not approach the project towards identifying the user based on the user's behavior is that it goes against the ideals of ProxyAuth. One of the tenants of ProxyAuth is to create continuous authentication without the need for extra hardware or device. Furthermore, the team does not have any background in data science. Therefore, working on a project that requires classifying data and perhaps using machine learning to help improve identifying users is out of the scope.
+Another related project to ProxyAuth is ZEBRA. ZEBRA is a zero-effort bilateral recurring authentication~\cite{zebra}. The issue ZEBRA is trying to tackle is the prevalent behavior of users leaving their computer terminal unlocked. To authenticate, ZEBRA requires users to wear a bracelet that has a built-in accelerometer, gyroscope, and radio on their dominant wrist which would act as an authenticator. Unlike other related works mentioned that will be mentioned in this paper, ZEBRA takes this approach in a very unique way. ZEBRA compares the wrist movement from the bracelet to the user's input via a keyboard or a mouse to determine the identity of the user. Using the data gathered from the watch such as accelerometer and gyroscope data, the researchers try to correlate it with the input event which seems a very difficult project to implement. The reason why the team did not approach the project towards identifying the user based on the user's behavior is that it goes against the ideals of ProxyAuth. One of the tenants of ProxyAuth is to create continuous authentication without the need for extra hardware or device. Furthermore, the team does not have any background in data science. Therefore, working on a project that requires classifying data and perhaps using machine learning to help improve identifying users is out of the scope.
 
-One neat competitor to ProxyAuth is the use of Glass Wearable Device as an authentication device. Researchers at the Stevens Institute of Technology worked on creating a continuous authentication scheme using glass wearable devices to aid those with disability or provide ease of authentication for those in environments where users need to frequently authenticate and log out such as those working in hospitals[16]. The authentication process works by using a mix of voice and the glasses' vision to authenticate the system. The glasses are meant to be flexible and can have various commands such as "OK glass, authenticate". Using the authenticate phrase would have the system display a QR code in which the user needs to look at to authenticate. The PC would periodically issue authentication challenges which are just QR code that would pop up to the screen. However, wearable glass technologies are still in development and are not widely adopted making the use case for this implementation to not be feasible.
+One neat competitor to ProxyAuth is the use of Glass Wearable Device as an authentication device. Researchers at the Stevens Institute of Technology worked on creating a continuous authentication scheme using glass wearable devices to aid those with disability or provide ease of authentication for those in environments where users need to frequently authenticate and log out such as those working in hospitals~\cite{paper_glasses}. The authentication process works by using a mix of voice and the glasses' vision to authenticate the system. The glasses are meant to be flexible and can have various commands such as "OK glass, authenticate". Using the authenticate phrase would have the system display a QR code in which the user needs to look at to authenticate. The PC would periodically issue authentication challenges which are just QR code that would pop up to the screen. However, wearable glass technologies are still in development and are not widely adopted making the use case for this implementation to not be feasible.
 
 \label{Related Works}
 
@@ -536,7 +537,7 @@ Now that all the dependencies, directories, and files have been created or modif
 \label{prerequisite}
 
 \subsection{PAM Implementation}
-Linux PAM (Pluggable Authentication Module) enables the local system administrator to choose how applications authenticate users[19]. A PAM module takes the form of a dynamically loadable object file (with the extension \%.so). Meaning PAM modules are dynamically linked at runtime whenever a specific application relies on PAM API for authentication. PAM modules allow developers to develop applications separate from the authentication scheme. Refer to \textbf{proxyAuth/Makefile} to see how to compile PAM modules since it is different from compiling code to be an executable. The file is also a good reference to know how to compile code using Bluez and GLib since some libraries require more than just adding a library flag to compile.
+Linux PAM (Pluggable Authentication Module) enables the local system administrator to choose how applications authenticate users~\cite{pam}. A PAM module takes the form of a dynamically loadable object file (with the extension \%.so). Meaning PAM modules are dynamically linked at runtime whenever a specific application relies on PAM API for authentication. PAM modules allow developers to develop applications separate from the authentication scheme. Refer to \textbf{proxyAuth/Makefile} to see how to compile PAM modules since it is different from compiling code to be an executable. The file is also a good reference to know how to compile code using Bluez and GLib since some libraries require more than just adding a library flag to compile.
 
 For the project, we want to edit the policy of how \textbf{gdm-password} authenticates users. In the subsection above, we modified \textbf{gdm-password} because the program that handles graphical user interface logins on machines using GNOME relies on \textbf{gdm-password}. We have added the following rule to \textbf{gdm-password}:
 {\small
@@ -598,7 +599,7 @@ The role of the de-authentication server is to communicate with the authenticato
 Before starting the Bluetooth server, there are a few things \textbf{deauth} does. Firstly, \textbf{deauth} checks if the given parameter is a valid Bluetooth address by calling the function \textbf{\emph{check\_arg}}. In addition, \textbf{deauth} also verifies that the given Bluetooth address is currently paired and trusted by the user by calling \textbf{\emph{is\_trusted\_client}}. If any of the two functions return False, the program will lock the system. The given Bluetooth address is needed to know which device to communicate with. It is dangerous to accept a connection from a random device.
 
 \subsubsection{Bluetooth Overview} 
-When working with Bluetooth, it is helpful to understand some fundamentals about Bluetooth, especially if you are trying to understand what is going on in the function \textbf{\emph{init\_server}} in \textbf{deauth.c}. Bluetooth is a short-range wireless technology (operating at 2.4GHz) with a maximum range between 10-100 meters depending on the Bluetooth class the device has[20]. Typical mobile phones have only Bluetooth class 2 or class 3 which have a range of 10m or less which is perfect for our use case. Since we want the program \textbf{deauth} to act as a server, we need to advertise \textbf{deauth} as a service to all the devices around the PC. The PC will act as a Service Discovery Protocol server which will advertise all services registered to the SDP server. This allows our phone to be aware of the \textbf{deauth} service and connect to it.
+When working with Bluetooth, it is helpful to understand some fundamentals about Bluetooth, especially if you are trying to understand what is going on in the function \textbf{\emph{init\_server}} in \textbf{deauth.c}. Bluetooth is a short-range wireless technology (operating at 2.4GHz) with a maximum range between 10-100 meters depending on the Bluetooth class the device has~\cite{bluetooth_myths}. Typical mobile phones have only Bluetooth class 2 or class 3 which have a range of 10m or less which is perfect for our use case. Since we want the program \textbf{deauth} to act as a server, we need to advertise \textbf{deauth} as a service to all the devices around the PC. The PC will act as a Service Discovery Protocol server which will advertise all services registered to the SDP server. This allows our phone to be aware of the \textbf{deauth} service and connect to it.
 
 Special thanks to \textbf{Albert Huang} for his documentation on programming Bluetooth in Linux. Without his work, working with Bluetooth would have been an almost impossible task.
 
@@ -623,7 +624,7 @@ This function is responsible for setting a UUID to identify the \textbf{deauth} 
 \hrulefill
 
 \textbf{\emph{set\_bluetooth\_service\_info}}\\
-This function is responsible for setting the profile of the service we are trying to create. Bluetooth profiles are additional protocols that help define what kind of data the service is transmitting[22]. The profile the program will use is \textbf{Serial Port Profile (SPP)} which are great at sending a lot of data between the PC and the authenticator.
+This function is responsible for setting the profile of the service we are trying to create. Bluetooth profiles are additional protocols that help define what kind of data the service is transmitting~\cite{bluetooth_basics}. The profile the program will use is \textbf{Serial Port Profile (SPP)} which are great at sending a lot of data between the PC and the authenticator.
 
 \hrulefill
 
@@ -633,12 +634,12 @@ This function is responsible to set our service record to be publicly browsable.
 \hrulefill
 
 \textbf{\emph{set\_l2cap\_info}}\\
-This function creates a UUID for L2CAP and to indicate our service will be using L2CAP protocol. When our service is discoverable with SDP, there are various ways to access our service. We will be using L2CAP protocol (Logical Link Control and Adaptation Protocol) to handle communication between the server and client[23].
+This function creates a UUID for L2CAP and to indicate our service will be using L2CAP protocol. When our service is discoverable with SDP, there are various ways to access our service. We will be using L2CAP protocol (Logical Link Control and Adaptation Protocol) to handle communication between the server and client~\cite{bluetooth_sdp_development}.
 
 \hrulefill
 
 \textbf{\emph{register\_rfcomm\_sock}}\\
-The function is responsible to register the RFCOMM channel for RFCOMM sockets. RFCOMM (Radio Frequency Communication) is a protocol built on top of L2CAP protocol [28]. RFCOMM provides a simple reliable data transfer similar to TCP.
+The function is responsible to register the RFCOMM channel for RFCOMM sockets. RFCOMM (Radio Frequency Communication) is a protocol built on top of L2CAP protocol~\cite{bluetooth_wiki}. RFCOMM provides a simple reliable data transfer similar to TCP.
 
 \hrulefill
 
@@ -646,7 +647,7 @@ After \textbf{\emph{register\_service}} calls all the above functions, all that 
 
 To register the service to the local SDP server, we need to first connect to the SDP server using Bluez function \textbf{\emph{sdp\_connect}}. The function to register our service is \textbf{\emph{sdp\_record\_register}}.
 
-To summarize, here is the flow of how to set up a Bluetooth server taken from \textbf{Albert Huang's} book \textbf{\emph{Bluetooth Essentials for Programmers}}[25]:
+To summarize, here is the flow of how to set up a Bluetooth server taken from \textbf{Albert Huang's} book \textbf{\emph{Bluetooth Essentials for Programmers}}~\cite{bluetooth_essentials_book}:
 {\small
 \begin{lstlisting}// set the general service ID
 // set the service class
@@ -661,10 +662,10 @@ To summarize, here is the flow of how to set up a Bluetooth server taken from \t
 \hrulefill
 
 \includegraphics[scale=0.3]{bluetooth-definitions.png}
-\small \textbf{Figure 1:} A list of common definitions taken from \textbf{Bluetooth Specification Version 1.0 B}[24]
+\small \textbf{Figure 1:} A list of common definitions taken from \textbf{Bluetooth Specification Version 1.0 B}~\cite{bluetooth_basics}
 
 \includegraphics[scale=0.5]{bluetooth-service.png}\\
-\small \textbf{Figure 2:} Data representation of the service record. Taken from a paper about the development of Service Discovery Architecture[23]
+\small \textbf{Figure 2:} Data representation of the service record. Taken from a paper about the development of Service Discovery Architecture~\cite{bluetooth_sdp_development}
 
 \normalsize
 \subsubsection{Communication between Deauth and Authenticator}
@@ -763,9 +764,9 @@ To test all the features stated in the design goals for PAM, all Kim needed to d
 There were many tools and methods used to test the de-authentication server. Firstly, to check whether or not the Bluetooth server is able to communicate with other devices, Daniel and Kim used various Android Applications to simulate a client such as Blueterm to connect to the server and send messages to the server. There was the Android application the team created that was supposed to be able to communicate with the server but when Daniel and Kim initially tested the server and the Android application, it did not work. Therefore to isolate the issue, Kim and Daniel had to use various tools available on the desktop and on the PlayStore to debug where the issues were. But once the issue with communicating with both the Android application and server was resolved, testing was very simple. To test whether or not the server and the android application constantly communicate with each other, we just printed the messages that both the server and client send to each other. To verify whether lock-out works on the de-authentication server, we had the Android device stop sending messages for over 10 seconds and see whether or not the system locks out. To verify proximity check, some modifications to the server was made to print out the bandwidth at each fixed interval and walk out of the room till the system was locked. By observing the changes in bandwidth speed over certain distances, we confirmed the auto-lockout feature works when the user is away from their system.
 
 \subsubsection{Security Evaluation}
-Due to time constraints and difficulty getting the Ubertooth One to work the way we want it, there were no security evaluations conducted in the project. The goal of the project was to create a convenient, cheap and secured alternative to password authentication. To test our application's security, the team initially wanted to test a repeater attack and Bluetooth spoofing to see whether or not there were vulnerabilities to the project. However, the team was unsuccessful in having the Ubertooth One to repeat packets and was unable to learn how to spoof Bluetooth MAC addresses on time for the final sprint. Since the team was unable to sniff Bluetooth packets, the team decided to try implementing an encryption scheme to further secure the communication between the authenticator and the PC. The encryption scheme the team tried to implement was AES GCM. AES GCM is known for its high performance while maintaining security[26]. AES GCM is designed to provide both data authenticity, integrity, and confidentiality to allow the user to know whether the data has been tampered or not, the ability to verify the originator of the message and is unreadable by eavesdroppers. However, the team failed to implement any additional layer of encryption on top of the encryption Bluetooth uses.
+Due to time constraints and difficulty getting the Ubertooth One to work the way we want it, there were no security evaluations conducted in the project. The goal of the project was to create a convenient, cheap and secured alternative to password authentication. To test our application's security, the team initially wanted to test a repeater attack and Bluetooth spoofing to see whether or not there were vulnerabilities to the project. However, the team was unsuccessful in having the Ubertooth One to repeat packets and was unable to learn how to spoof Bluetooth MAC addresses on time for the final sprint. Since the team was unable to sniff Bluetooth packets, the team decided to try implementing an encryption scheme to further secure the communication between the authenticator and the PC. The encryption scheme the team tried to implement was AES GCM. AES GCM is known for its high performance while maintaining security~\cite{aes-gcm}. AES GCM is designed to provide both data authenticity, integrity, and confidentiality to allow the user to know whether the data has been tampered or not, the ability to verify the originator of the message and is unreadable by eavesdroppers. However, the team failed to implement any additional layer of encryption on top of the encryption Bluetooth uses.
 
-Therefore, the Bluetooth communication between the PC and authenticator solely relies on the security of Bluetooth which remains to be questionable whether or not Bluetooth security is reliable. There are three aspects of security that Bluetooth needs to provide for our project to be secured: confidentiality, integrity, and authorization. Bluetooth must ensure that the messages being sent between the PC and authenticator cannot be tampered nor read by a malicious entity. Furthermore, no unauthorized devices should be communicating with the PC when the de-authentication server issues a challenge to the authenticator. The security that Bluetooth devices offer vary between different versions of Bluetooth the device supports. For instance, Bluetooth versions 4 and 5 uses Elliptic Curve P-256 pairing algorithm and AES-CCM encryption[27]. AES-CCM is designed to provide both authentication and confidentiality. AES-CCM just like AES-GCM is symmetric encryption and is less computationally expensive compared to asymmetric key encryptions. To authenticate the PC, our implementation relies on the security of Bluetooth pairing. The team will be assuming the security of Bluetooth's implementation of Curve P-256 pairing algorithm is secured. Therefore, ProxyAuth will rely on the underlying Bluetooth security for now and will look into ways to make the project more secure in the future.
+Therefore, the Bluetooth communication between the PC and authenticator solely relies on the security of Bluetooth which remains to be questionable whether or not Bluetooth security is reliable. There are three aspects of security that Bluetooth needs to provide for our project to be secured: confidentiality, integrity, and authorization. Bluetooth must ensure that the messages being sent between the PC and authenticator cannot be tampered nor read by a malicious entity. Furthermore, no unauthorized devices should be communicating with the PC when the de-authentication server issues a challenge to the authenticator. The security that Bluetooth devices offer vary between different versions of Bluetooth the device supports. For instance, Bluetooth versions 4 and 5 uses Elliptic Curve P-256 pairing algorithm and AES-CCM encryption~\cite{bluetooth_security}. AES-CCM is designed to provide both authentication and confidentiality. AES-CCM just like AES-GCM is symmetric encryption and is less computationally expensive compared to asymmetric key encryptions. To authenticate the PC, our implementation relies on the security of Bluetooth pairing. The team will be assuming the security of Bluetooth's implementation of Curve P-256 pairing algorithm is secured. Therefore, ProxyAuth will rely on the underlying Bluetooth security for now and will look into ways to make the project more secure in the future.
 
 Aside from concerns about the security of Bluetooth, there were a few security considerations made when developing the de-authentication server. Since the applications were written in C, there were concerns of introducing security vulnerabilities in the application such as buffer overflow, privilege escalation, and memory access issues. For instance, when reading the list of trusted MAC addresses from the file \textbf{/etc/proxy\_auth/\emph{user}}, there may be malicious contents in the file that would cause the program to crash or cause a buffer overflow. It is unlikely for any malicious input to be written to \textbf{/etc/proxy\_auth/\emph{user}} because the file is owned by root and only the system administrator is allowed to write the list of trusted MAC addresses for each user into the file. Each user in the system has their own file located in \textbf{/etc/proxy\_auth/}.
 If the system administrator allows each user to write to the list themselves, the file permissions should be set that only the owner (i.e. the user) should be able to write to the file. However, it is not safe to assume the file is safe. Therefore when PAM and de-authentication server reads from the file, each line in the file gets parsed to ensure each line in the file is a valid Bluetooth MAC address. However, the current implementation of the file sanitizer does cause some worry. Upon writing the report, Kim has noticed when the program reads from the file, it uses \textbf{\emph{getline}} to read each line of the file. This is a concern because Kim is unsure if there is a limit to how long a line can be. A better implementation would be to read only \textbf{BT\_MAC\_LEN} bytes at a time from the file to avoid any possible issues with \textbf{\emph{getline}}. When developing PAM and the de-authentication server, Kim ensured the team compiles the code in a strict manner. Warnings are treated as errors and the \textbf{-fsanitize} flag is used to detect any memory leaks during runtime. Kim has put in a lot of effort to close any possible memory leaks but there can still be bugs that compromise the security of the applications. Memory leaks and illegal access to memory can lead PAM and the de-authentication server to crash leading to a lot of security vulnerabilities with the project. If there are issues with memory access in PAM, it could lead the user to be unable to access their machine. Though this can be resolved by pressing \emph{crtl + shift + f3} to log onto their system via terminal console. However, if the de-authentication server crashes, the lockout feature would be disabled. Meaning the user could leave their system unlocked without the user's notice which leads the system to be vulnerable to malicious entities. Another concern raised with the de-authentication server is the fact that the process can be killed by the attacker. If the user takes their attention away from the system such as having a discussion with a coworker in their cubicle and is physically away from their PC but still nearby their system to not have the PC be locked out, an attacker could kill the de-authentication server. This will leave the system vulnerable when the user leaves their cubicle thinking the system would auto-lock when in reality, the lock-out feature was disabled by a malicious attacker. The team will assume this risk to be low since the window of opportunity is small and unlikely. However, there exists a possible vulnerability with PAM that could lead to the risk of this window of opportunity to increase significantly. PAM authenticates assuming Bluetooth pairing process is secure. PAM does not check the proximity of the authenticator before authenticating the system. A proximity check is only offered in the de-authentication server. If a repeater can extend the range of the authenticator's connection with the user's PC, the attacker can quickly kill the de-authentication server before the program can detect the proximity of the authenticator and thereby giving full access of the PC to the attacker.
@@ -826,30 +827,7 @@ Responsibilities were split into 4 main categories:
 
 \textbf{Daniel Xin Wang:} Daniel's main responsibility was working on the security component of the project. More specifically, to investigate the Ubertooth One's capabilities and devise ways to attack and defend our implementation. Some ideas Daniel has proposed were potential attacks by signal repeaters, man in the middle attack, and spoofing Bluetooth MAC addresses. Daniel has implemented a bandwidth test that will measure the speed of the Bluetooth packets being sent by the Android device to determine the distance of the device from the system. Daniel also contributed to the de-authentication server such as have the system to lock when the mobile application fails the challenge request and also explored how to program Bluetooth by creating a C program that would scan all Bluetooth devices within the vicinity.
 
-\subsection{Lessons Learned}
-There has been a lot of obstacles encountered throughout the course of the project.
-
-\subsubsection{General Obstacles:}
-\begin{itemize}[noitemsep]
-\item Working on a semester-long project while juggling three or more other Computer Science courses is a lot of work. In general, Computer Science courses consumes a lot of time but a capstone project consume way more time than I have initially expected. Although I may be taking more Computer Science courses than everyone else in the group, other members compensate it by either working a side job or taking more courses than me. We were not mentally prepared for how much commitment is needed to get the project completed.
-
-\item When choosing a project, one should not be too ambitious and have a realistic plan in mind. It is fine to overestimate how much a task can take because delays are to be expected in software development. One issue our group encountered was that there was no real concrete plan on how to achieve our goals. We knew what the end product should be but we did not plan what user stories and features to work on in advance. Having more detailed and engaged meetings would have us all plan in advance what can and what cannot be done.  
-
-\item Know your team's skillset, commitment, and schedule before choosing a project to work on. During the first few sprints, I realized a few things about the group:
-\begin{itemize}[noitemsep]
-\item \textbf{Communication Issue}: Some members are hard to get a hold on to due to their busy schedule. The choice of using Slack as the way to communicate with the team further cause problems. Slack is a great tool but it is meaningless if there are some members who do not check Slack on a daily basis. I thought the tool was ideal for the team because of all the collaborative tools it offers and the fact that it unanimously voted for when we did a poll. All members have cast votes for both Discord and Slack. To break the tie, we had flipped a coin in which Slack won the coin toss. However, a member have expressed their dislike of the tool and refused to periodically check on Slack. Perhaps we should have adopted a tool that the majority of the team has already adopted such as Discord or Facebook Messenger even though Messenger lacks any way to organize messages.
-
-There were definitely issues with the lack of communication with the entire team in general. The Kanban Board (Github Issue Board) was supposed to help each member know what issues existed and the status of the project such as who is working on what and what has been completed. However, a tool is only good if the team uses it effectively. There was no one who was willing to lead the group and act as a manager or a scrum master. There was very little coordination in the group and no one seemed to know what other members were working on during each sprint nor know what features needed to be worked on. I was hoping that by using a Kanban Board and creating issues and assigning them to myself would notify members of what I was doing. However, it does not seem that the group bothered checking the Kanban Board often nor read all the documentation I wrote about for each issue and pull request. In addition, members were not periodically creating issues and assigning them to themselves. The few issues that were created usually lacked information on what the issue was about. Without proper documentation and proper software engineering practice, the project was bound to be a mess. Without anyone to supervise the project as a whole, the project was bound to be a mess. Therefore, I had to periodically create tasks for members to work on, remind members to work on some user stories and ask them about their updates. However, I only put in very minimal amount of effort to act as a leader since I was hoping someone else such as the ones who proposed the project to me to lead the group. The only reason the project had some direction is probably due to the weekly meeting with the course supervisor and teaching assistant to give an update on our progress. Without those weekly meetings with the course staff, it is unlikely the team would have managed to create a functional product.
-
-\item \textbf{Lack of Knowledge:} In the industry, we are expected to be able to pick up tools and technologies very fast. So even if members did lack knowledge, they can quickly learn and adopt new technologies. This is not an issue if students did not have other courses to work on. It also came to a surprise to me when I had to go over knowledge that I thought would be common knowledge by any $4^{th}$ year student to some members in the group. It ranges from UNIX utility commands, setting up VMs and the desktop, installing Linux on one's personal machines, and going over some programming concepts. Despite these issues, the group are Computer Science students so they did learn relatively quickly but it sure did not impress me with the lack of knowledge some members of the group had. Not having pre-requisite knowledge of the fundamental technologies nor experience in picking up technologies and languages in their own free time was an obstacle for the team. The lack of experience and knowledge has caused delays in getting user stories completed and have members to contribute more. The team had to spend more time trying to catch up with all the knowledge they needed for the project than expected. 
-
-\item \textbf{Skill Set:} It would seem some members of the group are not very comfortable with C. I know C may seem very scary and daunting but I personally found this language to be interesting and fun to work with. When some members saw the PAM and Bluetooth server code I was pushing, they lost all hopes in working on the components that needed to be programmed in C. This is an issue I should have taken into consideration when choosing what language we should implement our PAM and de-authentication program. I have listed reasons why I chose C to be the language we use to implement all the programs running in the Desktop under \nameref{Section 4}. But using a language that members were not too comfortable with causes delays as members would take longer to understand the code base and would demotivate them from working if the progress on some components has gone at a state of almost completion. I should have chosen to implement the de-authentication server at the very least in Python so that I can get members to contribute more.
-\end{itemize}
-\end{itemize}
-
-\label{sssec:num1}
-
-\subsubsection{Hardware and Software Obstacles:}
+\subsection{Hardware and Software Obstacles:}
 \begin{itemize}[noitemsep]
 \item \textbf{Development Environment}: Working on the project required members to work on a Linux machine. The lab machines do not give us sufficient privileges to work on PAM. Most of the team did not have Linux on their laptop so members opted to use a virtual machine. Members had issues getting the virtual machine to set up with ssh installed due to not having done it before. Therefore, only a limited number of members could test both the Android and PAM along with the de-authentication program. This was a big bottleneck during development. We had members spending countless of hours trying to set up the environment rather than spending those times working on user stories. Without an environment to test their work, the group often had to call me to test their code which often was riddled with bugs. Kim often had to stay up late fixing the code they have submitted for testing.
 
@@ -863,7 +841,7 @@ There were definitely issues with the lack of communication with the entire team
 For those who wish to continue this project, here are some recommendation specifically to the project implementation:
 \begin{singlespacing}
 \begin{itemize}
-\item Documentation on Programming Bluetooth is very lacking. Anyone wishing to work on Bluetooth for desktop, the only sole documentation you can really rely on is essentially Albert Huang's documentation on Bluetooth Programming or any documentation that expands on Huang's documentation. Huang created his own documentation about Bluetooth Development solely because there was "virtually no documentation whatsoever"[6]. On the flip side, Google has done a great job of providing documentation on programming Bluetooth on Android.
+\item Documentation on Programming Bluetooth is very lacking. Anyone wishing to work on Bluetooth for desktop, the only sole documentation you can really rely on is essentially Albert Huang's documentation on Bluetooth Programming or any documentation that expands on Huang's documentation. Huang created his own documentation about Bluetooth Development solely because there was "virtually no documentation whatsoever"~\cite{huang}. On the flip side, Google has done a great job of providing documentation on programming Bluetooth on Android.
 
 \item Most of the learning how to work with Bluetooth on Linux other than from Huang's documentation on Bluetooth is through reading various open source source code. Even Huang had to learn from reading the source code of many open-source software projects such as Bluez. Oddly enough, there are a lot of great and mature Bluetooth Desktop applications but not a lot of documentation which is also something Huang has noted in his book. When reading Huang's documentation about Bluetooth, it helps to also cross-reference other source code such as the source code for the Bluetooth library itself. It also helps to read on Bluetooth in general to understand what is actually happening at a much deeper level than what Huang covers.
 
@@ -895,16 +873,11 @@ The impact the project has on the team is profound. Although the project remains
 \normalsize
 The project provided the team personal experience what it takes to create a security product and the difficulties of working with an uncoordinated team with varying backgrounds and experiences. This report will not go over the learning outcomes of other members as this would be purely speculation and grossly inaccurate if attempted. The following learning outcome will only apply to the author. To see the learning outcomes of other members, please refer to the team's report on the project.
 
-\textbf{Teamwork Learning Outcomes}\\ 
-From my previous experience with working on a project with a large group of students, it is very difficult to coordinate with the team. This project was no different. The lack of communication and the refusal to follow software engineering practice in the team has caused major headaches for every single member in the team. Refer to section \ref{sssec:num1} to see what I learned with working with the group in detail.
+\noindent\textbf{Teamwork Learning Outcomes:} From my previous experience with working on a project with a large group of students, it is very difficult to coordinate with the team. This project was no different. The lack of communication and the refusal to follow software engineering practice in the team has caused major headaches for every single member in the team.\\
 
-I have a lot to learn on how to manage and work with a team with varying skills and backgrounds. At the time of writing the report, it came to me that I should have taken a more proactive stance to managing the team and project. Reflecting on the many conversations individual members had with me either in person, phone calls, or in private messaging, each and every member was aware of how uncoordinated the project was and wanted me to take charge of the project. I had stubbornly refused to take the responsibility to act as a leader and was very passive on the progress the team has made.
+\noindent\textbf{Workflow Learning Outcomes:} When working on the project, it was neat to work on various collaboration tools even if I was the only member who was actively using the tools. Github Issue Board was great to visualize the overall progress of the project. I even adopted using a Kanboard Board to help me visualize my daily tasks. Github offers a lot of neat tools such as Actions to build, test, and deploy code. Github Actions would be great for the team to adopt because I will no longer need to fix or ask members to fix code that they never bothered testing. If configured correctly, the tool should be able to create an APK of the Android application which can then be easily installed to one's phone for testing. Android Studio is a resource hungry application and so I often did not test what the Android team were pushing and just opted to read their code to see what they have done. I also enjoyed Slack's feature to integrate Github to Slack. The feature notifies every member in the channel of any changes to an issue, pull request or if someone has committed some changes to the project. Other tools that would have been interesting to use is creating a template on how each commit, issue, and pull request should be formatted so that I can have members write better commit messages and issues. \\
 
-\textbf{Workflow Learning Outcomes}\\
-When working on the project, it was neat to work on various collaboration tools even if I was the only member who was actively using the tools. Github Issue Board was great to visualize the overall progress of the project. I even adopted using a Kanboard Board to help me visualize my daily tasks. Github offers a lot of neat tools such as Actions to build, test, and deploy code. Github Actions would be great for the team to adopt because I will no longer need to fix or ask members to fix code that they never bothered testing. If configured correctly, the tool should be able to create an APK of the Android application which can then be easily installed to one's phone for testing. Android Studio is a resource hungry application and so I often did not test what the Android team were pushing and just opted to read their code to see what they have done. I also enjoyed Slack's feature to integrate Github to Slack. The feature notifies every member in the channel of any changes to an issue, pull request or if someone has committed some changes to the project. Despite not seeing much success in having the team keep track of my progress for a few weeks, on the last sprint I have gotten direct messages from members asking me specific questions about a pull request or a commit I pushed to the repository after reading the update from Slack. Other tools that would have been interesting to use is creating a template on how each commit, issue, and pull request should be formatted so that I can have members write better commit messages and issues. Although I never officially used many of the tools I read up on, it would have been great if the team had adopted more of these tools. However, the team did not seem to enjoy the adoption of software practices and the use of development tools. Some members have told me that they did not see the point of adopting practices that are intended for larger and more complex projects.\\
-
-\textbf{Linux, Android and C}\\
-Since I like using Linux and programming in C, I like what I have learned from the project. I have learned a lot about Linux such as how Linux authenticates users. Before the project started, I had no clue what PAM was nor knew what GDM was. In addition, I never knew other applications can communicate with each other using D-Bus nor knew how Bluetooth works. The project also taught me a lot about Makefiles, the differences between static and dynamic objects, and how to detect memory leaks by using various instrumentation and profiling tools such as valgrind and \emph{-fsanitize=address}. It was also interesting to learn Kotlin and compare it with Java since I have experience working with Java Android Development.
+\noindent\textbf{Linux, Android and C:} Since I like using Linux and programming in C, I like what I have learned from the project. I have learned a lot about Linux such as how Linux authenticates users. Before the project started, I had no clue what PAM was nor knew what GDM was. In addition, I never knew other applications can communicate with each other using D-Bus nor knew how Bluetooth works. The project also taught me a lot about Makefiles, the differences between static and dynamic objects, and how to detect memory leaks by using various instrumentation and profiling tools such as valgrind and \emph{-fsanitize=address}. It was also interesting to learn Kotlin and compare it with Java since I have experience working with Java Android Development.
 
 %%%%%%%%%%%%%%%%%%
 % Future Work
@@ -946,182 +919,6 @@ The project has a lot of room for improvements. The project did not even complet
 \end{itemize}
 
 \hrulefill
-
-\section{References}
-
-{\small
-\begin{lstlisting}
-[1] Verizon, "2017 Data Breach Investigations Report," (*@\textit{Verizon}@*), 2017. [Online].Available: https://www.ictsecuritymagazine.com/wp-content/uploads/2017-Data-Breach-Investigations-Report.pdf 
-    [Accessed March 30, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[2] S. Palfy, "How Much do Passwords Cost your Business?," (*@\textit{infosecurity}@*), June 14, 2018. 
-    [Online], Available: https://www.infosecu
-    rity-magazine.com [Accessed March 30, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[3] HYPR, "New Password Study by HYPR Finds 78% of People Had to Reset a Password They Forgot in Past 90 Days", (*@\textit{HYPR}@*), Dec 10, 2019. [Online], Available: https://www.hypr.com/hypr-password-study-findings/ 
-    [Accessed March 29, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[4] Verizon, "2019 Data Breach Investigations Report," (*@\textit{Verizon}@*), 2019. [Online], Available: https://enterprise.verizon.com/resources/executivebriefs/2019-dbir-executive-brief.pdf [Accessed March 30, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[5] Microsoft, "Password-less protection: Reduce your risk exposure with password alternatives," (*@\textit{Microsoft}@*), 2018. [Online], Available: https://query.prod.cms.rt.microsoft.com/cms/api/am/binary/RE2KEup [Accessed March 29, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[6] A. Huang, "An Introduction to Bluetooth Programming: About this booklet," 2008. [Online]. Available: https://people.csail.mit.edu/albert/bluez-intro/ [Accessed Jan. 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[7] J. Bonneau, C. Herley, P. Van. Oorschot and F. Stajano, "The Quest to Replace Passwords: A Framework for Comparative Evaluation of Web Authentication Schemes," 2012 IEEE Symposium on Security and Privacy, San Francisco, CA, 2012, pp. 553-567.
-\end{lstlisting}
-}
-
-{\small
-\lstset{emph={Computer Security and the Internet: Tools and Jewels}, emphstyle=\itshape}
-\begin{lstlisting}
-[8] Van Oorschot, (*@\textit{"Computer Security and the Internet: Tools and Jewels"}@*),
-     Springer, 2019. [E-book]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[9] L. Silver, "Smartphone Ownership Is Growing Rapidly Around the World, but Not Always Equally," (*@\textit{"PEW Research Center"}@*), Feb. 5, 2019. [Online], Available: https://www.pewresearch.org/ [Accessed March 31, 2019]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[10] Statcounter Global Stats, "Mobile Operating System Market Share Worldwide," (*@\textit{Statcounter Global Stats}@*) March 2020. [Online], Available: https://gs.statcounter.com/os-market-share/mobile/worldwide [Accessed April 05, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[11] A. Merayyan, "Proximity Authentication," (*@\textit{SANS Institute}@*), July 16, 2001. [online document], Available: https://www.sans.org/reading-room/whitepapers/authentication/proximity-authentication-102 [Accessed April 05, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[12] Ensure Technologies, "XYLOC Solutions Overview," (*@\textit{Ensure Technologies}@*), 2009. [online document], Available: https://www.ensuretech.com/wp-content/uploads/2011/08/xyloc-overview-brochure.pdf [Accessed Apirl 5, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[13] Apple, "How to unlock your Mac with your Apple Watch," (*@\textit{Apple}@*), Oct. 21, 2019. [Online], Available: https://support.apple.com/en-ca/HT206995 [Accessed 05, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[14] Apple, "Use Continuity to connect your Mac, iPhone, iPad, iPod touch, and Apple Watch," (*@\textit{Apple}@*), April 31, 2020. [Online], Available: https://support.apple.com/en-ca/HT204681 [Accessed April 5, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[15] Near Lock, "A new way to lock your Mac. Just walk away.", (*@\textit{Near Lock}@*). [Online], Available: https://nearlock.me/press [Accessed Apirl 05, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[16] D. Damopoulos, G. Kambourakis, "Hands-Free one-Time and continuous authentication using glass wearable devices," (*@\textit{Journal of Information Security and Applications}@*), vol. 46, p.138-150, June 2019 [Online]. Available: https://arxiv.org/pdf/1810.02496.pdf [Accessed Feb. 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[17] S. Mare, A. M. Markham, C. Cornelius, R. Peterson and D. Kotz, "ZEBRA: Zero-Effort Bilateral Recurring Authentication," (*@\textit{2014 IEEE Symposium on Security and Privacy}@*), San Jose, CA, 2014, pp. 705-720.
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[18] K. R, M. JP, C. A, and et al, "Role of computerized physician order entry systems in facilitating medication errors," (*@\textit{JAMA}@*), vol. 293, no. 10,pp. 1197-1203, 2005
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[19] A. Morgan, T. Kukuk, "The Linux-PAM Module Writers' Guide," (*@\textit{Linux PAM}@*), Aug. 2010. [Online], Available: http://www.linux-pam.org/Linux-PAM-html/mwg-introduction-description.html [Accessed Feb 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[20] M. Patkar, "5 Common Bluetooth Myths You Can Safely Ignore Now," (*@\textit{Make Use Of}@*), Dec. 25, 2018. [Online], Available: https://www.makeuseof.com/tag/5-myths-bluetooth-can-safely-ignore-now/ [Accessed May 06, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[21] I. Golatowski, Class Lecture, Topic: "Service DIscovery Protocol (SDP)" Faculty of Computer Science and Eletricial Engineering, University of Rostock, Germany, 2002. [online document], Available: https://www.amd.e-technik.uni-rostock.de/ma/gol/lectures/wirlec/bluetooth_info/sdp.html
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[22] Jimblom, "Bluetooth Basics," (*@\textit{Sparkfun}@*), Aug. 26, 2013. [Online], Available: https://learn.sparkfun.com/tutorials/bluetooth-basics/all [Accessed: April 06 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[23] C. Schwingenschlohl, A. Heigl, "Development of a Service Discovery Architecture for the Bluetooth Radio System," (*@\textit{Institute of Communication Networks, Technische Universität München}@*), 2000. [online document], Available: http://dl.ifip.org/db/conf/ifip6-6/eunice2000/paper5-2.pdf
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[24] (*@\textit{Bluetooth Specification}@*), Bluetooth Standard 1B, 1999 
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[25] A. Huang, L. Rudolph, (*@\textit{Bluetooth Essentials for Programmers}@*). Cambridge:  Cambridge University Press, 2007.
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[26] S.Gueron, "AES-GCM for Efficient Authenticated Encryption - Ending the Reign of HMAC-SHA-1?", Standford University, 2013.
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[27] Security Boulevard, "What We Need To Know About Bluetooth Security," (*@\textit{Security Boulevard}@*), Nov. 7, 2019. [Online]: Available: https://securityboulevard.com/2019/11/what-we-need-to-know-about-bluetooth-security/ [Accessed April 5, 2020]
-\end{lstlisting}
-}
-
-{\small
-\begin{lstlisting}
-[28] Wikipedia, "Bluetooth," (*@\textit{Wikipedia}@*). [Online], Available: https://en.wikipedia.org/wiki/Bluetooth [Accessed April 5, 2020]
-\end{lstlisting}
-}
 
 {\footnotesize \bibliographystyle{acm}
 \bibliography{sample}}
