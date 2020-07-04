@@ -12,4 +12,4 @@ all:
 	$(pdflatex) -synctex=1 -interaction=nonstopmode $(title)
 
 clean:
-	rm $(title).out $(title).blg $(title).bbl $(title).aux $(title).toc $(title).log $(title).pdf
+	rm $(title).out $(title).blg  $(title).bbl $(title).aux $(title).toc $(title).log $(title).pdf $(title).synctex.gz $(title).dvi $(title).bcf
