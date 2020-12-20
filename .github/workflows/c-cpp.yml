@@ -16,5 +16,5 @@ jobs:
     - name: build_pam
       run: cd pam; perl install.pl
     - name: make
-      run: cd pam; make
+      run: cd pam; sudo make
 
