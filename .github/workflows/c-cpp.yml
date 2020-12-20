@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: build_pam
+      run: cd pam; perl install.pl
     - name: make
       run: make
 
