@@ -149,6 +149,10 @@ sub check_dependency {
 
 ################################################################################
 =head2 install_pkg
+Install the package onto the machine
+
+@param pkg: the name of the package
+@param os: the os running on the system
 =cut
 ################################################################################
 sub install_pkg {
@@ -184,5 +188,3 @@ for my $dir (@{$packages{$os}{'dirs'}}) {
 		`sudo mkdir $dir`;
 	}
 }
-
-=back

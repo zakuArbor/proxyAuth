@@ -13,8 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: build_pam
-      run: cd pam; perl install.pl
+    - name: Install Dependencies
+      run: cd pam; sudo make install
     - name: make
       run: cd pam; sudo make
 
