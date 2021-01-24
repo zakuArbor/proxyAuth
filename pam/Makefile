@@ -1,10 +1,15 @@
 CC = gcc
-CFLAGS += -std=gnu11 -Wall -Werror -DNDEBUG
+CFLAGS += -g -std=gnu11 -Wall -Werror -DNDEBUG
 PFLAGS += -fPIC -fno-stack-protector
 LDFLAGS = -x --shared
 GLIB = `pkg-config --libs glib-2.0 gio-2.0`
 G_CFLAGS = `pkg-config --cflags glib-2.0 gio-2.0`
-LINUX_PAM_PATH = /lib/security
+OS:=$(shell head -n 1 /etc/os-release | cut -d = -f 2)
+ifeq ($(OS), Fedora)
+	LINUX_PAM_PATH = /lib64/security
+else
+	LINUX_PAM_PATH = /lib/security
+endif
 DEAUTH_PATH = /etc/proxy_auth
 PAM_PATH = $(LINUX_PAM_PATH)/pam_proxy.so
 BLUETOOTH_LIB = -lbluetooth
@@ -44,7 +49,7 @@ proxy_dbus.o: $(SRC)/proxy_dbus.c
 %.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ $(G_CFLAGS) $(GLIB)
 
-install: 
+install:
 	perl install.pl
 
 clean:

@@ -1,6 +1,15 @@
 # proxyAuth
 PAMxAndroid via Bluetooth proximity based login
 
+**Status:** Discontinued
+
+There has been no active development nor interest after the course ended. Feel 
+free to fork the project, open issues and suggest changes. I will be making 
+minor changes once in a while to clean up the code and play around.
+
+2021-01-23: I am working on adding support to Fedora and perhaps RHEL since 
+those are the main platforms I use for work and personal usage.
+
 ## PAM SETUP
 **Requirements:**
 * GDM (GNOME Display Manager)
@@ -26,19 +35,16 @@ sudo apt install bluez
 sudo apt-get install libbluetooth-dev
 ```
 
-3. Create the directory `/lib/security` if it does not exist
-`mkdir /lib/security/`
+`make install` will also create the directory `/lib/security` 
+(or `lib64/security` on Fedora) if it does not exist and `/etc/proxy_auth`.
  
-4. Clone the repo:
-`git clone https://github.com/Sxx125/proxyAuth.git`
-
-5. Compile:
+4. Compile:
 Assuming you are in the pam directory of the project (i.e. `$(INSTALLATION FOLDER)/proxyAuth/pam`)
 ```
 sudo make
 ```
 
-6. Change PAM GDM Password Configuration:
+5. Change PAM GDM Password Configuration:
 ```
 sudo vi /etc/pam.d/gdm-password
 ```
