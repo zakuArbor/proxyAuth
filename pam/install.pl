@@ -171,7 +171,9 @@ sub install_pkg {
 # MAIN 
 ################################################################################
 my $os = get_distro();
-print "os: $os\n";
+print "os: |$os|\n";
+print Dumper(@{$packages{$os}{'deps'}});
+
 #install missing dependencies
 for my $dep (@{$packages{$os}{'deps'}}) {
 	print_s("Checking if $dep is installed");
