@@ -1,3 +1,4 @@
+![C/C++ CI](https://github.com/zakuArbor/proxyAuth/workflows/C/C++%20CI/badge.svg)
 # proxyAuth
 PAMxAndroid via Bluetooth proximity based login
 
