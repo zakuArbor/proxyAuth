@@ -106,6 +106,7 @@ sub get_distro {
 	if (-e '/etc/os-release') {
 		$os=`head -n 1 /etc/os-release | cut -d = -f 2`;
     chomp($os);
+    $os =~ s/"//g;
 	}
 	$os=lc($os);
 	if ($os =~ /fedora|ubuntu/) {
@@ -171,7 +172,10 @@ sub install_pkg {
 # MAIN 
 ################################################################################
 my $os = get_distro();
-print "os: |$os|\n";
+if ($os eq "") {
+  print STDERR "Error: $os is not a supported. Please use Fedora or Ubuntu\n";
+  exit 1;
+}
 print Dumper(@{$packages{$os}{'deps'}});
 
 #install missing dependencies
