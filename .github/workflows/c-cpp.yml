@@ -3,8 +3,12 @@ name: C/C++ CI
 on:
   push:
     branches: [ master ]
+    paths:
+    - 'pam/**'
   pull_request:
     branches: [ master ]
+    paths:
+    - 'pam/**'
 
 jobs:
   build:
