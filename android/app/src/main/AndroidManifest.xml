@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.myapplicationtest">
-    <!-- added the bluetooth permissions in the application manifest file -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    package="com.example.proxyauth">
 
     <application
         android:allowBackup="true"
@@ -13,44 +8,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".AboutActivity"></activity>
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".HelpActivity" />
+        android:theme="@style/Theme.ProxyAuth">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Because android:exported is set to "false", the service is only available to this app. -->
-        <service
-            android:name=".RSSPullService"
-            android:exported="false" />
-
-        <activity
-            android:name=".ControlActivity"
-            android:screenOrientation="portrait" />
-
-        <service
-            android:name=".BluetoothInteraction"
-            android:exported="false"/>
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.domain.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
-
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
+        </activity>
     </application>
 
 </manifest>
