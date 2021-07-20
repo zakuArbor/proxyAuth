@@ -7,7 +7,7 @@
 #include <string.h>
 
 #define BT_MAC_LEN 17
-#define BT_MAX_CONN 7 //Bluetooth Adapters can only connect up to 7 devices
+#define BT_MAX_CONN 7 //Bluetooth Adapters can only connect up to 7 devices test
 #define LOG 1
 
 /*
