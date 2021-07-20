@@ -1,6 +1,6 @@
 #include "pam_bt_pair.h"
 
-/*
+/* test
 * Return Bluetooth address if the device is paired. Else return NULL
 *
 * @param properties: An 'object' that holds a specific bluetooth device's metadata
