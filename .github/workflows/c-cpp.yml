@@ -2,11 +2,11 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ github-ci ]
     paths:
     - 'pam/**'
   pull_request:
-    branches: [ master ]
+    branches: [ github-ci ]
     paths:
     - 'pam/**'
 
