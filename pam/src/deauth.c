@@ -15,7 +15,7 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
-//test
+//test1
 #include "pam_misc.h"
 #include "pam_bt_misc.h"
 #include "pam_bt_pair.h"
