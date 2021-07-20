@@ -18,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install Dependencies
-      run: cd pam; sudo make install
+      run: sudo apt-get update; sudo apt-get -y upgrade;cd pam; sudo make install
     - name: make
       run: cd pam; sudo make
 
