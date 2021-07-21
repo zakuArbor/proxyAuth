@@ -14,9 +14,6 @@ name: "CodeQL"
 on:
   push:
     branches: [ master ]
-    paths:
-      - pam
-      - pam/src
   schedule:
     - cron: '27 15 * * 3'
   
