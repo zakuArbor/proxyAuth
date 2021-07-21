@@ -53,8 +53,15 @@ jobs:
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+    - name: Build
+      run: |
+        echo "Remove broken apt repos [Ubuntu]"
+        for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
+        echo "Update Ubuntu"
+        sudo apt-get update -y; sudo apt-get upgrade -y
+        echo "Install Dependencies"
+        cd pam; sudo make install
+        make
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
