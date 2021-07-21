@@ -61,7 +61,7 @@ jobs:
         sudo apt-get update -y; sudo apt-get upgrade -y
         echo "Install Dependencies"
         cd pam; sudo make install
-        make
+        sudo make
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
