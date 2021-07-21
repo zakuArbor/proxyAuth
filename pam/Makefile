@@ -5,12 +5,22 @@ LDFLAGS = -x --shared
 GLIB = `pkg-config --libs glib-2.0 gio-2.0`
 G_CFLAGS = `pkg-config --cflags glib-2.0 gio-2.0`
 OS:=$(shell head -n 1 /etc/os-release | cut -d = -f 2)
+DEAUTH_PATH = /etc/proxy_auth
+
 ifeq ($(OS), Fedora)
 	LINUX_PAM_PATH = /lib64/security
 else
 	LINUX_PAM_PATH = /lib/security
 endif
-DEAUTH_PATH = /etc/proxy_auth
+#override with user's preferred installation path
+ifneq ($(ALT_PAM_PATH), )
+	LINUX_PAM_PATH = $(ALT_PAM_PATH)
+endif
+ifneq ($(ALT_DEAUTH_PATH),)
+	DEAUTH_PATH = $(ALT_DEAUTH_PATH)
+endif
+#end
+
 PAM_PATH = $(LINUX_PAM_PATH)/pam_proxy.so
 BLUETOOTH_LIB = -lbluetooth
 LDLIBS = -lpam -lc
