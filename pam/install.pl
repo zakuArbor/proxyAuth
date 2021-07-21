@@ -66,7 +66,7 @@ my %packages = (
   'ubuntu' => {
     'deps'     => ['libpam0g-dev','libglib2.0-dev','bluez','libbluetooth-dev'],
     'checker'  => 'dpkg -s',
-    'installer'=> 'apt-get',
+    'installer'=> 'apt-get install',
     'dirs'     => ['/lib/security/', '/etc/proxy_auth/'],
   },
   'fedora' => {
