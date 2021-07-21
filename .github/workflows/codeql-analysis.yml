@@ -17,9 +17,6 @@ on:
     paths:
       - pam
       - pam/src
-    paths-ignore:
-      - pam/install.pl
-      - pam/Makefile
   schedule:
     - cron: '27 15 * * 3'
   
