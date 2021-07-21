@@ -14,18 +14,15 @@ name: "CodeQL"
 on:
   push:
     branches: [ master ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ master ]
+    paths:
+      - pam
+      - pam/src
+    paths-ignore:
+      - pam/install.pl
+      - pam/Makefile
   schedule:
     - cron: '27 15 * * 3'
-  paths:
-    - pam
-    - pam/src
-  paths-ignore:
-    - pam/install.pl
-    - pam/Makefile
-
+  
 jobs:
   analyze:
     name: Analyze
