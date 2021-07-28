@@ -32,7 +32,7 @@ extern void terminate_server(int server, int client, sdp_session_t *session);
 
 void terminate(struct dbus_obj *data_obj);
 
-/*
+/**
 * Terminate program if user is locked by actively "listening"/monitoring the changes in presence status
 *
 * Signal Handler whenever the property of status changes
@@ -51,7 +51,7 @@ void on_signal (
     gpointer user_data
 );
 
-/*
+/**
 * Calls and sets all the necessary data to listen for the status of the user's session (i.e. is the session locked)
 *
 * @param server: a struct that contains the server and client's fd and the Bluetooth's SDP server object

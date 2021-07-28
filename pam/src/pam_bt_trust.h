@@ -9,7 +9,7 @@
 
 extern const char *trusted_dir_path;
 
-/*
+/**
 * Return 1 iff a trusted device for the user is connected
 *
 * @param log_fp: the handle of the log file
@@ -21,7 +21,7 @@ extern const char *trusted_dir_path;
 */
 int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char **paired_devices, int num_of_paired, char **detected_dev);
 
-/*
+/**
 * Return file pointer for the user's trusted bluetooth device
 *
 * @param trusted_dir_path: the path to where all the user's trusted device file is located
@@ -31,7 +31,7 @@ int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, int num_of_
 */
 FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, FILE *log_fp);
 
-/*
+/**
 * Write to the array all the trusted bluetooth MAC addresses.
 *
 * @param trusted_dev_fp: the file handle of the user's trusted device file
@@ -39,7 +39,7 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
 */
 void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_trusted_devices);
 
-/*
+/**
 * Populate the array with trusted devices
 *
 * @param log_fp: the file handle for the log file
@@ -51,7 +51,7 @@ void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_t
 */
 char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const char *username, int *num_of_devices);
 
-/*
+/**
 * Deals whether or not the device is able to login via bluetooth
 *
 * @param log_fp: the file handle for the log file

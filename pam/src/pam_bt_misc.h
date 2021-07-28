@@ -10,7 +10,7 @@
 #define BT_MAX_CONN 7 //Bluetooth Adapters can only connect up to 7 devices
 #define LOG 1
 
-/*
+/**
 * Return 1 iff the address is a valid Bluetooth Address
 *
 * NOTE: Bluetooth Address is a 48 bit address. The function will treat address as a string expecting:
@@ -24,7 +24,7 @@
 */
 int verify_bt_addr(char *address, FILE *log_fp);
 
-/*
+/**
 * Return 1 iff the given address is one of the trusted devices the user trusts
 *
 * @param log_fp: the handle of the log file
@@ -34,7 +34,7 @@ int verify_bt_addr(char *address, FILE *log_fp);
 */
 int is_dev_trusted(FILE *log_fp, char *dev, char **trusted_devices, int num_of_devices);
 
-/*
+/**
 * Free the list of bluetooth MAC addresses from memory
 *
 * @param device_list: the list of bluetooth MAC addresses

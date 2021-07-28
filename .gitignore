@@ -4,3 +4,5 @@
 *.swp
 *.o
 pam_test
+doc/html
+doc/latex

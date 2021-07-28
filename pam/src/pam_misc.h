@@ -11,7 +11,7 @@
 #include <sys/stat.h>
 
 
-/*
+/**
 * Set the login time to the given pointer
 * Format: %a %b %d %H:%M:%S %Y
 * Example: Fri Feb 11 02:59:18 2020
@@ -27,7 +27,7 @@
 */
 void get_login_time(char *curr_time);
 
-/*
+/**
 * Return the number of lines there are in the file
 *
 * Use Case: Each user will have a list of trusted bluetooth MAC stored in a file. E
@@ -39,7 +39,7 @@ void get_login_time(char *curr_time);
 */
 int get_num_lines(FILE *fp);
 
-/*
+/**
 * Check if the directory exists. If not try to create the directory
 *
 * @param dir_path: The path to the directory

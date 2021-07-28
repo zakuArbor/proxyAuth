@@ -12,7 +12,7 @@
 #define DBUS_METHOD_NAME                "GetManagedObjects"
 #define DBUS_METHOD_RETURN_TYPE         "(a{oa{sa{sv}}})"
 
-/*
+/**
 * Return Bluetooth address if the device is paired. Else return NULL
 *
 * @param properties: An 'object' that holds a specific bluetooth device's metadata
@@ -20,7 +20,7 @@
 */
 char *check_is_paired(GVariant *properties);
 
-/*
+/**
 *Return a list of paired devices
 * 
 * @param num_of_paired: the number of devices that are paired
@@ -30,7 +30,7 @@ char *check_is_paired(GVariant *properties);
 */
 char **process_dbus_bt_list(GVariant *result, int *num_of_paired);
 
-/*
+/**
 * Return a list of Bluetooth addresses that is currently paired (connected) to the host
 *
 * Approach: Use dbus to list all the bluetooth devices and see the connected property

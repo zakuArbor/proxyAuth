@@ -12,7 +12,7 @@
 #include "pam_misc.h"
 #include "pam_bt_misc.h"
 
-/*
+/**
 * Once Authenticated, run the deauth background service
 *
 * NOTE: exec replaces the child process. Memory mappings are not preservered on an exec() call so memory is reclaimed apparently.

@@ -62,5 +62,8 @@ proxy_dbus.o: $(SRC)/proxy_dbus.c
 install:
 	perl install.pl
 
+doc:
+	doxygen Doxyfile
+
 clean:
 	rm -f *.o $(PAM_PATH) pam_test $(DEAUTH_PATH)/$@

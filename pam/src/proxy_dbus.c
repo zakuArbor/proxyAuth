@@ -17,17 +17,6 @@ void terminate(struct dbus_obj *data_obj) {
     exit(0);
 }
 
-/*
-* Terminate program if user is locked by actively "listening"/monitoring the changes in presence status
-*
-* Signal Handler whenever the property of status changes
-*
-* @param proxy:
-* @param sender_name:
-* @param signal_name:
-* @param parameters:
-* @param user_data: a pointer to data that needs to be freed before terminating the program
-*/
 void on_signal (
         GDBusProxy *proxy, 
         gchar *sender_name, 
@@ -46,14 +35,6 @@ void on_signal (
     }
 }
 
-/*
-* Calls and sets all the necessary data to listen for the status of the user's session (i.e. is the session locked)
-*
-* @param server: a struct that contains the server and client's fd and the Bluetooth's SDP server object
-*
-* NOTE: returns a reference to a struct dbus_obj that needs to be freed
-* @return an object that contains all the necessary data to listen for the lock status and the data that needs to be freed when program terminate
-*/
 struct dbus_obj *set_lock_listener(struct server_data_t *server) {
     struct dbus_obj *data_obj = NULL;
 
