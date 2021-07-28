@@ -12,17 +12,17 @@
 
 
 /**
-* Set the login time to the given pointer
-* Format: %a %b %d %H:%M:%S %Y
-* Example: Fri Feb 11 02:59:18 2020
-*
-* %a: locale's abbreviated weekday name (e.g., Sun)
-* %b: locale's abbreviated month name (e.g., Jan)
-* %d: day of month (e.g., 01)
-* %H: hour (00..23)
-* %M: minute (00..59)
-* %S: second (00..60)
-* %Y: year
+* Set the login time to the given pointer           <br>
+* Format: %a %b %d %H:%M:%S %Y                      <br>
+* Example: Fri Feb 11 02:59:18 2020                 <br>
+*                                                   <br>
+* %a: locale's abbreviated weekday name (e.g., Sun) <br>
+* %b: locale's abbreviated month name (e.g., Jan)   <br>
+* %d: day of month (e.g., 01)                       <br>
+* %H: hour (00..23)                                 <br>
+* %M: minute (00..59)                               <br>
+* %S: second (00..60)                               <br>
+* %Y: year                                          <br>
 * Credits: `man date` for the format specifier
 */
 void get_login_time(char *curr_time);
