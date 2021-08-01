@@ -31,7 +31,6 @@ jobs:
         with:
           arguments: '--minlevel 4 --sarif ./'
           output: 'flawfinder_results.sarif'
-          false_positive : enable
 
       - name: Upload analysis results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v1
