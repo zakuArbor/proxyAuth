@@ -28,7 +28,10 @@
 #define SERVICE_PROV "ProxyAuth"
 #define minThroughput 100  //Min Throughput varies depending on devices and work scenarios. Calibrate as needed. 
 
-/*
+/**
+* @file deauth.c
+* @brief A background program that runs as soon as you are authenticated to check if your device is nearby. It'll lock the computer if the device is not nearby.
+*
 * Special Thanks to: Ryan Scott for providing how to register service and Albert Huang
 */
 
@@ -50,8 +53,14 @@ void terminate_server(int server, int client, sdp_session_t *session) {
     }
 }
 
-/*
+/**
 * Set the general service ID and service class
+* 
+* @param svc_uuid: a pointer to store the generated service 128-bit UUID
+* @param svc_class_uuid: a pointer to store the generated Service Class UUID
+* @param svc_class_list: a pointer to an array of service class uuid
+* @param record:
+* @param svc_uuid_int:
 */
 void set_service(uuid_t *svc_uuid, uuid_t *svc_class_uuid, sdp_list_t **svc_class_list, sdp_record_t *record, uint32_t *svc_uuid_int) {
     /* set the general service ID */
@@ -71,7 +80,7 @@ void set_service(uuid_t *svc_uuid, uuid_t *svc_class_uuid, sdp_list_t **svc_clas
     sdp_set_service_classes(record, *svc_class_list);
 }
 
-/*
+/**
 * Set Bluetooth profile metadata for the service and the version of the profile
 */
 void set_bluetooth_service_info(sdp_profile_desc_t *profile, sdp_list_t **profile_list, sdp_record_t *record) {
@@ -82,7 +91,7 @@ void set_bluetooth_service_info(sdp_profile_desc_t *profile, sdp_list_t **profil
     sdp_set_profile_descs(record, *profile_list);
 }
 
-/*
+/**
 * Make the service record publicly browsable. Allows remote bluetooth devices to see the service record.
 */
 void set_browsable(sdp_list_t **root_list, sdp_record_t *record, uuid_t *root_uuid) {
@@ -91,7 +100,7 @@ void set_browsable(sdp_list_t **root_list, sdp_record_t *record, uuid_t *root_uu
     sdp_set_browse_groups(record, *root_list);
 }
 
-/*
+/**
 * set l2cap information
 */
 void set_l2cap_info(sdp_list_t **l2cap_list, sdp_list_t **proto_list, uuid_t *l2cap_uuid) {
@@ -100,7 +109,7 @@ void set_l2cap_info(sdp_list_t **l2cap_list, sdp_list_t **proto_list, uuid_t *l2
     *proto_list = sdp_list_append(0, *l2cap_list);
 }
 
-/*
+/**
 * register the RFCOMM channel for RFCOMM sockets
 */
 void register_rfcomm_sock(
@@ -199,7 +208,7 @@ sdp_session_t *register_service(uint8_t rfcomm_channel) {
     return session;
 }
 
-/*
+/**
 * Setup the bluetooth server
 * 
 * @return return the server's socket file descriptor
@@ -226,7 +235,7 @@ int init_server(struct sockaddr_rc *loc_addr, sdp_session_t **session) {
     return s;   
 }
 
-/*
+/**
 * Lock the computer, cleanup memory and open fd, and terminate program
 *
 * @param server_data: a struct that contains fd that needs to be closed and all the dbus references needed
@@ -239,7 +248,7 @@ void lock(struct dbus_obj *data_obj) {
     }
 }
 
-/*
+/**
 * Return 1 iff the given bluetooth address in the argument is valid
 *
 * @param argc: number of arguments (always >= 1 due to program name stored in argv[0])
@@ -259,7 +268,7 @@ int check_arg(int argc, char **argv) {
     return 1;
 }
 
-/*
+/**
 * Return 1 iff the given bluetooth address is trusted and paired
 *
 * @param bt_addr: the address of the bluetooth to check
@@ -302,7 +311,7 @@ is_trusted_terminate:
     return status;
 }
 
-/*
+/**
 * Connect a new client. If client is not from a trusted device nor authorized then lock the system.
 *
 * @param s: server's socket

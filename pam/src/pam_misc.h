@@ -24,6 +24,9 @@
 * %S: second (00..60)                               <br>
 * %Y: year                                          <br>
 * Credits: `man date` for the format specifier
+*
+* @param curr_time a pointer to store the current time
+* @return nothing
 */
 void get_login_time(char *curr_time);
 
@@ -44,10 +47,10 @@ int get_num_lines(FILE *fp);
 *
 * @param dir_path: The path to the directory
 * @param log_fp: the handle of the log file
-* @return:
-*   -1: cannot access dir or file is not a directory or directory could not be created
-*   0: created the directory
-*   1: file exists and it is a directory
+* @return
+*   -1: cannot access dir or file is not a directory or directory could not be created <br>
+*   0: created the directory <br>
+*   1: file exists and it is a directory <br>
 */
 int check_or_creat_dir(const char *dir_path, FILE *log_fp);
 #endif
