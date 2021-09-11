@@ -27,7 +27,7 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/refresh_devices"
+        android:id="@+id/refresh_btn"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
