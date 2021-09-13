@@ -4,4 +4,9 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="refresh">REFRESH</string>
+    <string name = "deviceName_label">Device name</string>
+    <string name = "address_label">Device address</string>
+    <string name = "isAuth_label">Authenticating</string>
+    <string name = "isTrusted_label">Trusted</string>
+    <string name = "disconnect_label">KILL</string>
 </resources>

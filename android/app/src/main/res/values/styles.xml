@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name ="Device_labels">
+        <item name = "android:fontFamily">sans-serif-medium</item>
+        <item name = "android:text">@string/address_label</item>
+        <item name = "android:textFontWeight">700</item>
+    </style>
+    <style name ="device_values">
+        <item name ="android:textAlignment">textEnd</item>
+    </style>
+</resources>

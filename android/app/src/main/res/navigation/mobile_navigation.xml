@@ -22,4 +22,10 @@
         android:name="com.example.proxyauth.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_device"
+        android:name="com.example.proxyauth.ui.device.DeviceFragment"
+        android:label="Device Information"
+        tools:layout="@layout/fragment_device" />
 </navigation>

@@ -91,7 +91,7 @@ class HomeFragment : Fragment() {
         return root
     }
 
-    fun isConnected(device: BluetoothDevice): Boolean {
+    private fun isConnected(device: BluetoothDevice): Boolean {
         return try {
             val m: Method = device.javaClass.getMethod("isConnected")
             m.invoke(device) as Boolean
