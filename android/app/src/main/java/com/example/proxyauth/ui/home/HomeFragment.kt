@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.example.proxyauth.R
 import com.example.proxyauth.databinding.FragmentHomeBinding
 import java.lang.reflect.Method
@@ -75,12 +76,13 @@ class HomeFragment : Fragment() {
             )
         }
         devListView.adapter = devAdapter
-        devListView.onItemClickListener = AdapterView.OnItemClickListener{_, _, pos, _ ->
+        devListView.onItemClickListener = AdapterView.OnItemClickListener{view, _, pos, _ ->
             activity?.let {
                 //device.address
                 //device.name
-                val is_connected: Boolean = isConnected(deviceList[pos])
-                Toast.makeText(it, deviceList[pos].name + " " + is_connected.toString(), Toast.LENGTH_LONG).show()
+                Navigation.findNavController(view).navigate(R.id.action_navigation_home_to_navigation_device)
+                //val is_connected: Boolean = isConnected(deviceList[pos])
+
             }
         }
         updateDevList();
