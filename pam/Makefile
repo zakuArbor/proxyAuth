@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS += -g -std=gnu11 -Wall -Werror -DNDEBUG
+CFLAGS += -g -std=gnu11 -Wall -Werror 
 PFLAGS += -fPIC -fno-stack-protector
 LDFLAGS = -x --shared
 GLIB = `pkg-config --libs glib-2.0 gio-2.0`
@@ -25,13 +25,14 @@ PAM_PATH = $(LINUX_PAM_PATH)/pam_proxy.so
 BLUETOOTH_LIB = -lbluetooth
 LDLIBS = -lpam -lc
 SRC = src
-LIB_OBJ = pam_misc.o pam_bt_misc.o pam_bt_pair.o pam_bt_trust.o pam_post_auth.o
+LIB_OBJ = pam_misc.o pam_bt_misc.o pam_bt_pair.o pam_bt_trust.o pam_post_auth.o pam_sec.o
 #gcc -print-file-name=libasan.so
 
 all: pam_proxy.so pam_test deauth
 pam_misc.o: $(SRC)/pam_misc.h
 pam_bt_misc.o: $(SRC)/pam_bt_misc.h
 pam_bt_pair.o: $(SRC)/pam_bt_pair.h
+pam_sec.o: $(SRC)/pam_sec.h
 pam_bt_trust.o: $(SRC)/pam_bt_trust.h $(SRC)/pam_misc.h $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_pair.h
 pam_post_auth.o: $(SRC)/pam_post_auth.h $(SRC)/pam_bt_misc.h
 proxy_dbus.o: $(SRC)/proxy_dbus.h $(SRC)/pam_bt_trust.h $(SRC)/pam_misc.h $(SRC)/pam_bt_misc.h $(SRC)/pam_bt_pair.h
@@ -64,6 +65,8 @@ install:
 
 doc:
 	doxygen Doxyfile
+	find ./src -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" > cscope.files
+	cscope -b -q -k
 
 clean:
 	rm -f *.o $(PAM_PATH) pam_test $(DEAUTH_PATH)/$@

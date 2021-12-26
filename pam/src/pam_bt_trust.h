@@ -6,6 +6,7 @@
 #include "pam_misc.h"
 #include "pam_bt_misc.h"
 #include "pam_bt_pair.h"
+#include "pam_sec.h"
 
 extern const char *trusted_dir_path;
 

@@ -46,6 +46,10 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
         file_name[len] = '\0';
     }
 
+    if (!(check_config(log_fp, file_name, 0))) {
+        return NULL;
+    }
+
     if (!(trusted_dev_fp = fopen(file_name, "r"))) {
         perror("There are no trusted device");
         if (log_fp) {
@@ -91,9 +95,8 @@ char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const ch
     FILE *trusted_dev_fp = NULL;
     int num_of_devices_lc = 0; //localalizing for possible memory performance improvement
 
-    /*** Check if the trusted device directory exist ***/
-    if (check_or_creat_dir(trusted_dir_path, log_fp) <= 0) {
-        //NOTE: ret status of 0 means directory just got created, so there are no trusted device
+    /*** Check if the trusted device directory exist and has the correct permissions ***/
+    if (check_config(log_fp, trusted_dir_path, 1) <= 0) {
         goto find_trusted_devices_terminate;
     }
     /***************************************************/
