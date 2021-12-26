@@ -28,6 +28,7 @@
 #include "pam_bt_pair.h"
 #include "pam_bt_trust.h"
 #include "pam_post_auth.h"
+#include "pam_sec.h"
 
 int main(int argc, char **argv)
 {
@@ -37,17 +38,15 @@ int main(int argc, char **argv)
     FILE *log_fp = NULL;
     
     /*** OPEN LOG FILE ***/
-    if (!(log_fp = fopen("/var/log/pam-proxy-auth.log", "a"))) {
+    if (!(log_fp = fopen("pam-proxy-auth.log", "a"))) {
         perror("Failed to open file");
     }
+
     /*********************/
     printf("start bluetooth_login\n");
     if (bluetooth_login(log_fp, trusted_dir_path, username, &detected_dev)) {
        printf("Welcome %s. Login via Auth Proxy.\n", username);
-       exec_deauth(detected_dev, username, log_fp, trusted_dir_path);
-    }
-    else {
-        printf("Failed");
+       //exec_deauth(detected_dev, username, log_fp, trusted_dir_path);
     }
 
     if (log_fp) {
