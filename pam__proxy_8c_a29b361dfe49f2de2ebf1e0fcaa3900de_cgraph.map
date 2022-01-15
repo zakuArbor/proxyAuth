@@ -1,0 +1,19 @@
+<map id="pam_sm_authenticate" name="pam_sm_authenticate">
+<area shape="rect" id="node1" title=" " alt="" coords="5,271,156,297"/>
+<area shape="rect" id="node2" href="$pam__bt__trust_8c.html#a11ff3cbf9f313d7a9ea434c83f61aa6a" title=" " alt="" coords="204,245,313,272"/>
+<area shape="rect" id="node17" href="$pam__post__auth_8c.html#a255f2465b7fd99377d022a4a9334fed1" title=" " alt="" coords="211,296,306,323"/>
+<area shape="rect" id="node3" href="$pam__bt__trust_8c.html#a218ab45da59bbecedbd1d6ce4f08cf6e" title=" " alt="" coords="361,81,503,108"/>
+<area shape="rect" id="node10" href="$pam__bt__trust_8c.html#a63dca1bb3ba9a16df4a0b270ac1a7438" title=" " alt="" coords="367,154,497,195"/>
+<area shape="rect" id="node12" href="$pam__bt__misc_8c.html#a67e94683bc2c967879c2b18b8b7a7c4b" title=" " alt="" coords="375,220,489,247"/>
+<area shape="rect" id="node13" href="$pam__misc_8c.html#aa241605477f0fba5beeb7be0eff5871c" title=" " alt="" coords="379,321,485,348"/>
+<area shape="rect" id="node14" href="$pam__bt__pair_8c.html#a0982f353fa0e015e06eaba9d7164d55d" title=" " alt="" coords="365,271,499,297"/>
+<area shape="rect" id="node4" href="$pam__sec_8c.html#afc0c307d3a65a155775e97cb8b6501e1" title=" " alt="" coords="753,31,851,57"/>
+<area shape="rect" id="node7" href="$pam__misc_8c.html#a2e30edd72fed52ba52cd1d51afe53c95" title=" " alt="" coords="570,31,677,57"/>
+<area shape="rect" id="node8" href="$pam__bt__trust_8c.html#a5210560ef79fa03ecbeb85f4eccb4940" title=" " alt="" coords="554,81,693,108"/>
+<area shape="rect" id="node9" href="$pam__bt__trust_8c.html#a671181c1f3adc21b30a202ba7f370b11" title=" " alt="" coords="554,132,693,159"/>
+<area shape="rect" id="node5" href="$pam__sec_8c.html#a26886b7d782ab31d7746aa4107fb4e04" title=" " alt="" coords="908,5,1001,32"/>
+<area shape="rect" id="node6" href="$pam__sec_8c.html#a1a34a8d6b785220f017a9d010bda8ee0" title=" " alt="" coords="923,56,986,83"/>
+<area shape="rect" id="node11" href="$pam__bt__misc_8c.html#ab1dcac140f23316278bc07c80ba6f98b" title=" " alt="" coords="570,183,677,209"/>
+<area shape="rect" id="node15" href="$pam__bt__pair_8c.html#a438bb3eec94f76856dcbca4cac3974f8" title=" " alt="" coords="551,271,696,297"/>
+<area shape="rect" id="node16" href="$pam__bt__pair_8c.html#af9433b5cdb30a04f8767429d66adf97c" title=" " alt="" coords="744,271,860,297"/>
+</map>
