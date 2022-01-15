@@ -24,12 +24,12 @@ jobs:
       uses: mattnotmitt/doxygen-action@v1.9.1
       with:
         # Path to Doxyfile
-        doxyfile-path: "pam/Doxyfile" 
+        doxyfile-path: "./pam/Doxyfile" 
         # Working directory
-        working-directory: "pam/src/" 
+        working-directory: "./pam/src/" 
     
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3.7.3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: doc/doxy/html
+        publish_dir: ./doc/doxy/html
