@@ -1,0 +1,20 @@
+<map id="connect_client" name="connect_client">
+<area shape="rect" id="node1" title=" " alt="" coords="5,233,112,260"/>
+<area shape="rect" id="node2" href="$deauth_8c.html#aabedf75506971e618c72cf59465b7e71" title=" " alt="" coords="160,183,277,209"/>
+<area shape="rect" id="node15" href="$deauth_8c.html#a1620ed5f9a7602c963e384192621b12a" title=" " alt="" coords="195,259,242,285"/>
+<area shape="rect" id="node3" href="$pam__bt__trust_8c.html#a218ab45da59bbecedbd1d6ce4f08cf6e" title=" " alt="" coords="325,81,467,108"/>
+<area shape="rect" id="node10" href="$pam__bt__misc_8c.html#a67e94683bc2c967879c2b18b8b7a7c4b" title=" " alt="" coords="339,132,453,159"/>
+<area shape="rect" id="node11" href="$pam__bt__pair_8c.html#a0982f353fa0e015e06eaba9d7164d55d" title=" " alt="" coords="329,183,463,209"/>
+<area shape="rect" id="node14" href="$pam__bt__misc_8c.html#ab1dcac140f23316278bc07c80ba6f98b" title=" " alt="" coords="343,233,449,260"/>
+<area shape="rect" id="node4" href="$pam__sec_8c.html#afc0c307d3a65a155775e97cb8b6501e1" title=" " alt="" coords="717,31,815,57"/>
+<area shape="rect" id="node7" href="$pam__misc_8c.html#a2e30edd72fed52ba52cd1d51afe53c95" title=" " alt="" coords="534,31,641,57"/>
+<area shape="rect" id="node8" href="$pam__bt__trust_8c.html#a5210560ef79fa03ecbeb85f4eccb4940" title=" " alt="" coords="518,81,657,108"/>
+<area shape="rect" id="node9" href="$pam__bt__trust_8c.html#a671181c1f3adc21b30a202ba7f370b11" title=" " alt="" coords="518,132,657,159"/>
+<area shape="rect" id="node5" href="$pam__sec_8c.html#a26886b7d782ab31d7746aa4107fb4e04" title=" " alt="" coords="872,5,965,32"/>
+<area shape="rect" id="node6" href="$pam__sec_8c.html#a1a34a8d6b785220f017a9d010bda8ee0" title=" " alt="" coords="887,56,950,83"/>
+<area shape="rect" id="node12" href="$pam__bt__pair_8c.html#a438bb3eec94f76856dcbca4cac3974f8" title=" " alt="" coords="515,183,660,209"/>
+<area shape="rect" id="node13" href="$pam__bt__pair_8c.html#af9433b5cdb30a04f8767429d66adf97c" title=" " alt="" coords="708,183,824,209"/>
+<area shape="rect" id="node16" href="$proxy__dbus_8c.html#ac8031b75ad309b625b5ff96c84bfcf94" title=" " alt="" coords="358,284,434,311"/>
+<area shape="rect" id="node17" href="$deauth_8c.html#a3000869e3fe498f41505e97cccdbd904" title=" " alt="" coords="528,284,647,311"/>
+<area shape="rect" id="node18" href="$deauth_8c.html#a822797738ca4ed6abfc03035c50bd356" title=" " alt="" coords="725,284,807,311"/>
+</map>
