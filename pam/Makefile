@@ -49,7 +49,7 @@ pam_proxy.o: $(SRC)/pam_proxy.c
 
 pam_test: pam_test.o $(LIB_OBJ)
 	if [ -f $@ ];	then rm -f $@; fi
-	$(CC) $^ -o $@ $(CFLAGS) $(PFLAGS) $(BLUETOOTH_LIB) -fsanitize=address $(G_CFLAGS) $(GLIB)
+	$(CC) $^ -o $@ $(CFLAGS) $(PFLAGS) $(BLUETOOTH_LIB) -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer $(G_CFLAGS) $(GLIB)
 
 deauth: deauth.o $(LIB_OBJ) proxy_dbus.o
 	$(CC) $^ -o $(DEAUTH_PATH)/$@ $(CFLAGS) $(BLUETOOTH_LIB) -fsanitize=address $(G_CFLAGS) $(GLIB) 
