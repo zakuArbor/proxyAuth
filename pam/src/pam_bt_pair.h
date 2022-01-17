@@ -1,6 +1,7 @@
 #ifndef PAM_BT_PAIR
 #define PAM_BT_PAIR
 
+#include <stdint.h>
 #include <stdio.h>
 #include <glib.h>
 #include <gio/gio.h>
@@ -28,7 +29,7 @@ char *check_is_paired(GVariant *properties);
 * @param result: The object returned by request to DBUS for all managed bluetooth object
 * @return: returns a list of paired devices. Need to free
 */
-char **process_dbus_bt_list(GVariant *result, int *num_of_paired);
+char **process_dbus_bt_list(GVariant *result, uint8_t *num_of_paired);
 
 /**
 * Return a list of Bluetooth addresses that is currently paired (connected) to the host
@@ -40,5 +41,5 @@ char **process_dbus_bt_list(GVariant *result, int *num_of_paired);
 *   NOTE: the value is set within the helper function that the function will call
 * @return: return a list of bluetooth addresses connected to the host 
 */
-char **get_paired_devices(int *num_of_paired);
+char **get_paired_devices(uint8_t *num_of_paired);
 #endif

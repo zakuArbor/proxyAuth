@@ -40,13 +40,13 @@ char *check_is_paired(GVariant *properties) {
     return addr;
 }
 
-char **process_dbus_bt_list(GVariant *result, int *num_of_paired) {
+char **process_dbus_bt_list(GVariant *result, uint8_t *num_of_paired) {
     if(!result) {
         return NULL;
     }
 
     char **paired_devices = NULL;
-    int num_of_paired_lc = 0;
+    uint8_t num_of_paired_lc = 0;
 
     if (!(paired_devices = malloc(sizeof(char *) *BT_MAX_CONN))) {
         perror("malloc");
@@ -64,7 +64,8 @@ char **process_dbus_bt_list(GVariant *result, int *num_of_paired) {
         GVariant *properties;
         GVariantIter ii;
         g_variant_iter_init(&ii, ifaces_and_properties);
-        while(g_variant_iter_next(&ii, "{&s@a{sv}}", &interface_name, &properties)) {
+        while(g_variant_iter_next(&ii, "{&s@a{sv}}", &interface_name, &properties) &&
+             num_of_paired_lc < BT_MAX_CONN) {
             gchar *interface_name_lower = g_ascii_strdown(interface_name, -1);
             if(g_strstr_len(interface_name_lower, -1, "device")) {
                 char *addr;
@@ -83,7 +84,7 @@ char **process_dbus_bt_list(GVariant *result, int *num_of_paired) {
     return paired_devices;
 }
 
-char **get_paired_devices(int *num_of_paired) {
+char **get_paired_devices(uint8_t *num_of_paired) {
     GDBusConnection *conn;
 
     GVariant *result = NULL;

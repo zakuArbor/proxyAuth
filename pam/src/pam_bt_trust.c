@@ -1,12 +1,20 @@
 #include "pam_bt_trust.h"
 
-int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char **paired_devices, int num_of_paired, char **detected_dev) {
+int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, 
+                               const uint8_t num_of_devices, char **paired_devices, 
+                               const uint8_t num_of_paired, char **detected_dev) {
     if (!trusted_devices || !paired_devices) {
         return 0;
     }
+
     int trusted_dev_found = 0;
 
-    for (int i = 0; i < num_of_paired; i++) {
+    uint8_t num_paired = num_of_paired; //for ensuring bound check 
+    if (num_paired > BT_MAX_CONN) {
+        num_paired = BT_MAX_CONN;
+    } 
+
+    for (int i = 0; i < num_paired; i++) {
         if (is_dev_trusted(log_fp, paired_devices[i], trusted_devices, num_of_devices)) {
             if (log_fp) {
                 fprintf(log_fp, "Trusted Device: %s\n", paired_devices[i]);
@@ -26,25 +34,29 @@ int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, int num_of_
 FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, FILE *log_fp) {
     FILE *trusted_dev_fp = NULL;
 
-    char file_name[NAME_MAX];
-    int len = 0;
+    char file_name[PATH_MAX]; //includes null terminator and the filename
+    unsigned int len = 0;
     strcpy(file_name, "");
+
+    if (strlen(trusted_dir_path) + strlen(username) >= PATH_MAX) { 
+        return NULL;
+    }
+    //assuming NAME_MAX is greater than LOGIN_NAME_MAX
+    if (strlen(username) > LOGIN_NAME_MAX || strlen(username) == 0) {
+      return NULL;
+    }
     
     if (strlen(trusted_dir_path) > 0) {
         strncat(file_name, trusted_dir_path, strlen(trusted_dir_path));
         len += strlen(trusted_dir_path);
     }
-    if (strlen(username) > 0) {
-        strncat(file_name, username, strlen(username));
-        len += strlen(username);
-    }
+    
+    strncat(file_name, username, strlen(username));
+    len += strlen(username);
+    
     //I am paranoid
-    if (len > NAME_MAX) {
-        file_name[NAME_MAX] = '\0';
-    }
-    else {
-        file_name[len] = '\0';
-    }
+    file_name[PATH_MAX] = '\0';
+    file_name[len] = '\0';
 
     if (!(check_config(log_fp, file_name, 0))) {
         return NULL;
@@ -62,26 +74,31 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
     return trusted_dev_fp;
 }
 
-void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_trusted_devices) {
-    int i = 0;
+void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, const uint8_t num_trusted_devices) {
+    uint8_t i = 0;
 
     char *line = NULL;
     char **dev = NULL;
     size_t len = 0;
     ssize_t read;
 
-    if (trusted_dev_fp && trusted_devices && num_trusted_devices > 0) {
-        fseek(trusted_dev_fp, 0, SEEK_SET);
-        while ((read = getline(&line, &len, trusted_dev_fp)) != -1 && i < num_trusted_devices) {
-            if (strcmp(line, "\n") != 0) {
-                dev = trusted_devices + i;
-                line[BT_MAC_LEN] = '\0';
-                if ((*dev = malloc(sizeof(char) * (BT_MAC_LEN + 1)))) {
-                    strncpy(*dev, line, BT_MAC_LEN);
-                    (*dev)[BT_MAC_LEN] = '\0';
-                    i++;
-                }
+    if (!trusted_dev_fp || !trusted_devices || num_trusted_devices <= 0) {
+      return;
+    }
+
+    fseek(trusted_dev_fp, 0, SEEK_SET);
+    while ((read = getline(&line, &len, trusted_dev_fp)) != -1 && i < num_trusted_devices) {
+        if (strcmp(line, "\n") != 0) {
+            dev = trusted_devices + i;
+            line[BT_MAC_LEN] = '\0';
+            if ((*dev = malloc(sizeof(char) * (BT_MAC_LEN + 1)))) {
+                strncpy(*dev, line, BT_MAC_LEN);
+                (*dev)[BT_MAC_LEN] = '\0';
+                i++;
             }
+        }
+        if (i >= BT_MAX_CONN) {
+          break;
         }
     }
 
@@ -90,10 +107,10 @@ void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_t
     }
 }
 
-char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const char *username, int *num_of_devices) {
+char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const char *username, uint8_t *num_of_devices) {
     char **trusted_devices = NULL;
     FILE *trusted_dev_fp = NULL;
-    int num_of_devices_lc = 0; //localalizing for possible memory performance improvement
+    uint8_t num_of_devices_lc = 0; //localalizing for possible memory performance improvement
 
     /*** Check if the trusted device directory exist and has the correct permissions ***/
     if (check_config(log_fp, trusted_dir_path, 1) <= 0) {
@@ -108,7 +125,11 @@ char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const ch
     if (!(num_of_devices_lc = get_num_lines(trusted_dev_fp))) {
         goto find_trusted_devices_terminate;
     }
-   
+  
+    if (num_of_devices_lc > BT_MAX_CONN) {
+        num_of_devices_lc = BT_MAX_CONN; //only look at the first n entries
+    }
+
     if (!(trusted_devices = malloc(sizeof(char *) * num_of_devices_lc))) {
         perror("malloc");
         goto find_trusted_devices_terminate;
@@ -129,8 +150,8 @@ int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *user
     int bluetooth_status = 0;
     char curr_time[50];
 
-    int num_of_devices = 0;
-    int num_of_paired = 0;
+    uint8_t num_of_devices = 0;
+    uint8_t num_of_paired = 0;
 
     char **trusted_devices = NULL;
     char **paired_devices = get_paired_devices(&num_of_paired);

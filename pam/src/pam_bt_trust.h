@@ -1,8 +1,10 @@
 #ifndef PAM_BT_TRUST
 #define PAM_BT_TRUST
 
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 #include "pam_misc.h"
 #include "pam_bt_misc.h"
 #include "pam_bt_pair.h"
@@ -20,7 +22,9 @@ extern const char *trusted_dir_path;
 *   NOTE: detected_dev will be set in this function if a device was detected
 * @return: 1 iff a trusted device for the user is detected
 */
-int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, int num_of_devices, char **paired_devices, int num_of_paired, char **detected_dev);
+int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, 
+                               const uint8_t num_of_devices, char **paired_devices, 
+                               const uint8_t num_of_paired, char **detected_dev);
 
 /**
 * Return file pointer for the user's trusted bluetooth device
@@ -38,7 +42,7 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
 * @param trusted_dev_fp: the file handle of the user's trusted device file
 * @param trusted_devices: an array that will contain all the user's trusted bluetooth MAC addresses to authenticate from
 */
-void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_trusted_devices);
+void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, const uint8_t num_trusted_devices);
 
 /**
 * Populate the array with trusted devices
@@ -50,7 +54,7 @@ void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_t
 *   Note: the number is set in this function
 * @return the list of trusted devices
 */
-char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const char *username, int *num_of_devices);
+char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const char *username, uint8_t *num_of_devices);
 
 /**
 * Deals whether or not the device is able to login via bluetooth
