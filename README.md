@@ -15,6 +15,6 @@ minor changes once in a while to clean up the code and play around.
 **2021-08-25:** Project is still inactive but there are some planned features to be released in 12 months from now:
 * An entire rewrite of the android application
 * Integration of development tools (i.e. CI support via Github Actions, Doxygen for documentation, static analyzers, and testing suite)
-* Security enhancements (`SECURITY.md` will detail security fixes)
+* Security enhancements (`PATCHES.md` will detail security fixes)
 * Support for Fedora (should be minimal changes since uses the same Graphical Desktop Environment)
 
