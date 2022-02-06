@@ -4,10 +4,10 @@ PFLAGS += -fPIC -fno-stack-protector
 LDFLAGS = -x --shared
 GLIB = `pkg-config --libs glib-2.0 gio-2.0`
 G_CFLAGS = `pkg-config --cflags glib-2.0 gio-2.0`
-OS:=$(shell head -n 1 /etc/os-release | cut -d = -f 2)
+OS:=$(shell grep -E "^ID" /etc/os-release | cut -d = -f 2)
 DEAUTH_PATH = /etc/proxy_auth
 
-ifeq ($(OS), Fedora)
+ifeq ($(OS), fedora)
 	LINUX_PAM_PATH = /lib64/security
 else
 	LINUX_PAM_PATH = /lib/security

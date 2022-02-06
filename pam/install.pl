@@ -72,7 +72,7 @@ my %packages = (
   'fedora' => {
     'deps'     => [
                      'pam-devel', 'glib2-devel', 'bluez', 'bluez-libs-devel',
-                     'libasan'
+                     'libasan', 'libubsan'
                   ],
     'checker'  => 'rpm -q',
     'installer'=> 'dnf install',
