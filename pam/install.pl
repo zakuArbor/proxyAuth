@@ -104,7 +104,7 @@ If invalid OS, will return an empty string
 sub get_distro {
 	my $os="";
 	if (-e '/etc/os-release') {
-		$os=`grep -E "^ID" /etc/os-release | grep ID | cut -d = -f 2`;
+		$os=`grep -E "^ID=" /etc/os-release | grep ID | cut -d = -f 2`;
     chomp($os);
     $os =~ s/"//g;
 	}
