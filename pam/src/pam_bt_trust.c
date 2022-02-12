@@ -28,15 +28,18 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
 
     const unsigned int buf_size = PATH_MAX + LOGIN_NAME_MAX;
     char file_name[buf_size]; //assumes LOGIN_NAME_MAX <= NAME_MAX
-    unsigned int len = 0, copy_len = 0;
+    unsigned int copy_len = 0;
+    unsigned int len = 0;
     strcpy(file_name, "");
     
     if (strlen(trusted_dir_path) > 0) {
         copy_len = strlen(trusted_dir_path);
         copy_len = copy_len > (PATH_MAX -1) ? (PATH_MAX - 1): copy_len; //PATH_MAX includes null-terminator
         strncat(file_name, trusted_dir_path, copy_len); 
-        len += copy_len;
+        len = copy_len;
     }
+
+    assert(strlen(file_name) < buf_size);
 
     if (strlen(username) > 0) {
         copy_len = strlen(username);
@@ -44,6 +47,9 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
         strncat(file_name, username, copy_len);
         len += copy_len;
     }
+
+    assert(strlen(file_name) < buf_size);
+    
     //I am paranoid
     if (len > buf_size) {
         file_name[buf_size-1] = '\0';
@@ -51,8 +57,6 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
     else {
         file_name[len] = '\0';
     }
-
-    assert(strlen(file_name) < buf_size);
 
     if (!(check_config(log_fp, file_name, 0))) {
         return NULL;
