@@ -27,24 +27,30 @@ FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, F
     FILE *trusted_dev_fp = NULL;
 
     char file_name[NAME_MAX];
-    int len = 0;
+    int len = 0, copy_len = 0;
     strcpy(file_name, "");
     
     if (strlen(trusted_dir_path) > 0) {
-        strncat(file_name, trusted_dir_path, strlen(trusted_dir_path));
-        len += strlen(trusted_dir_path);
+        copy_len = strlen(trusted_dir_path);
+        copy_len = copy_len > NAME_MAX ? NAME_MAX : copy_len;
+        strncat(file_name, trusted_dir_path, copy_len); 
+        len += copy_len;
     }
     if (strlen(username) > 0) {
-        strncat(file_name, username, strlen(username));
-        len += strlen(username);
+        copy_len = strlen(username);
+        copy_len = (copy_len > NAME_MAX - len) ? (NAME_MAX - len) : copy_len;
+        strncat(file_name, username, copy_len);
+        len += copy_len;
     }
     //I am paranoid
     if (len > NAME_MAX) {
-        file_name[NAME_MAX] = '\0';
+        file_name[NAME_MAX-1] = '\0';
     }
     else {
         file_name[len] = '\0';
     }
+
+    assert(strlen(file_name) < NAME_MAX);
 
     if (!(check_config(log_fp, file_name, 0))) {
         return NULL;
