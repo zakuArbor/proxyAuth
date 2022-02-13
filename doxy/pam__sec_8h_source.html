@@ -70,11 +70,7 @@ $(function() {
 <div class="title">pam_sec.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="pam__sec_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">* @author: zakuarbor (Ju Hong Kim)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">* @brief: Where security checks and security tools are placed</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<a href="pam__sec_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#ifndef PAM_SEC_H</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#define PAM_SEC_H</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
@@ -87,45 +83,20 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;sys/types.h&gt;</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;sys/stat.h&gt;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">* Return 1 iff the file exists (and not a link) and has the correct permission</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">* </span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">* @param log_fp: the handle of the log file</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">* @param file: the config file (a directory or regular file)</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">* @param is_dir: 1 iff the file is a directory</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">* @return: return 1 iff the file exists, is of the type specified by is_dir and has the correct permission. Else returns a 0.</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">int</span> <a class="code" href="pam__sec_8h.html#afc0c307d3a65a155775e97cb8b6501e1">check_config</a>(FILE *log_fp, <span class="keyword">const</span> <span class="keywordtype">char</span> * <span class="keyword">const</span> file, <span class="keyword">const</span> <span class="keywordtype">int</span> is_dir);</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">* Return 1 iff the file exists and is not a symlink. Else returns a 0.</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">*</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">* @param log_fp: the handle of the log file</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">* @param file: the file to inspect</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">* @param st: the pointer to a file stat structure. This field is modified in the function</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">* @return: return 1 iff the file exists and is not a symlink. Else returns a 0.</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">int</span> <a class="code" href="pam__sec_8h.html#a1a34a8d6b785220f017a9d010bda8ee0">is_nlnk</a>(FILE *log_fp, <span class="keyword">const</span> <span class="keywordtype">char</span> * <span class="keyword">const</span> file, <span class="keyword">struct</span> stat * <span class="keyword">const</span> st);</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">* Return 1 iff the file is owned by root and has rw permission and the other fields does not have write permission</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">*</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">* @param log_fp: the handle of the log file</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">* @param file: the file to inspect</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">* @param st: the pointer to a file stat structure. This field is not modified in this function</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">* @param is_dir: 1 iff the desired file is supposed to be a directory</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">* @return: return 1 iff the file is owned by root and has rw permission and the other fields does not have write permission</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">int</span> <a class="code" href="pam__sec_8h.html#a26886b7d782ab31d7746aa4107fb4e04">check_perm</a>(FILE *log_fp, <span class="keyword">const</span> <span class="keywordtype">char</span> * <span class="keyword">const</span> file, <span class="keyword">const</span> <span class="keyword">struct</span> stat * <span class="keyword">const</span> st, <span class="keyword">const</span> <span class="keywordtype">int</span> is_dir);</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="apam__sec_8h_html_a1a34a8d6b785220f017a9d010bda8ee0"><div class="ttname"><a href="pam__sec_8h.html#a1a34a8d6b785220f017a9d010bda8ee0">is_nlnk</a></div><div class="ttdeci">int is_nlnk(FILE *log_fp, const char *const file, struct stat *const st)</div><div class="ttdef"><b>Definition:</b> <a href="pam__sec_8c_source.html#l00041">pam_sec.c:41</a></div></div>
 <div class="ttc" id="apam__sec_8h_html_a26886b7d782ab31d7746aa4107fb4e04"><div class="ttname"><a href="pam__sec_8h.html#a26886b7d782ab31d7746aa4107fb4e04">check_perm</a></div><div class="ttdeci">int check_perm(FILE *log_fp, const char *const file, const struct stat *const st, const int is_dir)</div><div class="ttdef"><b>Definition:</b> <a href="pam__sec_8c_source.html#l00064">pam_sec.c:64</a></div></div>
-<div class="ttc" id="apam__sec_8h_html_afc0c307d3a65a155775e97cb8b6501e1"><div class="ttname"><a href="pam__sec_8h.html#afc0c307d3a65a155775e97cb8b6501e1">check_config</a></div><div class="ttdeci">int check_config(FILE *log_fp, const char *const file, const int is_dir)</div><div class="ttdef"><b>Definition:</b> <a href="pam__sec_8c_source.html#l00003">pam_sec.c:3</a></div></div>
+<div class="ttc" id="apam__sec_8h_html_afc0c307d3a65a155775e97cb8b6501e1"><div class="ttname"><a href="pam__sec_8h.html#afc0c307d3a65a155775e97cb8b6501e1">check_config</a></div><div class="ttdeci">int check_config(FILE *log_fp, const char *const file, const int is_dir)</div><div class="ttdoc">: Where security checks and security tools are placed</div><div class="ttdef"><b>Definition:</b> <a href="pam__sec_8c_source.html#l00003">pam_sec.c:3</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 10 2022 06:17:40 for ProxyAuth by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Feb 13 2022 00:01:59 for ProxyAuth by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

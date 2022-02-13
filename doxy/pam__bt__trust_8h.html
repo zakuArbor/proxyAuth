@@ -73,7 +73,8 @@ $(function() {
 <div class="title">pam_bt_trust.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
+<div class="textblock"><code>#include &lt;assert.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="pam__misc_8h_source.html">pam_misc.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="pam__bt__misc_8h_source.html">pam_bt_misc.h</a>&quot;</code><br />
@@ -84,22 +85,23 @@ Include dependency graph for pam_bt_trust.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="pam__bt__trust_8h__incl.png" border="0" usemap="#asrc_2pam__bt__trust_8h" alt=""/></div>
 <map name="asrc_2pam__bt__trust_8h" id="asrc_2pam__bt__trust_8h">
-<area shape="rect" title=" " alt="" coords="304,5,434,32"/>
-<area shape="rect" title=" " alt="" coords="184,229,244,256"/>
-<area shape="rect" title=" " alt="" coords="269,229,333,256"/>
-<area shape="rect" href="pam__misc_8h.html" title=" " alt="" coords="432,155,524,181"/>
-<area shape="rect" href="pam__bt__misc_8h.html" title=" " alt="" coords="246,155,356,181"/>
-<area shape="rect" href="pam__bt__pair_8h.html" title=" " alt="" coords="156,80,259,107"/>
-<area shape="rect" href="pam__sec_8h.html" title=" " alt="" coords="549,155,634,181"/>
-<area shape="rect" title=" " alt="" coords="750,229,812,256"/>
-<area shape="rect" title=" " alt="" coords="358,229,420,256"/>
-<area shape="rect" title=" " alt="" coords="836,229,894,256"/>
-<area shape="rect" title=" " alt="" coords="445,229,512,256"/>
-<area shape="rect" title=" " alt="" coords="536,229,623,256"/>
-<area shape="rect" title=" " alt="" coords="647,229,726,256"/>
-<area shape="rect" title=" " alt="" coords="98,229,160,256"/>
-<area shape="rect" title=" " alt="" coords="118,155,170,181"/>
-<area shape="rect" title=" " alt="" coords="23,155,94,181"/>
+<area shape="rect" title=" " alt="" coords="362,5,493,32"/>
+<area shape="rect" title=" " alt="" coords="5,80,73,107"/>
+<area shape="rect" title=" " alt="" coords="311,229,371,256"/>
+<area shape="rect" title=" " alt="" coords="395,229,459,256"/>
+<area shape="rect" href="pam__misc_8h.html" title=" " alt="" coords="559,155,651,181"/>
+<area shape="rect" href="pam__bt__misc_8h.html" title=" " alt="" coords="372,155,483,181"/>
+<area shape="rect" href="pam__bt__pair_8h.html" title=" " alt="" coords="283,80,385,107"/>
+<area shape="rect" href="pam__sec_8h.html" title=" " alt="" coords="675,155,761,181"/>
+<area shape="rect" title=" " alt="" coords="877,229,938,256"/>
+<area shape="rect" title=" " alt="" coords="484,229,547,256"/>
+<area shape="rect" title=" " alt="" coords="963,229,1020,256"/>
+<area shape="rect" title=" " alt="" coords="571,229,638,256"/>
+<area shape="rect" title=" " alt="" coords="663,229,749,256"/>
+<area shape="rect" title=" " alt="" coords="773,229,852,256"/>
+<area shape="rect" title=" " alt="" coords="224,229,287,256"/>
+<area shape="rect" title=" " alt="" coords="244,155,296,181"/>
+<area shape="rect" title=" " alt="" coords="149,155,220,181"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -186,7 +188,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>: return 1 if the trusted bluetooth device is detected </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="pam__bt__trust_8c_source.html#l00128">128</a> of file <a class="el" href="pam__bt__trust_8c_source.html">pam_bt_trust.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pam__bt__trust_8c_source.html#l00140">140</a> of file <a class="el" href="pam__bt__trust_8c_source.html">pam_bt_trust.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -198,7 +200,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="pam__bt__misc_8c.html#a67e94683bc2c967879c2b18b8b7a7c4b" title=" " alt="" coords="177,220,290,247"/>
 <area shape="rect" href="pam__misc_8c.html#aa241605477f0fba5beeb7be0eff5871c" title=" " alt="" coords="180,271,287,297"/>
 <area shape="rect" href="pam__bt__pair_8c.html#a0982f353fa0e015e06eaba9d7164d55d" title=" " alt="" coords="166,321,301,348"/>
-<area shape="rect" href="pam__sec_8c.html#afc0c307d3a65a155775e97cb8b6501e1" title=" " alt="" coords="554,31,653,57"/>
+<area shape="rect" href="pam__sec_8c.html#afc0c307d3a65a155775e97cb8b6501e1" title=": Where security checks and security tools are placed" alt="" coords="554,31,653,57"/>
 <area shape="rect" href="pam__misc_8c.html#a2e30edd72fed52ba52cd1d51afe53c95" title=" " alt="" coords="371,31,478,57"/>
 <area shape="rect" href="pam__bt__trust_8c.html#a5210560ef79fa03ecbeb85f4eccb4940" title=" " alt="" coords="355,81,494,108"/>
 <area shape="rect" href="pam__bt__trust_8c.html#a671181c1f3adc21b30a202ba7f370b11" title=" " alt="" coords="355,132,494,159"/>
@@ -261,14 +263,14 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the list of trusted devices </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="pam__bt__trust_8c_source.html#l00093">93</a> of file <a class="el" href="pam__bt__trust_8c_source.html">pam_bt_trust.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pam__bt__trust_8c_source.html#l00105">105</a> of file <a class="el" href="pam__bt__trust_8c_source.html">pam_bt_trust.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="pam__bt__trust_8h_a218ab45da59bbecedbd1d6ce4f08cf6e_cgraph.png" border="0" usemap="#apam__bt__trust_8h_a218ab45da59bbecedbd1d6ce4f08cf6e_cgraph" alt=""/></div>
 <map name="apam__bt__trust_8h_a218ab45da59bbecedbd1d6ce4f08cf6e_cgraph" id="apam__bt__trust_8h_a218ab45da59bbecedbd1d6ce4f08cf6e_cgraph">
 <area shape="rect" title=" " alt="" coords="5,56,147,83"/>
-<area shape="rect" href="pam__sec_8c.html#afc0c307d3a65a155775e97cb8b6501e1" title=" " alt="" coords="381,31,480,57"/>
+<area shape="rect" href="pam__sec_8c.html#afc0c307d3a65a155775e97cb8b6501e1" title=": Where security checks and security tools are placed" alt="" coords="381,31,480,57"/>
 <area shape="rect" href="pam__misc_8c.html#a2e30edd72fed52ba52cd1d51afe53c95" title=" " alt="" coords="211,31,317,57"/>
 <area shape="rect" href="pam__bt__trust_8c.html#a5210560ef79fa03ecbeb85f4eccb4940" title=" " alt="" coords="195,81,333,108"/>
 <area shape="rect" href="pam__bt__trust_8c.html#a671181c1f3adc21b30a202ba7f370b11" title=" " alt="" coords="195,132,333,159"/>
@@ -402,7 +404,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="pam__bt__trust_8h_a5210560ef79fa03ecbeb85f4eccb4940_cgraph.png" border="0" usemap="#apam__bt__trust_8h_a5210560ef79fa03ecbeb85f4eccb4940_cgraph" alt=""/></div>
 <map name="apam__bt__trust_8h_a5210560ef79fa03ecbeb85f4eccb4940_cgraph" id="apam__bt__trust_8h_a5210560ef79fa03ecbeb85f4eccb4940_cgraph">
 <area shape="rect" title=" " alt="" coords="5,31,144,57"/>
-<area shape="rect" href="pam__sec_8c.html#afc0c307d3a65a155775e97cb8b6501e1" title=" " alt="" coords="192,31,291,57"/>
+<area shape="rect" href="pam__sec_8c.html#afc0c307d3a65a155775e97cb8b6501e1" title=": Where security checks and security tools are placed" alt="" coords="192,31,291,57"/>
 <area shape="rect" href="pam__sec_8c.html#a26886b7d782ab31d7746aa4107fb4e04" title=" " alt="" coords="339,5,432,32"/>
 <area shape="rect" href="pam__sec_8c.html#a1a34a8d6b785220f017a9d010bda8ee0" title=" " alt="" coords="354,56,417,83"/>
 </map>
@@ -450,7 +452,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="pam__bt__trust_8c_source.html#l00065">65</a> of file <a class="el" href="pam__bt__trust_8c_source.html">pam_bt_trust.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pam__bt__trust_8c_source.html#l00077">77</a> of file <a class="el" href="pam__bt__trust_8c_source.html">pam_bt_trust.c</a>.</p>
 
 </div>
 </div>
@@ -482,7 +484,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 10 2022 06:17:40 for ProxyAuth by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Feb 13 2022 00:01:59 for ProxyAuth by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -96,6 +96,7 @@ Include dependency graph for pam_sec.c:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:afc0c307d3a65a155775e97cb8b6501e1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pam__sec_8c.html#afc0c307d3a65a155775e97cb8b6501e1">check_config</a> (FILE *log_fp, const char *const file, const int is_dir)</td></tr>
+<tr class="memdesc:afc0c307d3a65a155775e97cb8b6501e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">: Where security checks and security tools are placed  <a href="pam__sec_8c.html#afc0c307d3a65a155775e97cb8b6501e1">More...</a><br /></td></tr>
 <tr class="separator:afc0c307d3a65a155775e97cb8b6501e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a34a8d6b785220f017a9d010bda8ee0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pam__sec_8c.html#a1a34a8d6b785220f017a9d010bda8ee0">is_nlnk</a> (FILE *log_fp, const char *const file, struct stat *const st)</td></tr>
 <tr class="separator:a1a34a8d6b785220f017a9d010bda8ee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,13 +136,25 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>: Where security checks and security tools are placed </p>
+<dl class="section author"><dt>Author</dt><dd>: zakuarbor (Ju Hong Kim) Return 1 iff the file exists (and not a link) and has the correct permission</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">log_fp</td><td>the handle of the log file </td></tr>
+    <tr><td class="paramname">file</td><td>the config file (a directory or regular file) </td></tr>
+    <tr><td class="paramname">is_dir</td><td>1 iff the file is a directory </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: return 1 iff the file exists, is of the type specified by is_dir and has the correct permission. Else returns a 0. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="pam__sec_8c_source.html#l00003">3</a> of file <a class="el" href="pam__sec_8c_source.html">pam_sec.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="pam__sec_8c_afc0c307d3a65a155775e97cb8b6501e1_cgraph.png" border="0" usemap="#apam__sec_8c_afc0c307d3a65a155775e97cb8b6501e1_cgraph" alt=""/></div>
 <map name="apam__sec_8c_afc0c307d3a65a155775e97cb8b6501e1_cgraph" id="apam__sec_8c_afc0c307d3a65a155775e97cb8b6501e1_cgraph">
-<area shape="rect" title=" " alt="" coords="5,31,104,57"/>
+<area shape="rect" title=": Where security checks and security tools are placed" alt="" coords="5,31,104,57"/>
 <area shape="rect" href="pam__sec_8c.html#a26886b7d782ab31d7746aa4107fb4e04" title=" " alt="" coords="152,5,245,32"/>
 <area shape="rect" href="pam__sec_8c.html#a1a34a8d6b785220f017a9d010bda8ee0" title=" " alt="" coords="167,56,230,83"/>
 </map>
@@ -186,6 +199,17 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Return 1 iff the file is owned by root and has rw permission and the other fields does not have write permission</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">log_fp</td><td>the handle of the log file </td></tr>
+    <tr><td class="paramname">file</td><td>the file to inspect </td></tr>
+    <tr><td class="paramname">st</td><td>the pointer to a file stat structure. This field is not modified in this function </td></tr>
+    <tr><td class="paramname">is_dir</td><td>1 iff the desired file is supposed to be a directory </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: return 1 iff the file is owned by root and has rw permission and the other fields does not have write permission </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="pam__sec_8c_source.html#l00064">64</a> of file <a class="el" href="pam__sec_8c_source.html">pam_sec.c</a>.</p>
 
@@ -222,6 +246,16 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Return 1 iff the file exists and is not a symlink. Else returns a 0.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">log_fp</td><td>the handle of the log file </td></tr>
+    <tr><td class="paramname">file</td><td>the file to inspect </td></tr>
+    <tr><td class="paramname">st</td><td>the pointer to a file stat structure. This field is modified in the function </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: return 1 iff the file exists and is not a symlink. Else returns a 0. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="pam__sec_8c_source.html#l00041">41</a> of file <a class="el" href="pam__sec_8c_source.html">pam_sec.c</a>.</p>
 
@@ -230,7 +264,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 10 2022 06:17:40 for ProxyAuth by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Feb 13 2022 00:01:59 for ProxyAuth by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
