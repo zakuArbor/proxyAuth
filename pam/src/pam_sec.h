@@ -1,4 +1,4 @@
-/*
+/**
 * @author: zakuarbor (Ju Hong Kim)
 * @brief: Where security checks and security tools are placed
 */
@@ -15,7 +15,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-/*
+/**
 * Return 1 iff the file exists (and not a link) and has the correct permission
 * 
 * @param log_fp: the handle of the log file
@@ -25,7 +25,7 @@
 */
 int check_config(FILE *log_fp, const char * const file, const int is_dir);
 
-/*
+/**
 * Return 1 iff the file exists and is not a symlink. Else returns a 0.
 *
 * @param log_fp: the handle of the log file
@@ -35,7 +35,7 @@ int check_config(FILE *log_fp, const char * const file, const int is_dir);
 */
 int is_nlnk(FILE *log_fp, const char * const file, struct stat * const st);
 
-/*
+/**
 * Return 1 iff the file is owned by root and has rw permission and the other fields does not have write permission
 *
 * @param log_fp: the handle of the log file

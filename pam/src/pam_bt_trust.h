@@ -1,6 +1,7 @@
 #ifndef PAM_BT_TRUST
 #define PAM_BT_TRUST
 
+#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include "pam_misc.h"
