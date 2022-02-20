@@ -24,6 +24,10 @@ int find_trusted_paired_device(FILE *log_fp, char **trusted_devices, int num_of_
 }
 
 FILE *get_trusted_dev_file(const char *trusted_dir_path, const char *username, FILE *log_fp) {
+    if (!trusted_dir_path || !username) {
+      return NULL;
+    }
+
     FILE *trusted_dev_fp = NULL;
 
     const unsigned int buf_size = PATH_MAX + LOGIN_NAME_MAX;
@@ -105,7 +109,11 @@ void set_trusted_devices(FILE *trusted_dev_fp, char **trusted_devices, int num_t
 char **find_trusted_devices(FILE *log_fp, const char *trusted_dir_path, const char *username, int *num_of_devices) {
     char **trusted_devices = NULL;
     FILE *trusted_dev_fp = NULL;
-    int num_of_devices_lc = 0; //localalizing for possible memory performance improvement
+    int num_of_devices_lc = 0; 
+
+    if (!trusted_dir_path || !username || !num_of_devices) {
+      goto find_trusted_devices_terminate;
+    }
 
     /*** Check if the trusted device directory exist and has the correct permissions ***/
     if (check_config(log_fp, trusted_dir_path, 1) <= 0) {
