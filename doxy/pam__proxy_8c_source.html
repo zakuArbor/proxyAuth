@@ -110,20 +110,18 @@ $(function() {
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            fprintf(log_fp, <span class="stringliteral">&quot;Login via Auth Proxy\n&quot;</span>);</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        }</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="pam__post__auth_8c.html#a255f2465b7fd99377d022a4a9334fed1">exec_deauth</a>(detected_dev, username, log_fp, <a class="code" href="pam__bt__misc_8c.html#a9e3b53d04a57f137adbc8fc09bacae19">trusted_dir_path</a>);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">if</span> (detected_dev) {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            free(detected_dev);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        }</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        bluetooth_status = PAM_SUCCESS;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        free(detected_dev);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        bluetooth_status = PAM_SUCCESS;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<a class="code" href="pam__proxy_8c.html#a29b361dfe49f2de2ebf1e0fcaa3900de">pam_sm_authenticate</a>:</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="pam__proxy_8c.html#a29b361dfe49f2de2ebf1e0fcaa3900de">pam_sm_authenticate</a>:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">if</span> (log_fp) {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        fclose(log_fp);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    }</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> bluetooth_status;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">if</span> (log_fp) {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        fclose(log_fp);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> bluetooth_status;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
 <div class="ttc" id="apam__bt__misc_8c_html_a9e3b53d04a57f137adbc8fc09bacae19"><div class="ttname"><a href="pam__bt__misc_8c.html#a9e3b53d04a57f137adbc8fc09bacae19">trusted_dir_path</a></div><div class="ttdeci">const char * trusted_dir_path</div><div class="ttdef"><b>Definition:</b> <a href="pam__bt__misc_8c_source.html#l00003">pam_bt_misc.c:3</a></div></div>
 <div class="ttc" id="apam__bt__trust_8c_html_a11ff3cbf9f313d7a9ea434c83f61aa6a"><div class="ttname"><a href="pam__bt__trust_8c.html#a11ff3cbf9f313d7a9ea434c83f61aa6a">bluetooth_login</a></div><div class="ttdeci">int bluetooth_login(FILE *log_fp, const char *trusted_dir_path, const char *username, char **detected_dev)</div><div class="ttdef"><b>Definition:</b> <a href="pam__bt__trust_8c_source.html#l00148">pam_bt_trust.c:148</a></div></div>
 <div class="ttc" id="apam__post__auth_8c_html_a255f2465b7fd99377d022a4a9334fed1"><div class="ttname"><a href="pam__post__auth_8c.html#a255f2465b7fd99377d022a4a9334fed1">exec_deauth</a></div><div class="ttdeci">int exec_deauth(char *bt_addr, const char *username, FILE *log_fp, const char *trusted_dir_path)</div><div class="ttdef"><b>Definition:</b> <a href="pam__post__auth_8c_source.html#l00003">pam_post_auth.c:3</a></div></div>
@@ -134,7 +132,7 @@ $(function() {
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 20 2022 23:30:58 for ProxyAuth by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Mar 7 2022 06:53:49 for ProxyAuth by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
