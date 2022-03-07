@@ -56,7 +56,9 @@ void free_device_list(char **device_list, int num_of_devices) {
     if (device_list) {
         for (int i = 0; i < num_of_devices; i++) {
             free(device_list[i]);
+            device_list[i] = NULL;
         }
-        free(device_list);
+        free(device_list); 
+        device_list = NULL;
     }
 }
